@@ -8,6 +8,7 @@ import com.frc7153.Controllers.XboxController;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.subsystems.IMU;
+import frc.robot.subsystems.ShuffleboardManager;
 import frc.robot.subsystems.SwerveDriveBase;
 
 public class Robot extends TimedRobot {
@@ -20,10 +21,12 @@ public class Robot extends TimedRobot {
   // Actuators
   public static SwerveDriveBase driveBase = new SwerveDriveBase();
 
+  // Shuffleboard
+  public static ShuffleboardManager shuffleboard = new ShuffleboardManager();
+
   // Robot Init
   @Override
-  public void robotInit() {
-  }
+  public void robotInit() {}
 
   // Robot Periodic
   @Override
