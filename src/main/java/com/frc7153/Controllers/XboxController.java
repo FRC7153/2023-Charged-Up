@@ -156,6 +156,6 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
         public boolean runsWhenDisabled() { return true; }
 
         @Override
-        public String getName() { return String.format("Recalibrate Xbox controller %s", getPort()); }
+        public String getName() { return String.format("Recalibrate Xbox Controller %s", getPort()); }
     }
 }

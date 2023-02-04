@@ -133,6 +133,6 @@ public class Joystick extends edu.wpi.first.wpilibj.Joystick {
         public boolean runsWhenDisabled() { return true; }
 
         @Override
-        public String getName() { return String.format("Recalibrate joystick %s", getPort()); }
+        public String getName() { return String.format("Recalibrate Joystick %s", getPort()); }
     }
 }
