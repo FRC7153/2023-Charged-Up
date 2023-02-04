@@ -1,6 +1,7 @@
 package com.frc7153.Controllers;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -15,6 +16,9 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
     private double triggerDeadband;
     private OffsetMode mode;
     private double triggerThresh;
+
+    // Last offset update
+    private double lastOffsetUpdate = 0.0;
 
     /**
      * Creates a new Xbox Controller object
@@ -57,7 +61,14 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
             super.getRawAxis(Axis.kRightX.value),
             super.getRawAxis(Axis.kRightY.value)
         );
+
+        lastOffsetUpdate = Timer.getFPGATimestamp();
     }
+
+    /**
+     * @return The last time calibrateOffset() was called, in seconds
+     */
+    public double getLastOffsetUpdate() { return lastOffsetUpdate; }
 
     /**
      * Sets the deadband
@@ -139,18 +150,14 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
      * A command to recalibrate the joysticks. This can be bound to a button, or put on Shuffleboard
      */
     public class CalibrateOffsetCommand extends CommandBase {
-        private boolean running = false;
-
         @Override
         public void initialize() {
-            running = true;
             calibrateOffset();
             System.out.println(String.format("Xbox Controller %s calibrated", getPort()));
-            running = false;
         }
 
         @Override
-        public boolean isFinished() { return !running; }
+        public boolean isFinished() { return true; }
 
         @Override
         public boolean runsWhenDisabled() { return true; }

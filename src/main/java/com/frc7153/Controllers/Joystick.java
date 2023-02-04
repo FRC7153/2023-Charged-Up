@@ -1,6 +1,7 @@
 package com.frc7153.Controllers;
 
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -14,6 +15,9 @@ public class Joystick extends edu.wpi.first.wpilibj.Joystick {
     private double throttleDeadband;
     private boolean throttleInvert;
     private OffsetMode mode;
+
+    // Last offset update
+    private double lastOffsetUpdate = 0.0;
 
     /**
      * Creates a new Joystick object
@@ -52,7 +56,14 @@ public class Joystick extends edu.wpi.first.wpilibj.Joystick {
             super.getRawAxis(getYChannel()), 
             super.getRawAxis(getTwistChannel())
         );
+
+        lastOffsetUpdate = Timer.getFPGATimestamp();
     }
+
+    /**
+     * @return The last time calibrateOffset() was called, in seconds
+     */
+    public double getLastOffsetUpdate() { return lastOffsetUpdate; }
 
     /**
      * Sets the deadband.
@@ -116,18 +127,14 @@ public class Joystick extends edu.wpi.first.wpilibj.Joystick {
      * A command to recalibrate the joystick. This can be bound to a button, or put on Shuffleboard.
      */
     public class CalibrateOffsetCommand extends CommandBase {
-        private boolean running = false;
-
         @Override
         public void initialize() {
-            running = true;
             calibrateOffset();
             System.out.println(String.format("Joystick %s calibrated", getPort()));
-            running = false;
         }
 
         @Override
-        public boolean isFinished() { return !running; }
+        public boolean isFinished() { return true; }
 
         @Override
         public boolean runsWhenDisabled() { return true; }
