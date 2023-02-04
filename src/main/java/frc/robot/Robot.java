@@ -4,27 +4,29 @@
 
 package frc.robot;
 
+import com.frc7153.Controllers.Joystick;
+import com.frc7153.Controllers.OffsetMode;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
- */
 public class Robot extends TimedRobot {
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
-  @Override
-  public void robotInit() {}
+  // Joysticks
+  public static Joystick joy1 = new Joystick(0);
 
   @Override
-  public void robotPeriodic() {}
+  public void robotInit() {
+  }
 
   @Override
-  public void autonomousInit() {}
+  public void robotPeriodic() {
+    System.out.println(joy1.getX());
+  }
+
+  @Override
+  public void autonomousInit() {
+    joy1.calibrateOffset();
+    joy1.setOffsetMode(OffsetMode.TRANSlATE);
+  }
 
   @Override
   public void autonomousPeriodic() {}
