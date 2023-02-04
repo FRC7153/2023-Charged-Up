@@ -4,54 +4,58 @@
 
 package frc.robot;
 
-import com.frc7153.Controllers.Joystick;
-import com.frc7153.Controllers.OffsetMode;
+import com.frc7153.Controllers.XboxController;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.subsystems.IMU;
+import frc.robot.subsystems.SwerveDriveBase;
 
 public class Robot extends TimedRobot {
   // Joysticks
-  public static Joystick joy1 = new Joystick(0);
+  public static XboxController controller0 = new XboxController(0);
 
+  // Peripherals
+  public static IMU imu = new IMU();
+
+  // Actuators
+  public static SwerveDriveBase driveBase = new SwerveDriveBase();
+
+  // Robot Init
   @Override
   public void robotInit() {
   }
 
+  // Robot Periodic
   @Override
-  public void robotPeriodic() {
-    System.out.println(joy1.getX());
-  }
+  public void robotPeriodic() {}
 
+  // Auto Init
   @Override
-  public void autonomousInit() {
-    joy1.calibrateOffset();
-    joy1.setOffsetMode(OffsetMode.TRANSlATE);
-  }
+  public void autonomousInit() {}
 
+  // Auto Periodic
   @Override
   public void autonomousPeriodic() {}
 
+  // Teleop Init
   @Override
   public void teleopInit() {}
 
+  // Teleop Periodic
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    driveBase.driveTeleop();
+  }
 
+  // Disabled Init
   @Override
   public void disabledInit() {}
 
-  @Override
-  public void disabledPeriodic() {}
-
+  // Test Init
   @Override
   public void testInit() {}
 
+  // Test Periodic
   @Override
   public void testPeriodic() {}
-
-  @Override
-  public void simulationInit() {}
-
-  @Override
-  public void simulationPeriodic() {}
 }
