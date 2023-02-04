@@ -20,7 +20,7 @@ public class SwerveDriveBase {
     private SwerveWheel_FN rl = new SwerveWheel_FN(10, 6, 14, -halfWidth, -halfHeight , 8.35);
     private SwerveWheel_FN rr = new SwerveWheel_FN(9, 5, 13, halfWidth, -halfHeight, 17.139);
 
-    private SwerveBase base = new SwerveBase(fl, fr, rl, rr, Robot.imu.getAngle());
+    private SwerveBase base = new SwerveBase(fl, fr, rl, rr, Robot.imu.getYaw());
 
     // Drive Teleop
     public void driveTeleop() {
@@ -28,7 +28,7 @@ public class SwerveDriveBase {
             Robot.controller0.getLeftY(), 
             Robot.controller0.getLeftX(), 
             Robot.controller0.getRightX(), 
-            Robot.imu.getAngle()
+            Robot.imu.getYaw()
         );
     }
 }

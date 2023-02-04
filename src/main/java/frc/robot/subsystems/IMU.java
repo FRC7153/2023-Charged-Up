@@ -13,7 +13,7 @@ public class IMU {
     /**
      * @return Angle, in degrees (CCW positive)
      */
-    public double getAngle() { return imu.getAngle(); }
+    public double getYaw() { return imu.getAngle(); }
 
     /**
      * @return X acceleration (meters per second per second)
