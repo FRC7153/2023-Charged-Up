@@ -8,6 +8,7 @@ import com.frc7153.Controllers.XboxController;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ArmPI;
 import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.ShuffleboardManager;
 import frc.robot.subsystems.SwerveDriveBase;
@@ -18,6 +19,7 @@ public class Robot extends TimedRobot {
 
   // Peripherals
   public static IMU imu = new IMU();
+  public static ArmPI armPi = new ArmPI();
 
   // Actuators
   public static SwerveDriveBase driveBase = new SwerveDriveBase();
@@ -33,6 +35,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    armPi.ping();
   }
 
   // Auto Init
