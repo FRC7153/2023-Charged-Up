@@ -2,7 +2,7 @@
 # If you remove items from this file, intellisense might break.
 
 ### Raspberry Pi ###
-RaspberryPi/logs
+RaspberryPi/logs/*
 !RaspberryPi/logs/.gitkeep
 
 ### C++ ###
