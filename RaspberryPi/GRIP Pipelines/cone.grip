@@ -1,7 +1,7 @@
 <grip:Pipeline>
   <sources>
     <grip:ImageFile>
-      <property name="path" value="/Users/brendanraykoff/Documents/Robotics/2023/WPIPlayingFieldImages (1)/PC060003.JPG"/>
+      <property name="path" value=""/>
     </grip:ImageFile>
   </sources>
   <steps>
