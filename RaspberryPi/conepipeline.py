@@ -20,9 +20,12 @@ class ConePipeline:
         self.cv_resize_output = None
 
         self.__hsl_threshold_input = self.cv_resize_output
-        self.__hsl_threshold_hue = [19.424460431654676, 33.753353652972216]
-        self.__hsl_threshold_saturation = [217.7988964760395, 255.0]
-        self.__hsl_threshold_luminance = [110.07194244604317, 255.0]
+        #self.__hsl_threshold_hue = [19.424460431654676, 33.753353652972216]
+        #self.__hsl_threshold_saturation = [217.7988964760395, 255.0]
+        #self.__hsl_threshold_luminance = [110.07194244604317, 255.0]
+        self.__hsl_threshold_hue = [19.0, 50.0]
+        self.__hsl_threshold_saturation = [40.0, 255.0]
+        self.__hsl_threshold_luminance = [60.0, 255.0]
 
         self.hsl_threshold_output = None
 
@@ -46,7 +49,7 @@ class ConePipeline:
 
         self.__find_blobs_input = self.cv_dilate_output
         self.__find_blobs_min_area = 1.0
-        self.__find_blobs_circularity = [0.0, 1.0]
+        self.__find_blobs_circularity = [0.01, 1.0]
         self.__find_blobs_dark_blobs = False
 
         self.find_blobs_output = None
