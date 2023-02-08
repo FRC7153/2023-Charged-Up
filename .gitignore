@@ -4,6 +4,7 @@
 ### Raspberry Pi ###
 RaspberryPi/logs/*
 !RaspberryPi/logs/.gitkeep
+__pycache__/
 
 ### C++ ###
 # Prerequisites

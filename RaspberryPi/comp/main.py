@@ -7,7 +7,7 @@ from CameraServer import CameraServer
 from ConePipeline import ConePipeline
 
 ## INIT
-log = Logger("logs")
+log = Logger("../logs")
 bus = can.initCAN(log)
 device = can.Device(bus, 19, log)
 
