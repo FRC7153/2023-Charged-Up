@@ -6,7 +6,7 @@ import threading
 ## LOGGER
 logger = None
 
-## SYSTEM BROADCAS MESSAGES
+## SYSTEM BROADCAST MESSAGES
 kBROADCASTS = ["DISABLE", "SYSTEM HALT", "SYSTEM RESET", "DEVICE ASSIGN", "DEVICE QUERY", "HEARTBEAT", "SYNC", "UPDATE", "FIRMWARE VERSION", "ENUMERATE", "SYSTEM RESUME"]
 
 ## START CAN BUS
@@ -135,7 +135,7 @@ class Device:
                 self.__listening = False
 
         ## SEND DATA
-        def send(apiClass, apiIndex, data):
+        def send(self, apiClass, apiIndex, data):
                 if apiClass in self.__handlers:
                         self.__warn(f"sent data to API class ({apiClass}) that is currently defined as a listener (this will trigger an event)")
                 
@@ -146,6 +146,6 @@ class Device:
                 )
 
                 try:
-                        bus.send(msg)
+                        self.__bus.send(msg)
                 except Exception as e:
                         self.__warn(f"WARNING: Could not send message (class: {apiClass}, index: {apiIndex}) ({e})")
