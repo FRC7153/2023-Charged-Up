@@ -11,9 +11,20 @@ public class IMU {
 
     // Get Values
     /**
-     * @return Angle, in degrees (CCW positive)
+     * @return Yaw angle, in degrees (CCW positive)
      */
     public double getYaw() { return imu.getAngle(); }
+
+    // TODO check these:
+    /**
+     * @return Pitch angle, in degrees
+     */
+    public double getPitch() { return imu.getXComplementaryAngle(); }
+
+    /**
+     * @return Roll angle, in degrees
+     */
+    public double getRoll() { return imu.getYComplementaryAngle(); }
 
     /**
      * @return X acceleration (meters per second per second)
