@@ -14,7 +14,7 @@ Data (8 bytes, 64 bits):
 <br>
 \*\*_Reserved for if this sensor(s) is added_
 <br>
-\*\*\*_As a decimal, 4 bits before zero point_
+\*\*\*_As a decimal, 4 decimal bits before zero point_
 
 ## Pipeline
 The pipeline was created in Grip, then exported to Python and uploaded to the Pi with some modifications made. We had two pipelines, [cone.grip](RaspberryPi/GRIP/cone.grip) and [cube.grip](RaspberryPi/GRIP/cube.grip). The HSL values of these pipelines were changed later to add support for tuning. Now, they are loaded in from a JSON file.
