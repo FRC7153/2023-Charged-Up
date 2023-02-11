@@ -34,7 +34,7 @@ import com.frc7153.SwerveDrive.SwerveMathUtils;
 public class SwerveWheel_FN implements SwerveWheel {
     // CONFIG VALUES //
     private static double k_SPIN_RATIO = 150.0 / 7.0;
-    private static double k_DRIVE_RATIO = 6.12; // For standard speed module TODO check this
+    private static double k_DRIVE_RATIO = 6.12; // For standard speed module
     private static double k_WHEEL_CIRCUMFERENCE = Units.inchesToMeters(4.0) * Math.PI; // 3.75
 
     private static int k_SPIN_CURRENT_LIMIT = 40;
@@ -164,7 +164,7 @@ public class SwerveWheel_FN implements SwerveWheel {
     @Override
     public SwerveModulePosition getState() {
         return new SwerveModulePosition(
-            SwerveMathUtils.falcon500VelocityToRPM(driveWheel.getSelectedSensorVelocity()) / k_DRIVE_RATIO * k_WHEEL_CIRCUMFERENCE / 60.0, 
+            SwerveMathUtils.falcon500PositionToRotations(driveWheel.getSelectedSensorPosition()) / k_DRIVE_RATIO * k_WHEEL_CIRCUMFERENCE,
             Rotation2d.fromDegrees(SwerveMathUtils.normalizeAngle360(getAngleFromRelative()))
         );
     }

@@ -1,4 +1,4 @@
-package com.frc7153.Controllers;
+package com.frc7153.Controllers.util;
 
 /**
  * How controllers should handle offsets to analog inputs (ie joysticks)
