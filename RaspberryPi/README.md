@@ -6,9 +6,9 @@ We used a RaspberryPi 4b on the arm of our robot to handle vision processing for
 Standard refresh packets sent from the RaspberryPi periodically, containing all the data the robot needs.
 
 Data (8 bytes, 64 bits):
-| 0 - 7 | 8 - 15 | 16 - 25 | 26 | 27 | 28 | 29 - 35 | 36 - 42 | 43 - 49 | 50 - 60 |
+| 0 - 7 | 8 - 15 | 16 - 25 | 26 | 27 | 28 | 29 - 35 | 36 - 42 | 43 - 49 | 50 - 55 |
 |---|---|---|---|---|---|---|---|---|---|
-| X angle\*|Y angle\*|Distance (mm)| Target\*\*\* | Limit switch\*\* | Voltage Input Stable | CPU temp (C) | CPU % | Memory % | Camera FPS\*\*\* |
+| X angle\*|Y angle\*|Distance (mm)| Target\*\*\*\* | Limit switch\*\* | Voltage Input Stable | CPU temp (C) | CPU % | Memory % | Camera FPS\*\*\* |
 
 \*_In degrees, 0 is center. This is a signed value, and negative 0 represents no target_
 <br>
