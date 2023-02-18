@@ -10,7 +10,7 @@ Data (8 bytes, 64 bits):
 |---|---|---|---|---|---|---|---|---|---|---|
 | X angle\*|Y angle\*|Distance (mm)| Target\*\*\*\* | Limit switch\*\* | Voltage Input Stable | CPU temp (C) | CPU % | Memory % | Camera FPS\*\*\* | CRC32 Checksum |
 
-\*_In degrees, 0 is center. This is a signed value, and negative 0 represents no target_
+\*_In half degrees, 0 is center. This is a signed value, and negative 0 represents no target_
 <br>
 \*\*_Reserved for if this sensor(s) is added_
 <br>
