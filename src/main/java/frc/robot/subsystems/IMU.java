@@ -1,13 +1,13 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.ADIS16448_IMU;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
 
 /**
  * For reading rotation and acceleration of ADIS16470.
  */
 public class IMU {
     // IMU
-    private ADIS16448_IMU imu = new ADIS16448_IMU();
+    private ADIS16470_IMU imu = new ADIS16470_IMU();
 
     // Get Values
     /**

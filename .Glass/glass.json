@@ -1,0 +1,20 @@
+{
+  "NetworkTables": {
+    "transitory": {
+      "Shuffleboard": {
+        "open": true,
+        "output": {
+          "open": true
+        }
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Controllers/Controllers/XboxController$CalibrateOffsetCommand": "Command"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "10.71.53.2"
+  }
+}
