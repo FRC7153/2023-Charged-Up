@@ -6,13 +6,17 @@ We used a RaspberryPi 4b on the arm of our robot to handle vision processing for
 Standard refresh packets sent from the RaspberryPi periodically, containing all the data the robot needs.
 
 Data (8 bytes, 64 bits):
-| 0 - 7 | 8 - 15 | 16 - 25 | 26 | 27 | 28 | 29 - 35 | 36 - 42 | 43 - 49 | 50 - 56 |
-|---|---|---|---|---|---|---|---|---|---|
-| X angle\*|Y angle\*|Distance (mm)| Left limit switch\*\* | Right limit switch\*\* | Voltage Input Stable | CPU temp (C) | CPU % | Memory % | Camera FPS |
+| 0 - 7 | 8 - 15 | 16 - 25 | 26 | 27 | 28 | 29 - 35 | 36 - 42 | 43 - 49 | 50 - 55 | 56 - 63 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| X angle\*|Y angle\*|Distance (mm)| Target\*\*\*\* | Limit switch\*\* | Voltage Input Stable | CPU temp (C) | CPU % | Memory % | Camera FPS\*\*\* | CRC32 Checksum |
 
-\*_In degrees, 0 is center. This is a signed value, and negative 0 represents no target_
+\*_In half degrees, 0 is center. This is a signed value, and negative 0 represents no target_
 <br>
 \*\*_Reserved for if this sensor(s) is added_
+<br>
+\*\*\*_As a decimal, 4 decimal bits before zero point_
+<br>
+\*\*\*\*_1 = cone, 0 = cube. If no target, is cached._
 
 ## Pipeline
 The pipeline was created in Grip, then exported to Python and uploaded to the Pi with some modifications made. We had two pipelines, [cone.grip](RaspberryPi/GRIP/cone.grip) and [cube.grip](RaspberryPi/GRIP/cube.grip). The HSL values of these pipelines were changed later to add support for tuning. Now, they are loaded in from a JSON file.
