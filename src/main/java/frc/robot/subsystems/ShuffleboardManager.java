@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
-
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -12,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.subsystems.ArmPI.PiCommandType;
 
 /**
  * Handles all values and commands put on Shuffleboard
@@ -86,13 +85,19 @@ public class ShuffleboardManager extends SubsystemBase {
 
         piVoltageStable = piTab.add("Voltage Stable", true)
             .withWidget(BuiltInWidgets.kBooleanBox)
-            .withPosition(6, 4)
+            .withPosition(6, 3)
             .getEntry();
         
         piCache = piTab.add("Latest Cache", "?")
-            .withPosition(6, 3)
+            .withPosition(7, 3)
             .withSize(2, 1)
             .getEntry();
+        
+        piTab.add("Camera Serer", Robot.armPi.new RaspberryPiCommand(PiCommandType.RUN_CAMERA_SERVER)).withPosition(6, 4);
+        piTab.add("Pause", Robot.armPi.new RaspberryPiCommand(PiCommandType.PAUSE_PROCESSING)).withPosition(7, 4);
+        piTab.add("Resume", Robot.armPi.new RaspberryPiCommand(PiCommandType.RESUME_PROCESSING)).withPosition(8, 4);
+        piTab.add("Shutdown", Robot.armPi.new RaspberryPiCommand(PiCommandType.SHUTDOWN_PI)).withPosition(6, 5);
+        piTab.add("Reboot", Robot.armPi.new RaspberryPiCommand(PiCommandType.REBOOT_PI)).withPosition(7, 5);
     }
 
     // Update Values
