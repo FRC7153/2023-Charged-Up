@@ -1,4 +1,4 @@
-package com.frc7153.SwerveDrive.WheelTypes;
+package com.frc7153.swervedrive.wheeltypes;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -23,8 +23,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 
-import com.frc7153.SwerveDrive.SwerveBase;
-import com.frc7153.SwerveDrive.SwerveMathUtils;
+import com.frc7153.swervedrive.SwerveBase;
+import com.frc7153.swervedrive.SwerveMathUtils;
 
 /**
  * Swerve Wheel that uses a Falcon500 for the drive motor and Neo Brushless (with CAN Spark Max) for spin motor.

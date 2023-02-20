@@ -4,10 +4,11 @@
 
 package frc.robot;
 
-import com.frc7153.Controllers.XboxController;
+import com.frc7153.controllers.XboxController;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmPI;
 import frc.robot.subsystems.IMU;
 import frc.robot.subsystems.ShuffleboardManager;
@@ -23,6 +24,7 @@ public class Robot extends TimedRobot {
 
   // Actuators
   public static SwerveDriveBase driveBase = new SwerveDriveBase();
+  public static Arm arm = new Arm();
 
   // Shuffleboard
   public static ShuffleboardManager shuffleboard = new ShuffleboardManager();

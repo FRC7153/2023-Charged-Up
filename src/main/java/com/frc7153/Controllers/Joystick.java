@@ -1,9 +1,9 @@
-package com.frc7153.Controllers;
+package com.frc7153.controllers;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import com.frc7153.Controllers.util.*;
+import com.frc7153.controllers.util.*;
 
 /**
  * Custom Joystick implementation that adds deadband and offset functionality

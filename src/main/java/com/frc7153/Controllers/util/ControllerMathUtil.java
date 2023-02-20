@@ -1,4 +1,4 @@
-package com.frc7153.Controllers.util;
+package com.frc7153.controllers.util;
 
 public class ControllerMathUtil {
     /**

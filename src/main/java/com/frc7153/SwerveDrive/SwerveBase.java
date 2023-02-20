@@ -1,4 +1,4 @@
-package com.frc7153.SwerveDrive;
+package com.frc7153.swervedrive;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,7 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.frc7153.SwerveDrive.WheelTypes.SwerveWheel;
+import com.frc7153.swervedrive.wheeltypes.SwerveWheel;
 
 public class SwerveBase extends SubsystemBase {
     // Wheels
