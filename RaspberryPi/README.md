@@ -31,7 +31,14 @@ Messages sent by the RoboRio to send commands to the RaspberryPi.
 ## Pipeline
 The pipeline was created in Grip, then exported to Python and uploaded to the Pi with some modifications made. We had two pipelines, [cone.grip](RaspberryPi/GRIP/cone.grip) and [cube.grip](RaspberryPi/GRIP/cube.grip). The HSL values of these pipelines were changed later to add support for tuning. Now, they are loaded in from a JSON file.
 
+## Startup
+To start the python file automatically, the following line was added in the */etc/rc.local* file:
+```
+## Run 2023 code:
+sudo python3 /home/frc7153/SeasonCode/2023-Charged-Up/RaspberryPi/comp/main.py
+```
+
 ## CAN 
 Some known errors of the FRCCAN program:
 - Cannot receive broadcast messages
-- Cannot receive messages with API index 0 (?)
+- Cannot receive messages with API index 0 (untested?)
