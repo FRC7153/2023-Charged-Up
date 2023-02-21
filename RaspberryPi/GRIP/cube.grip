@@ -1,0 +1,194 @@
+<grip:Pipeline>
+  <sources>
+    <grip:MultiImageFile>
+      <property name="path[26]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_01_00_Pro.jpg"/>
+      <property name="path[75]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_07_16_Pro.jpg"/>
+      <property name="path[10]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_57_39_Pro.jpg"/>
+      <property name="path[16]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_58_56_Pro.jpg"/>
+      <property name="path[65]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_06_11_Pro.jpg"/>
+      <property name="path[5]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_56_57_Pro.jpg"/>
+      <property name="path[55]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_05_10_Pro.jpg"/>
+      <property name="path[45]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_38_Pro.jpg"/>
+      <property name="path[35]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_14_Pro.jpg"/>
+      <property name="path[25]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_00_54_Pro.jpg"/>
+      <property name="path[74]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_07_16_Pro (2).jpg"/>
+      <property name="path[15]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_58_43_Pro.jpg"/>
+      <property name="path[64]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_06_06_Pro.jpg"/>
+      <property name="path[4]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_56_49_Pro.jpg"/>
+      <property name="path[54]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_05_05_Pro.jpg"/>
+      <property name="path[44]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_31_Pro.jpg"/>
+      <property name="path[34]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_10_Pro.jpg"/>
+      <property name="path[24]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_00_17_Pro.jpg"/>
+      <property name="path[73]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_07_03_Pro.jpg"/>
+      <property name="path[14]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_58_35_Pro.jpg"/>
+      <property name="path[63]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_06_04_Pro.jpg"/>
+      <property name="path[3]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_56_26_Pro.jpg"/>
+      <property name="path[69]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_06_48_Pro.jpg"/>
+      <property name="path[53]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_03_58_Pro.jpg"/>
+      <property name="path[9]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_57_31_Pro.jpg"/>
+      <property name="path[59]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_05_42_Pro.jpg"/>
+      <property name="path[43]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_30_Pro.jpg"/>
+      <property name="path[49]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_46_Pro.jpg"/>
+      <property name="path[33]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_04_Pro.jpg"/>
+      <property name="path[39]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_22_Pro.jpg"/>
+      <property name="path[23]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_00_13_Pro.jpg"/>
+      <property name="path[72]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_06_57_Pro.jpg"/>
+      <property name="path[29]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_01_35_Pro.jpg"/>
+      <property name="path[13]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_58_04_Pro.jpg"/>
+      <property name="path[62]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_06_02_Pro.jpg"/>
+      <property name="path[2]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_56_21_Pro.jpg"/>
+      <property name="path[19]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_59_23_Pro.jpg"/>
+      <property name="path[68]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_06_47_Pro.jpg"/>
+      <property name="path[52]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_03_39_Pro.jpg"/>
+      <property name="path[8]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_57_24_Pro.jpg"/>
+      <property name="path[58]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_05_41_Pro.jpg"/>
+      <property name="path[42]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_28_Pro.jpg"/>
+      <property name="path[48]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_45_Pro.jpg"/>
+      <property name="path[32]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_01_Pro.jpg"/>
+      <property name="path[38]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_22_Pro (2).jpg"/>
+      <property name="path[22]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_00_08_Pro.jpg"/>
+      <property name="path[71]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_06_54_Pro.jpg"/>
+      <property name="path[28]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_01_17_Pro.jpg"/>
+      <property name="path[12]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_57_54_Pro.jpg"/>
+      <property name="path[61]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_05_45_Pro.jpg"/>
+      <property name="path[1]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_56_15_Pro.jpg"/>
+      <property name="path[18]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_59_15_Pro.jpg"/>
+      <property name="path[67]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_06_33_Pro.jpg"/>
+      <property name="path[51]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_59_Pro.jpg"/>
+      <property name="path[7]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_57_14_Pro.jpg"/>
+      <property name="path[57]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_05_39_Pro.jpg"/>
+      <property name="path[41]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_27_Pro.jpg"/>
+      <property name="path[47]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_40_Pro.jpg"/>
+      <property name="path[31]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_01_52_Pro.jpg"/>
+      <property name="path[37]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_21_Pro.jpg"/>
+      <property name="path[21]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_59_36_Pro.jpg"/>
+      <property name="path[70]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_06_51_Pro.jpg"/>
+      <property name="path[27]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_01_05_Pro.jpg"/>
+      <property name="path[11]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_57_44_Pro.jpg"/>
+      <property name="path[60]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_05_44_Pro.jpg"/>
+      <property name="numImages" value="76"/>
+      <property name="path[0]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_55_51_Pro.jpg"/>
+      <property name="path[17]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_59_07_Pro.jpg"/>
+      <property name="path[66]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_06_19_Pro.jpg"/>
+      <property name="path[50]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_49_Pro.jpg"/>
+      <property name="path[6]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_57_04_Pro.jpg"/>
+      <property name="index" value="2"/>
+      <property name="path[56]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_05_17_Pro.jpg"/>
+      <property name="path[40]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_26_Pro.jpg"/>
+      <property name="path[46]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_39_Pro.jpg"/>
+      <property name="path[30]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_01_39_Pro.jpg"/>
+      <property name="path[36]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_10_02_15_Pro.jpg"/>
+      <property name="path[20]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230218_09_59_32_Pro.jpg"/>
+    </grip:MultiImageFile>
+  </sources>
+  <steps>
+    <grip:Step name="CV resize">
+      <grip:Input step="0" socket="0"/>
+      <grip:Input step="0" socket="1"/>
+      <grip:Input step="0" socket="2">
+        <value>0.5</value>
+      </grip:Input>
+      <grip:Input step="0" socket="3">
+        <value>0.5</value>
+      </grip:Input>
+      <grip:Input step="0" socket="4">
+        <value>INTER_LINEAR</value>
+      </grip:Input>
+      <grip:Output step="0" socket="0" previewed="false"/>
+    </grip:Step>
+    <grip:Step name="HSV Threshold">
+      <grip:Input step="1" socket="0"/>
+      <grip:Input step="1" socket="1">
+        <value>
+          <double>106.83453237410072</double>
+          <double>133.92491467576792</double>
+        </value>
+      </grip:Input>
+      <grip:Input step="1" socket="2">
+        <value>
+          <double>73.38129496402877</double>
+          <double>187.55119453924914</double>
+        </value>
+      </grip:Input>
+      <grip:Input step="1" socket="3">
+        <value>
+          <double>89.43345323741006</double>
+          <double>209.30887372013652</double>
+        </value>
+      </grip:Input>
+      <grip:Output step="1" socket="0" previewed="true"/>
+    </grip:Step>
+    <grip:Step name="CV erode">
+      <grip:Input step="2" socket="0"/>
+      <grip:Input step="2" socket="1"/>
+      <grip:Input step="2" socket="2"/>
+      <grip:Input step="2" socket="3">
+        <value>5.0</value>
+      </grip:Input>
+      <grip:Input step="2" socket="4">
+        <value>BORDER_CONSTANT</value>
+      </grip:Input>
+      <grip:Input step="2" socket="5"/>
+      <grip:Output step="2" socket="0" previewed="false"/>
+    </grip:Step>
+    <grip:Step name="CV dilate">
+      <grip:Input step="3" socket="0"/>
+      <grip:Input step="3" socket="1"/>
+      <grip:Input step="3" socket="2"/>
+      <grip:Input step="3" socket="3">
+        <value>15.0</value>
+      </grip:Input>
+      <grip:Input step="3" socket="4">
+        <value>BORDER_CONSTANT</value>
+      </grip:Input>
+      <grip:Input step="3" socket="5"/>
+      <grip:Output step="3" socket="0" previewed="false"/>
+    </grip:Step>
+    <grip:Step name="Find Contours">
+      <grip:Input step="4" socket="0"/>
+      <grip:Input step="4" socket="1">
+        <value>false</value>
+      </grip:Input>
+      <grip:Output step="4" socket="0" previewed="true"/>
+    </grip:Step>
+  </steps>
+  <connections>
+    <grip:Connection>
+      <grip:Output step="3" socket="0" previewed="false"/>
+      <grip:Input step="4" socket="0"/>
+    </grip:Connection>
+    <grip:Connection>
+      <grip:Output step="1" socket="0" previewed="true"/>
+      <grip:Input step="2" socket="0"/>
+    </grip:Connection>
+    <grip:Connection>
+      <grip:Output step="0" socket="0" previewed="false"/>
+      <grip:Input step="1" socket="0"/>
+    </grip:Connection>
+    <grip:Connection>
+      <grip:Output source="0" socket="0" previewed="true"/>
+      <grip:Input step="0" socket="0"/>
+    </grip:Connection>
+    <grip:Connection>
+      <grip:Output step="2" socket="0" previewed="false"/>
+      <grip:Input step="3" socket="0"/>
+    </grip:Connection>
+  </connections>
+  <settings>
+    <teamNumber>0</teamNumber>
+    <publishAddress>roboRIO-0-FRC.local</publishAddress>
+    <deployAddress>roboRIO-0-FRC.local</deployAddress>
+    <deployDir>/home/lvuser</deployDir>
+    <deployUser>lvuser</deployUser>
+    <deployJavaHome>/usr/local/frc/JRE/</deployJavaHome>
+    <deployJvmOptions>-Xmx50m -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:MaxNewSize=16m</deployJvmOptions>
+  </settings>
+  <codeGenerationSettings>
+    <language>Java</language>
+    <className>BLOBCUBEDETECTOR</className>
+    <implementWpilibPipeline>false</implementWpilibPipeline>
+    <saveDir>C:\Users\Default.DESKTOP-DO63H0N\Documents\grip code</saveDir>
+    <packageName>blobcubedetector</packageName>
+    <moduleName>grip</moduleName>
+  </codeGenerationSettings>
+</grip:Pipeline>

@@ -22,16 +22,16 @@ Data (8 bytes, 64 bits):
 Messages sent by the RoboRio to send commands to the RaspberryPi.
 
 **Indexes:**
-- 0: Run CameraServer (http)
 - 1: Pause processing
 - 2: Resume processing
 - 3: Reboot Pi
 - 4: Shutdown Pi
+- 5: Run CameraServer (http port 5000)
 
 ## Pipeline
 The pipeline was created in Grip, then exported to Python and uploaded to the Pi with some modifications made. We had two pipelines, [cone.grip](RaspberryPi/GRIP/cone.grip) and [cube.grip](RaspberryPi/GRIP/cube.grip). The HSL values of these pipelines were changed later to add support for tuning. Now, they are loaded in from a JSON file.
 
-## Tuning
-
-
 ## CAN 
+Some known errors of the FRCCAN program:
+- Cannot receive broadcast messages
+- Cannot receive messages with API index 0 (?)

@@ -16,6 +16,7 @@ def initCAN(log):
         os.system("sudo ip link set can0 type can bitrate 1000000")
         os.system("sudo ifconfig can0 up")
         bus = can.ThreadSafeBus(channel="can0", bustype="socketcan")
+        ##bus.set_filters([{"can_id":  0x0a080413, "can_mask": 0x01ffffc3f, "extended": True}]) # <-- this worked
         bus.set_filters(None)
         return bus
 
@@ -71,7 +72,7 @@ class Device:
                         self.__handlers[apiClass] = func
 
                         self.__safeAddFilter({
-                                "can_id": formatArb(10, 8, apiClass, 0, self._arbId),
+                                "can_id": formatArb(10, 8, apiClass, 0, self.__arbId),
                                 "can_mask": 0b11111111111111111110000111111,
                                 "extended": True
                         })
@@ -79,7 +80,7 @@ class Device:
                         return func
                 return decorator
 
-        ## ADD BROADCAST EVENT
+        ## ADD BROADCAST EVENT (UNTESTED)
         def receiveBroadcast(self):
                 def decorator(func):
                         if len(self.__broadcasters) == 0:
@@ -96,8 +97,11 @@ class Device:
         ## PACKET HANDLER
         def __packetHandlerWrapper(self, msg):
                 binary = "{0:b}".format(msg.arbitration_id).zfill(29)
-                apiClass = int(binary[14:20], 2)
-                apiIndex = int(binary[20:24], 2)
+                apiClass = int(binary[13:19], 2)
+                apiIndex = int(binary[19:23], 2)
+
+                #print(f"Message: {apiClass}, {apiIndex}, {msg.data}, {binary}")
+                #return
 
                 if binary[:20] == "0"*19: #broadcast message
                         for b in self.__broadcasters:
@@ -120,7 +124,7 @@ class Device:
                 print(f"Started listening to {self.__bus}")
                 while self.__listening:
                         msg = self.__bus.recv(5.0)
-                        if (msg != None and self.__handler != None): # Received data:
+                        if (msg != None and self.__handlers != {}): # Received data:
                                 threading.Thread(target=self.__packetHandlerWrapper, args=(msg,)).start()
                 print(f"Stopped listening to {self.__bus}")
 
@@ -128,6 +132,7 @@ class Device:
         def startListening(self):
                 self.__listening = True
                 self.__listenThread = threading.Thread(target=self.__listenThreadLoop)
+                self.__listenThread.daemon = True
                 self.__listenThread.start()
 
         ## STOP LISTEN
@@ -138,9 +143,9 @@ class Device:
         def send(self, apiClass, apiIndex, data):
                 if apiClass in self.__handlers:
                         self.__warn(f"sent data to API class ({apiClass}) that is currently defined as a listener (this will trigger an event)")
-                
+
                 msg = can.Message(
-                        arbitration_id = formatArb(10, 8, apiClass, apiIndex, self._arbId),
+                        arbitration_id = formatArb(10, 8, apiClass, apiIndex, self.__arbId),
                         data = data,
                         is_extended_id = True
                 )

@@ -34,5 +34,6 @@ class CameraServer:
 				use_reloader=False
 			)
 		)
+		self.__thread.daemon = True
 
 		self.__thread.start()
