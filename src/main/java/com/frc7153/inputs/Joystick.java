@@ -1,8 +1,8 @@
 package com.frc7153.inputs;
 
-import com.frc7153.MathUtils;
 import com.frc7153.inputs.util.*;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -118,7 +118,7 @@ public class Joystick extends edu.wpi.first.wpilibj.Joystick {
         }
 
         // Apply Deadband
-        return MathUtils.clamp(
+        return MathUtil.clamp(
             ControllerMathUtil.applyDeadband(
                 value, 
                 (axis == getThrottleChannel()) ? throttleDeadband : joystickDeadband
