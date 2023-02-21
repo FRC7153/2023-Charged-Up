@@ -5,10 +5,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import edu.wpi.first.hal.CANData;
-import edu.wpi.first.hal.CANStreamMessage;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.CAN;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -21,7 +19,6 @@ public class ArmPI {
 
     // CAN objects
     private CAN pi = new CAN(19, 8, 10);
-    private CANStreamMessage message = new CANStreamMessage();
 
     // Threading
     private ScheduledExecutorService CANRefreshExecutor = Executors.newSingleThreadScheduledExecutor();
