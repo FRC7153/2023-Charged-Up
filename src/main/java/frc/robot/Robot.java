@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import com.frc7153.controllers.XboxController;
+import com.frc7153.inputs.XboxController;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
