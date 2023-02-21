@@ -1,5 +1,6 @@
 package com.frc7153.inputs;
 
+import com.frc7153.MathUtils;
 import com.frc7153.inputs.util.*;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -123,11 +124,12 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
         }
 
         // Apply Deadband
-        return ControllerMathUtil.clamp(
+        return MathUtils.clamp(
             ControllerMathUtil.applyDeadband(
                 value,
                 (axis == Axis.kLeftTrigger.value || axis == Axis.kRightTrigger.value) ? triggerDeadband : joystickDeadband
-            )
+            ),
+            -1.0, 1.0
         );
     }
 

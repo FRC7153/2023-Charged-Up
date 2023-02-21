@@ -1,5 +1,6 @@
 package com.frc7153.inputs;
 
+import com.frc7153.MathUtils;
 import com.frc7153.inputs.util.*;
 
 import edu.wpi.first.math.geometry.Translation3d;
@@ -117,11 +118,12 @@ public class Joystick extends edu.wpi.first.wpilibj.Joystick {
         }
 
         // Apply Deadband
-        return ControllerMathUtil.clamp(
+        return MathUtils.clamp(
             ControllerMathUtil.applyDeadband(
                 value, 
                 (axis == getThrottleChannel()) ? throttleDeadband : joystickDeadband
-            )
+            ),
+            -1.0, 1.0
         );
     }
 

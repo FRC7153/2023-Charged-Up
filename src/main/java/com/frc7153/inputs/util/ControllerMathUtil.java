@@ -35,11 +35,4 @@ public class ControllerMathUtil {
             return 0.0;
         }
     }
-
-    /**
-     * Clamps number to range of -1.0 to 1.0
-     * @param input
-     * @return clamped input
-     */
-    public static double clamp(double value) { return Math.min(Math.max(value, -1.0), 1.0); }
 }
