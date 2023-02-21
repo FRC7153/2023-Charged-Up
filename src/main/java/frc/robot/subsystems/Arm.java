@@ -32,6 +32,6 @@ public class Arm {
      * @return whether the specified position is possible (legally and physically)
      */
     public boolean setTarget(Pose2d target) {
-        
+        return false;
     }
 }

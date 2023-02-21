@@ -5,8 +5,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import edu.wpi.first.hal.CANData;
+import edu.wpi.first.hal.CANStreamMessage;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.CAN;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -19,6 +21,7 @@ public class ArmPI {
 
     // CAN objects
     private CAN pi = new CAN(19, 8, 10);
+    private CANStreamMessage message = new CANStreamMessage();
 
     // Threading
     private ScheduledExecutorService CANRefreshExecutor = Executors.newSingleThreadScheduledExecutor();
@@ -47,14 +50,27 @@ public class ArmPI {
     }
 
     // BitSet to Int
-    private static int bitsetToInt(BitSet set) {
+    private static int bitsetToInt(BitSet set, int assumedLength) {
         int val = 0;
-        for (int x = 0; x < set.length(); x++) {
+
+        for (int x = 0; x < assumedLength; x++) {
             if (set.get(x)) {
-                val |= (1 << x);
+                val += Math.pow(2, (assumedLength - 1) - x);
             }
         }
+
         return val;
+    }
+
+    // BitSet to String
+    private static String bitsetToString(BitSet set) {
+        String str = "";
+
+        for (int x = 0; x < set.length(); x++) {
+            str += (set.get(x)) ? "1" : "0";
+        }
+
+        return str;
     }
 
     // Refresh Thread
@@ -62,32 +78,43 @@ public class ArmPI {
         @Override
         public void run() {
             CANData canData = new CANData();
+            System.out.println(canData.data);
 
             while (true) {
+                // Needs to reverse each byte individually (idk why lol)
                 if (pi.readPacketNew(0b0000010000, canData)) {
                     BitSet data = BitSet.valueOf(canData.data);
 
-                    cache = "";
-                    for (int x = 0; x < data.length(); x++) {
-                        cache += (data.get(x)) ? "1" : "0";
+                    for (int x = 0; x < 8; x++) {
+                        boolean[] newByte = new boolean[8];
+
+                        for (int b = 0; b < 8; b++) {
+                            newByte[b] = data.get((x*8) + (7 - b));
+                        }
+
+                        for (int b = 0; b < 8; b++) {
+                            data.set((x*8) + b, newByte[b]);
+                        }
                     }
 
-                    if (bitsetToInt(data.get(0, 16)) == 0) {
+                    cache = bitsetToString(data); // TODO big problem below
+
+                    if (bitsetToInt(data.get(0, 16), 16) == 0) {
                         cache_hasTarget = false;
                     } else {
-                        cache_xAngle = bitsetToInt(data.get(0, 8));
-                        cache_yAngle = bitsetToInt(data.get(8, 16));
-                        cache_target = data.get(26);   
+                        cache_xAngle = bitsetToInt(data.get(0, 8), 8);
+                        cache_yAngle = bitsetToInt(data.get(8, 16), 8);
+                        cache_target = data.get(26);
                         cache_hasTarget = true;
                     }
 
-                    cache_dist = bitsetToInt(data.get(16, 26));
+                    cache_dist = bitsetToInt(data.get(16, 26), 10);
                     cache_ls = data.get(27);
                     cache_voltage = data.get(28);
-                    cache_temp = bitsetToInt(data.get(29, 36)) * (9.0/5.0) + 32.0;
-                    cache_cpu = bitsetToInt(data.get(36, 43)) / 100.0;
-                    cache_mem = bitsetToInt(data.get(43, 50)) / 100.0;
-                    cache_fps = bitsetToInt(data.get(50, 56));
+                    cache_temp = bitsetToInt(data.get(29, 36), 7) * (9.0/5.0) + 32.0;
+                    cache_cpu = bitsetToInt(data.get(36, 43), 7) / 100.0;
+                    cache_mem = bitsetToInt(data.get(43, 50), 7) / 100.0;
+                    cache_fps = bitsetToInt(data.get(50, 56), 6);
 
                     cache_age = Timer.getFPGATimestamp();
                 }
@@ -129,7 +156,7 @@ public class ArmPI {
                     title = "Resume processing";
                     break;
                 case RUN_CAMERA_SERVER:
-                    command = 0b0000100000;
+                    command = 0b0000100101;
                     title = "Run camera server";
                     break;
                 case SHUTDOWN_PI:
