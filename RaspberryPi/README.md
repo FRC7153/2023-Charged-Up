@@ -29,7 +29,7 @@ Messages sent by the RoboRio to send commands to the RaspberryPi.
 - 5: Run CameraServer (http port 5000)
 
 ## Pipeline
-The pipeline was created in Grip, then exported to Python and uploaded to the Pi with some modifications made. We had two pipelines, [cone.grip](RaspberryPi/GRIP/cone.grip) and [cube.grip](RaspberryPi/GRIP/cube.grip). The HSL values of these pipelines were changed later to add support for tuning. Now, they are loaded in from a JSON file.
+The pipeline was created in Grip, then exported to Python and uploaded to the Pi with some modifications made. We had two pipelines, [cone.grip](/RaspberryPi/GRIP/cone.grip) and [cube.grip](/RaspberryPi/GRIP/cube.grip). The HSL values of these pipelines were changed later to add support for tuning. Now, they are loaded in from a JSON file.
 
 ## Startup
 To start the python file automatically, the following line was added in the */etc/rc.local* file:
