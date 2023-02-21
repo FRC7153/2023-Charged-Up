@@ -8,7 +8,10 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.ArmPI.PiCommandType;
 
@@ -47,37 +50,38 @@ public class ShuffleboardManager extends SubsystemBase {
 
         // RaspberryPi Values
         ShuffleboardTab piTab = Shuffleboard.getTab("Pi");
+        WidgetType piGraph = (Constants.kPI_GRAPHS) ? BuiltInWidgets.kGraph : BuiltInWidgets.kTextView;
 
         piCPUTemp = piTab.add("CPU Temp (f)", 0.0)
-            .withWidget(BuiltInWidgets.kGraph)
+            .withWidget(piGraph)
             .withPosition(0, 0)
             .withSize(3, 3)
             .withProperties(Map.of("VISIBLE TIME", 25, "AUTOMATIC BOUNDS", false, "UPPER BOUND", 185, "LOWER BOUND", 0, "UNIT", "f"))
             .getEntry();
         
         piCPUUsage = piTab.add("CPU Usage (%)", 0.0)
-            .withWidget(BuiltInWidgets.kGraph)
+            .withWidget(piGraph)
             .withPosition(3, 0)
             .withSize(3, 3)
             .withProperties(Map.of("VISIBLE TIME", 25, "AUTOMATIC BOUNDS", false, "UPPER BOUND", 1.0, "LOWER BOUND", 0.0, "UNIT", "%"))
             .getEntry();
 
         piMemUsage = piTab.add("Memory (%)", 0.0)
-            .withWidget(BuiltInWidgets.kGraph)
+            .withWidget(piGraph)
             .withPosition(6, 0)
             .withSize(3, 3)
             .withProperties(Map.of("VISIBLE TIME", 25, "AUTOMATIC BOUNDS", false, "UPPER BOUND", 1.0, "LOWER BOUND", 0.0, "UNIT", "%"))
             .getEntry();
 
         piFPS = piTab.add("FPS", 0.0)
-            .withWidget(BuiltInWidgets.kGraph)
+            .withWidget(piGraph)
             .withPosition(0, 3)
             .withSize(3, 3)
             .withProperties(Map.of("VISIBLE TIME", 25, "AUTOMATIC BOUNDS", true, "UNIT", "FPS"))
             .getEntry();
 
         piAge = piTab.add("Latest Packet Age (s)", 0.0)
-            .withWidget(BuiltInWidgets.kGraph)
+            .withWidget(piGraph)
             .withPosition(3, 3)
             .withSize(3, 3)
             .withProperties(Map.of("VISIBLE TIME", 25, "AUTOMATIC BOUNDS", true, "UNIT", "s"))

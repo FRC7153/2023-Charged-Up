@@ -13,6 +13,9 @@ import edu.wpi.first.math.util.Units;
  * </ul>
  */
 public class Constants {
+    /* SHUFFLEBOARD CONFIG */
+    public static boolean kPI_GRAPHS = true;
+
     /* SWERVE DRIVE CONSTANTS */
     public static Translation2d kWHEEL_DISTANCE = new Translation2d(
         Units.inchesToMeters(20.0)/2.0,
