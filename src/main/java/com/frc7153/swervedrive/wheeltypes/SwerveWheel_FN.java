@@ -108,14 +108,10 @@ public class SwerveWheel_FN implements SwerveWheel {
         // Spin PID
         spinPID = spinWheel.getPIDController();
 
-        if (spinPID.getP(k_SPIN_PID_INDEX) != spin_kP || spinPID.getI(k_SPIN_PID_INDEX) != spin_kI || spinPID.getD(k_SPIN_PID_INDEX) != spin_kD|| spinPID.getOutputMax(k_SPIN_PID_INDEX) != spin_kO || spinPID.getOutputMin(k_SPIN_PID_INDEX) != -spin_kO) {
-            spinPID.setP(spin_kP, k_SPIN_PID_INDEX);
-            spinPID.setI(spin_kI, k_SPIN_PID_INDEX);
-            spinPID.setD(spin_kD, k_SPIN_PID_INDEX);
-            spinPID.setOutputRange(-spin_kO, spin_kO, k_SPIN_PID_INDEX);
-            spinWheel.burnFlash();
-            DriverStation.reportWarning(String.format("Had to re-write Swerve PID values for CAN Spark Max %s", spin), false);
-        }
+        spinPID.setP(spin_kP, k_SPIN_PID_INDEX);
+        spinPID.setI(spin_kI, k_SPIN_PID_INDEX);
+        spinPID.setD(spin_kD, k_SPIN_PID_INDEX);
+        spinPID.setOutputRange(-spin_kO, spin_kO, k_SPIN_PID_INDEX);
 
         // Drive PID
         driveWheel.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);

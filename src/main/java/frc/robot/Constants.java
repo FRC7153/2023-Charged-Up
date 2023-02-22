@@ -14,7 +14,7 @@ import edu.wpi.first.math.util.Units;
  */
 public class Constants {
     /* SHUFFLEBOARD CONFIG */
-    public static boolean kPI_GRAPHS = true;
+    public static boolean kPI_GRAPHS = false;
 
     /* SWERVE DRIVE CONSTANTS */
     public static Translation2d kWHEEL_DISTANCE = new Translation2d(
@@ -28,13 +28,16 @@ public class Constants {
     public static double kRR_SWERVE_OFFSET = 17.139;
 
     /* ARM MOVEMENT CONSTANTS */
-    public static double kDISTANCE_TO_BUMPER = Units.inchesToMeters(10.0);
-    public static double kBASE_DISTANCE_TO_FLOOR = Units.inchesToMeters(2.0);
+    public static double kJOINT_TO_FLOOR_DIST = Units.inchesToMeters(10.0);
+    public static double kJOINT_TO_BUMPER_DIST = Units.inchesToMeters(7.0);
+
+    public static double kARM_ANGLE_RATIO = 12.0; // TODO add chain ratio
+    public static double kARM_0_ANGLE = 100.0;
 
     public static double kARM_MIN_EXTENSION = Units.inchesToMeters(12.0);
     public static double kARM_MAX_EXTENSION = Units.inchesToMeters(50.0);
 
-    public static double kMAX_ARM_ANGLE = 100.0; // degrees
+    public static double kMAX_ARM_ANGLE = 95.0; // symmetrical
     
     public static double kMAX_EXTENSION = Units.feetToMeters(4.0);
     public static double kMAX_HEIGHT = Units.feetToMeters(6.0);

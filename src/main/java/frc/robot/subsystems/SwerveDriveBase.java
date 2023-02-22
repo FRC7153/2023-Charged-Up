@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.wheeltypes.SwerveWheel_FN;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -26,5 +27,13 @@ public class SwerveDriveBase {
             Robot.controller0.getRightX(), 
             Robot.imu.getYaw()
         );
+    }
+
+    // Get Odometry Position
+    public Pose2d getPose() { return base.getOdometricPosition(); }
+
+    // Reset Odometry Position
+    public void setPose(Pose2d origin) {
+        base.startOdometry(origin.getRotation().getDegrees(), origin.getX(), origin.getY());
     }
 }
