@@ -67,7 +67,7 @@ public class IMU {
             Math.sin(Units.degreesToRadians(getYaw() + 90.0)) * xAccel
         );
 
-        velocity.plus(new Translation2d(
+        velocity = velocity.plus(new Translation2d(
             (yReport.getX() + xReport.getX()) * timeDiff, 
             (yReport.getY() + xReport.getY()) * timeDiff
         ));
