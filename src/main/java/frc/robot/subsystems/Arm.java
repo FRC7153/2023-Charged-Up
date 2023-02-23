@@ -76,7 +76,7 @@ public class Arm {
 
         // Move to motor positions
         // TODO
-        armPID.setReference(angle - ArmConstants.kANGLE_0_ANGLE, ControlType.kPosition, ArmConstants.kANGLE_PID.kSLOT);
+        armPID.setReference(angle, ControlType.kPosition, ArmConstants.kANGLE_PID.kSLOT);
 
         return true;
     }
