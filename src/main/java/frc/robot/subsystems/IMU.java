@@ -1,12 +1,9 @@
 package frc.robot.subsystems;
 
-import java.sql.Driver;
-
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
@@ -55,6 +52,8 @@ public class IMU {
         // Get accel
         double xAccel = xFilter.calculate(imu.getAccelX());
         double yAccel = yFilter.calculate(imu.getAccelY());
+
+        
 
         // Calculate for turn
         Translation2d yReport = new Translation2d(

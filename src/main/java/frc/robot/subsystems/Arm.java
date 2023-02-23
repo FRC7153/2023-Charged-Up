@@ -31,8 +31,8 @@ public class Arm {
      * <li>x = 0 is straight up and down</li>
      * <li>y = 0 is floor</li>
      * </ul>
-     * @param x target (meters)
-     * @param y target (meters)
+     * @param x target (inches)
+     * @param y target (inches)
      * @return whether the specified position is possible (legally and physically)
      */
     public boolean setTarget(double x, double y) {
@@ -67,7 +67,7 @@ public class Arm {
         // Move to motor positions
         // TODO
         armPID.setReference(angle - Constants.kARM_0_ANGLE, ControlType.kPosition);
-        
+
 
         return true;
     }

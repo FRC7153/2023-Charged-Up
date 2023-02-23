@@ -28,14 +28,14 @@ public class Constants {
     public static double kRR_SWERVE_OFFSET = 17.139;
 
     /* ARM MOVEMENT CONSTANTS */
-    public static double kJOINT_TO_FLOOR_DIST = Units.inchesToMeters(10.0);
-    public static double kJOINT_TO_BUMPER_DIST = Units.inchesToMeters(7.0);
+    public static double kJOINT_TO_FLOOR_DIST = 10.0; // Inches!
+    public static double kJOINT_TO_BUMPER_DIST = 7.0; // Inches!
 
     public static double kARM_ANGLE_RATIO = 12.0; // TODO add chain ratio
     public static double kARM_0_ANGLE = 100.0;
 
-    public static double kARM_MIN_EXTENSION = Units.inchesToMeters(12.0);
-    public static double kARM_MAX_EXTENSION = Units.inchesToMeters(50.0);
+    public static double kARM_MIN_EXTENSION = 12.0; // Inches!
+    public static double kARM_MAX_EXTENSION = 50.0; // Inches!
 
     public static double kMAX_ARM_ANGLE = 95.0; // symmetrical
     
