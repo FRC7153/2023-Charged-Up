@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.frc7153.math.InertialNavigator;
+
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,13 +22,7 @@ public class IMU {
     private ADIS16470_IMU imu = new ADIS16470_IMU();
 
     // Odometry
-    private LinearFilter xFilter = LinearFilter.movingAverage(10);
-    private LinearFilter yFilter = LinearFilter.movingAverage(10);
-
-    private Double lastIntegration = Double.NaN;
-    private Translation2d velocity = new Translation2d(0.0, 0.0);
-    private Pose2d imuPosition = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
-
+    private InertialNavigator navigator = new InertialNavigator();
     private GenericEntry output1 = Shuffleboard.getTab("odometry").add("output1", "").getEntry();
 
     // Set Position
@@ -34,50 +30,14 @@ public class IMU {
         imu.reset();
 
         Robot.driveBase.setPose(origin);
-        imuPosition = origin;
+        navigator.resetPose(origin);
     }
 
     // Get Position
     public void accumulatePosition() {
-        // Get time
-        if (Double.isNaN(lastIntegration)) { lastIntegration = Timer.getFPGATimestamp(); return; }
+        navigator.integrateAcceleration(imu.getAccelX(), imu.getAccelY(), imu.getAngle());
 
-        double timeDiff = Timer.getFPGATimestamp() - lastIntegration;
-        lastIntegration = Timer.getFPGATimestamp();
-
-        if (timeDiff > 1.0) {
-            DriverStation.reportWarning(String.format("Last acceleration integration is very stale (%s seconds ago)", timeDiff), false);
-        }
-
-        // Get accel
-        double xAccel = xFilter.calculate(imu.getAccelX());
-        double yAccel = yFilter.calculate(imu.getAccelY());
-
-        
-
-        // Calculate for turn
-        Translation2d yReport = new Translation2d(
-            Math.cos(Units.degreesToRadians(getYaw())) * yAccel,
-            Math.sin(Units.degreesToRadians(getYaw())) * yAccel
-        );
-
-        Translation2d xReport = new Translation2d(
-            Math.cos(Units.degreesToRadians(getYaw() + 90.0)) * xAccel,
-            Math.sin(Units.degreesToRadians(getYaw() + 90.0)) * xAccel
-        );
-
-        velocity = velocity.plus(new Translation2d(
-            (yReport.getX() + xReport.getX()) * timeDiff, 
-            (yReport.getY() + xReport.getY()) * timeDiff
-        ));
-
-        imuPosition = new Pose2d(
-            imuPosition.getX() + (velocity.getX() * timeDiff), 
-            imuPosition.getY() + (velocity.getY() * timeDiff),
-            Rotation2d.fromDegrees(getYaw())
-        );
-
-        output1.setString(imuPosition.toString());
+        output1.setString(navigator.toString());
     }
 
     // Get Values
