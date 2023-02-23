@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.Robot;
-import frc.robot.subsystems.ArmPI.PiCommandType;
 
 /**
  * Handles all values and commands put on Shuffleboard
@@ -96,11 +96,11 @@ public class ShuffleboardManager extends SubsystemBase {
             .withSize(2, 1)
             .getEntry();
         
-        piTab.add("Camera Serer", Robot.armPi.new RaspberryPiCommand(PiCommandType.RUN_CAMERA_SERVER)).withPosition(6, 4);
-        piTab.add("Pause", Robot.armPi.new RaspberryPiCommand(PiCommandType.PAUSE_PROCESSING)).withPosition(7, 4);
-        piTab.add("Resume", Robot.armPi.new RaspberryPiCommand(PiCommandType.RESUME_PROCESSING)).withPosition(8, 4);
-        piTab.add("Shutdown", Robot.armPi.new RaspberryPiCommand(PiCommandType.SHUTDOWN_PI)).withPosition(6, 5);
-        piTab.add("Reboot", Robot.armPi.new RaspberryPiCommand(PiCommandType.REBOOT_PI)).withPosition(7, 5);
+        piTab.add("Camera Server", new InstantCommand(Robot.armPi::startCameraServer)).withPosition(6, 4);
+        piTab.add("Pause", new InstantCommand(Robot.armPi::pauseProcessing)).withPosition(7, 4);
+        piTab.add("Resume", new InstantCommand(Robot.armPi::resumeProcessing)).withPosition(8, 4);
+        piTab.add("Shutdown", new InstantCommand(Robot.armPi::shutdown)).withPosition(6, 5);
+        piTab.add("Reboot", new InstantCommand(Robot.armPi::reboot)).withPosition(7, 5);
     }
 
     // Update Values

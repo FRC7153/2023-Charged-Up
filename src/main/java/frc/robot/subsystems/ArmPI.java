@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  * For communicating with the Raspberry Pi on the arm (over CAN bus)
@@ -123,60 +124,29 @@ public class ArmPI {
 
     // Run Command
     /**
-     * Different commands that can be run on the Pi with the {@code RaspberryPiCommand} command class
+     * Starts a HTTP camera server (port 5000)
      */
-    public static enum PiCommandType {RUN_CAMERA_SERVER, PAUSE_PROCESSING, RESUME_PROCESSING, REBOOT_PI, SHUTDOWN_PI};
+    public void startCameraServer() { pi.writePacket(null, 0b0000100101); }
 
     /**
-     * Run Command on Raspberry Pi
+     * Pauses processing on the Pi
      */
-    public class RaspberryPiCommand extends CommandBase {
-        private int command;
-        private String title;
+    public void pauseProcessing() { pi.writePacket(null, 0b0000100001); }
 
-        /**
-         * Create new command to execute the specified {@code PiCommandType}
-         * @param commandType
-         */
-        public RaspberryPiCommand(PiCommandType commandType) {
-            switch (commandType) {
-                case PAUSE_PROCESSING:
-                    command = 0b0000100001;
-                    title = "Pause processing";
-                    break;
-                case REBOOT_PI:
-                    command = 0b0000100011;
-                    title = "Reboot Pi";
-                    break;
-                case RESUME_PROCESSING:
-                    command = 0b0000100010;
-                    title = "Resume processing";
-                    break;
-                case RUN_CAMERA_SERVER:
-                    command = 0b0000100101;
-                    title = "Run camera server";
-                    break;
-                case SHUTDOWN_PI:
-                    command = 0b0000100100;
-                    title = "Shutdown Pi";
-                    break;
-            }
-        }
+    /**
+     * Resumes processing on the Pi
+     */
+    public void resumeProcessing() { pi.writePacket(null, 0b0000100010); }
 
-        // Config
-        @Override
-        public String getName() { return title; }
+    /**
+     * Reboots the Pi
+     */
+    public void reboot() { pi.writePacket(null, 0b0000100011); }
 
-        @Override
-        public boolean runsWhenDisabled() { return true; }
-
-        @Override
-        public boolean isFinished() { return true; }
-
-        // Run
-        @Override
-        public void execute() { pi.writePacket(null, command); }
-    }
+    /**
+     * Shutdowns the Pi
+     */
+    public void shutdown() { pi.writePacket(null, 0b0000100100); }
 
     // Read Values (Getters)
     /**
