@@ -23,6 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 
+import com.frc7153.math.PIDConstant;
 import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.SwerveMathUtils;
 
@@ -41,21 +42,10 @@ public class SwerveWheel_FN implements SwerveWheel {
     private static int k_DRIVE_CURRENT_LIMIT = 20;
     private static int k_DRIVE_CURRENT_PEAK = 25;
     private static double k_DRIVE_CURRENT_PEAK_DURATION = 0.1;
-    private static double k_DRIVE_ERR = 0.5;
     private static double k_DRIVE_DEADBAND = 0.5; // Meters ber second
 
-    private static int k_SPIN_PID_INDEX = 0;
-    private static int k_DRIVE_PID_INDEX = 0;
-
-    private static double spin_kP = 0.3;
-    private static double spin_kI = 0.00001;
-    private static double spin_kD = 0.0;
-    private static double spin_kO = 10.0;
-
-    private static double drive_kP = 0.05;
-    private static double drive_kI = 0.0;
-    private static double drive_kD = 0.0;
-    private static double drive_kF = 0.0;
+    private static PIDConstant kSPIN_PID = new PIDConstant(0, 0.3, 0.00001, 0.0, 0.5, -10.0, 10.0);
+    private static PIDConstant kDRIVE_PID = new PIDConstant(0, 0.05, 0.0, 0.0, 0.5, 0.0);
 
     private static double k_SPIN_MAX_ACCEL = 0.8;
     
@@ -108,19 +98,12 @@ public class SwerveWheel_FN implements SwerveWheel {
         // Spin PID
         spinPID = spinWheel.getPIDController();
 
-        spinPID.setP(spin_kP, k_SPIN_PID_INDEX);
-        spinPID.setI(spin_kI, k_SPIN_PID_INDEX);
-        spinPID.setD(spin_kD, k_SPIN_PID_INDEX);
-        spinPID.setOutputRange(-spin_kO, spin_kO, k_SPIN_PID_INDEX);
+        kSPIN_PID.apply(spinPID);
 
         // Drive PID
         driveWheel.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        driveWheel.configAllowableClosedloopError(k_DRIVE_PID_INDEX, k_DRIVE_ERR);
         
-        driveWheel.config_kP(k_DRIVE_PID_INDEX, drive_kP);
-        driveWheel.config_kI(k_DRIVE_PID_INDEX, drive_kI);
-        driveWheel.config_kD(k_DRIVE_PID_INDEX, drive_kD);
-        driveWheel.config_kF(k_DRIVE_PID_INDEX, drive_kF);
+        kDRIVE_PID.apply(driveWheel);
 
         /*
          * The X and Y values are implemented in WPI's library oddly:
@@ -138,10 +121,10 @@ public class SwerveWheel_FN implements SwerveWheel {
      * @param base The robot base (used to get max drive speed and spin speed)
      */
     public void enableMotionAccelerationStrategy(SwerveBase base) {
-        spinPID.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, k_SPIN_PID_INDEX);
-        spinPID.setSmartMotionMaxAccel(k_SPIN_MAX_ACCEL, k_SPIN_PID_INDEX);
-        spinPID.setSmartMotionMaxVelocity(base.getMaxDriveSpeed(), k_SPIN_PID_INDEX);
-        spinPID.setSmartMotionMinOutputVelocity(0.05, k_SPIN_PID_INDEX);
+        spinPID.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, kSPIN_PID.kSLOT);
+        spinPID.setSmartMotionMaxAccel(k_SPIN_MAX_ACCEL, kSPIN_PID.kSLOT);
+        spinPID.setSmartMotionMaxVelocity(base.getMaxDriveSpeed(), kSPIN_PID.kSLOT);
+        spinPID.setSmartMotionMinOutputVelocity(0.05, kSPIN_PID.kSLOT);
     }
 
     // Get Angle from Relative Encoder (degrees)
@@ -171,7 +154,7 @@ public class SwerveWheel_FN implements SwerveWheel {
         angle = SwerveMathUtils.normalizeAngle180(angle); // Normalize -180 to 180
         angle = (angle / 360.0 * k_SPIN_RATIO); // Convert to NEO position
         angle = SwerveMathUtils.calculateContinuousMovement(spinRelEncoder.getPosition(), angle, k_SPIN_RATIO); // Find quickest route
-        spinPID.setReference(angle, ControlType.kPosition, k_SPIN_PID_INDEX); // Set PID setpoint
+        spinPID.setReference(angle, ControlType.kPosition, kSPIN_PID.kSLOT); // Set PID setpoint
     }
 
     @Override

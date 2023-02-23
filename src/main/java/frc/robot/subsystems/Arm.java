@@ -1,13 +1,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.MotorFeedbackSensor;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.ArmConstants;
@@ -20,15 +18,21 @@ public class Arm {
     // PID
     private SparkMaxPIDController armPID = armMotor.getPIDController();
     private SparkMaxPIDController winchPID = winchMotor.getPIDController();
-    
+
+    // Encoders
+    private SparkMaxAbsoluteEncoder angleEncoder = armMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
 
     // Init
     public Arm() {
-        // TODO
         // Config Arm
-        armPID.setP(0.5, 0);
+        angleEncoder.setZeroOffset(ArmConstants.kANGLE_0_ANGLE);
+        angleEncoder.setPositionConversionFactor(ArmConstants.kANGLE_RATIO);
+
+        ArmConstants.kANGLE_PID.apply(armPID);
+        armPID.setFeedbackDevice(angleEncoder);
 
         // Config Winch
+        ArmConstants.kEXT_PID.apply(winchPID);
     }
 
     /**
@@ -72,8 +76,7 @@ public class Arm {
 
         // Move to motor positions
         // TODO
-        armPID.setReference(angle - ArmConstants.kANGLE_0_ANGLE, ControlType.kPosition);
-
+        armPID.setReference(angle - ArmConstants.kANGLE_0_ANGLE, ControlType.kPosition, ArmConstants.kANGLE_PID.kSLOT);
 
         return true;
     }
