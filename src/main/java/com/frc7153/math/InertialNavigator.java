@@ -13,8 +13,17 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class InertialNavigator {
     // Filters
-    private LinearFilter xFilter = LinearFilter.movingAverage(10);
-    private LinearFilter yFilter = LinearFilter.movingAverage(10);
+    private LinearFilter xFilter, yFilter;
+
+    // Constructor
+    /**
+     * Creates new object to track inertial position
+     * @param numToAverage The number of acceleration inputs to average, to reduce noise. Higher = smoother, but slower
+     */
+    public InertialNavigator(int numToAverage) {
+        xFilter = LinearFilter.movingAverage(numToAverage);
+        yFilter = LinearFilter.movingAverage(numToAverage);
+    }
 
     // State
     private Double lastIntegration = Double.NaN;
@@ -80,7 +89,7 @@ public class InertialNavigator {
      * Get current position
      * @return Current position from acceleration
      */
-    public Pose2d getPosition() { return pos;}
+    public Pose2d getPosition() { return pos; }
 
     /**
      * Get current position, as a string

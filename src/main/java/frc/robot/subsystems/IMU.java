@@ -22,7 +22,7 @@ public class IMU {
     private ADIS16470_IMU imu = new ADIS16470_IMU();
 
     // Odometry
-    private InertialNavigator navigator = new InertialNavigator();
+    private InertialNavigator navigator = new InertialNavigator(10);
     private GenericEntry output1 = Shuffleboard.getTab("odometry").add("output1", "").getEntry();
 
     // Set Position
