@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import java.util.Map;
 
+import com.frc7153.commands.ConfigCommand;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -96,11 +98,11 @@ public class ShuffleboardManager extends SubsystemBase {
             .withSize(2, 1)
             .getEntry();
         
-        piTab.add("Camera Server", new InstantCommand(Robot.armPi::startCameraServer)).withPosition(6, 4);
-        piTab.add("Pause", new InstantCommand(Robot.armPi::pauseProcessing)).withPosition(7, 4);
-        piTab.add("Resume", new InstantCommand(Robot.armPi::resumeProcessing)).withPosition(8, 4);
-        piTab.add("Shutdown", new InstantCommand(Robot.armPi::shutdown)).withPosition(6, 5);
-        piTab.add("Reboot", new InstantCommand(Robot.armPi::reboot)).withPosition(7, 5);
+        piTab.add("Camera Server", new ConfigCommand(Robot.armPi::startCameraServer, "Start CS")).withPosition(6, 4);
+        piTab.add("Pause", new ConfigCommand(Robot.armPi::pauseProcessing, "Pause")).withPosition(7, 4);
+        piTab.add("Resume", new ConfigCommand(Robot.armPi::resumeProcessing, "Resume")).withPosition(8, 4);
+        piTab.add("Shutdown", new ConfigCommand(Robot.armPi::shutdown, "Shutdown")).withPosition(6, 5);
+        piTab.add("Reboot", new ConfigCommand(Robot.armPi::reboot, "Reboot")).withPosition(7, 5);
     }
 
     // Update Values

@@ -50,7 +50,7 @@ public class InertialNavigator {
         if (lastIntegration.isNaN()) { lastIntegration = Timer.getFPGATimestamp(); return; }
 
         double timeDiff = Timer.getFPGATimestamp() - lastIntegration;
-        lastIntegration = timeDiff;
+        lastIntegration = Timer.getFPGATimestamp();
 
         if (timeDiff > 1.0) {
             DriverStation.reportWarning(String.format("Last acceleration integration is very state (%s seconds ago)", timeDiff), false);

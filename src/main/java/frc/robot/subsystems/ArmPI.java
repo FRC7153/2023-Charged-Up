@@ -126,27 +126,27 @@ public class ArmPI {
     /**
      * Starts a HTTP camera server (port 5000)
      */
-    public void startCameraServer() { pi.writePacket(null, 0b0000100101); }
+    public void startCameraServer() { pi.writePacket(new byte[]{}, 0b0000100101); System.out.println(":)"); }
 
     /**
      * Pauses processing on the Pi
      */
-    public void pauseProcessing() { pi.writePacket(null, 0b0000100001); }
+    public void pauseProcessing() { pi.writePacket(new byte[]{}, 0b0000100001); }
 
     /**
      * Resumes processing on the Pi
      */
-    public void resumeProcessing() { pi.writePacket(null, 0b0000100010); }
+    public void resumeProcessing() { pi.writePacket(new byte[]{}, 0b0000100010); }
 
     /**
      * Reboots the Pi
      */
-    public void reboot() { pi.writePacket(null, 0b0000100011); }
+    public void reboot() { pi.writePacket(new byte[]{}, 0b0000100011); }
 
     /**
      * Shutdowns the Pi
      */
-    public void shutdown() { pi.writePacket(null, 0b0000100100); }
+    public void shutdown() { pi.writePacket(new byte[]{}, 0b0000100100); }
 
     // Read Values (Getters)
     /**
