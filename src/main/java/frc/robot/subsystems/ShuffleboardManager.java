@@ -8,10 +8,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.ArmPI.PiCommandType;
 
@@ -50,7 +49,7 @@ public class ShuffleboardManager extends SubsystemBase {
 
         // RaspberryPi Values
         ShuffleboardTab piTab = Shuffleboard.getTab("Pi");
-        WidgetType piGraph = (Constants.kPI_GRAPHS) ? BuiltInWidgets.kGraph : BuiltInWidgets.kTextView;
+        WidgetType piGraph = (ShuffleboardConstants.kPI_GRAPHS) ? BuiltInWidgets.kGraph : BuiltInWidgets.kTextView;
 
         piCPUTemp = piTab.add("CPU Temp (f)", 0.0)
             .withWidget(piGraph)

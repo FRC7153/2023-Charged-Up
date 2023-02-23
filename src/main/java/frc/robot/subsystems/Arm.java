@@ -1,14 +1,16 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.MotorFeedbackSensor;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 
 public class Arm {
     // Motors
@@ -22,7 +24,11 @@ public class Arm {
 
     // Init
     public Arm() {
-        // TODO pid values
+        // TODO
+        // Config Arm
+        armPID.setP(0.5, 0);
+
+        // Config Winch
     }
 
     /**
@@ -38,27 +44,27 @@ public class Arm {
     public boolean setTarget(double x, double y) {
         // Sanity check
         if (
-            x < -48.0 - Constants.kJOINT_TO_BUMPER_DIST || 
-            x > 48.0 + Constants.kJOINT_TO_BUMPER_DIST ||
+            x < -ArmConstants.kMAX_REACH - ArmConstants.kJOINT_TO_BUMPER_DIST || 
+            x > ArmConstants.kMAX_REACH + ArmConstants.kJOINT_TO_BUMPER_DIST ||
             y < 0 ||
-            y > 72.0
+            y > ArmConstants.kMAX_HEIGHT
         ) {
             DriverStation.reportWarning(String.format("Illegal target arm position (%s, %s)", x, y), false);
             return false;
         }
 
         // Get extension and angle
-        double extension = Math.sqrt(Math.pow(x, 2) + Math.pow(y - Constants.kJOINT_TO_FLOOR_DIST, 2));
-        double angle = Units.radiansToDegrees(Math.atan((y - Constants.kJOINT_TO_FLOOR_DIST) / x));
+        double extension = Math.sqrt(Math.pow(x, 2) + Math.pow(y - ArmConstants.kJOINT_TO_FLOOR_DIST, 2));
+        double angle = Units.radiansToDegrees(Math.atan((y - ArmConstants.kJOINT_TO_FLOOR_DIST) / x));
 
-        extension -= Constants.kARM_MIN_EXTENSION;
+        extension -= ArmConstants.kMIN_EXTENSION;
 
         // Sanity check 2
         if (
             extension < 0.0 || 
-            extension > Constants.kARM_MAX_EXTENSION ||
-            angle > Constants.kMAX_ARM_ANGLE ||
-            angle < -Constants.kMAX_ARM_ANGLE
+            extension > ArmConstants.kMAX_EXTENSION ||
+            angle > ArmConstants.kMAX_ARM_ANGLE ||
+            angle < -ArmConstants.kMAX_ARM_ANGLE
         ) {
             DriverStation.reportWarning(String.format("Illegal arm kinematic position (%s, %s -> %s and %s deg)", x, y, extension, angle), false);
             return false;
@@ -66,7 +72,7 @@ public class Arm {
 
         // Move to motor positions
         // TODO
-        armPID.setReference(angle - Constants.kARM_0_ANGLE, ControlType.kPosition);
+        armPID.setReference(angle - ArmConstants.kANGLE_0_ANGLE, ControlType.kPosition);
 
 
         return true;
