@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import com.frc7153.logging.FileDump;
-import com.frc7153.math.InertialNavigator;
+import com.frc7153.math.DeadReckoning;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
@@ -18,7 +18,7 @@ public class IMU {
     private ADIS16470_IMU imu = new ADIS16470_IMU();
 
     // Odometry
-    private InertialNavigator navigator = new InertialNavigator(10);
+    private DeadReckoning navigator = new DeadReckoning(10);
     private GenericEntry output1 = Shuffleboard.getTab("odometry").add("output1", "").getEntry();
 
     private FileDump debug = new FileDump("IMU-debug");

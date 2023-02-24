@@ -9,9 +9,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
- * Uses acceleration and yaw to track position
+ * Uses acceleration and yaw from an IMU to track position.<br><br>
+ * Uses trapezoidal integration for better accuracy.
  */
-public class InertialNavigator {
+public class DeadReckoning {
     // Filters
     private LinearFilter xFilter, yFilter;
 
@@ -20,7 +21,7 @@ public class InertialNavigator {
      * Creates new object to track inertial position
      * @param numToAverage The number of acceleration inputs to average, to reduce noise. Higher = smoother, but slower
      */
-    public InertialNavigator(int numToAverage) {
+    public DeadReckoning(int numToAverage) {
         xFilter = LinearFilter.movingAverage(numToAverage);
         yFilter = LinearFilter.movingAverage(numToAverage);
     }
@@ -28,6 +29,7 @@ public class InertialNavigator {
     // State
     private Double lastIntegration = Double.NaN;
     private Translation2d velocity = new Translation2d(0.0, 0.0);
+    private Translation2d prevAccel = new Translation2d(0.0, 0.0);
     private Pose2d pos = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
 
     /**
@@ -47,7 +49,7 @@ public class InertialNavigator {
      */
     public void integrateAcceleration(double xAccel, double yAccel, double yaw) {
         // Get time
-        if (lastIntegration.isNaN()) { lastIntegration = Timer.getFPGATimestamp(); return; }
+        if (lastIntegration.isNaN()) {lastIntegration = Timer.getFPGATimestamp(); return; }
 
         double timeDiff = Timer.getFPGATimestamp() - lastIntegration;
         lastIntegration = Timer.getFPGATimestamp();
@@ -56,7 +58,7 @@ public class InertialNavigator {
             DriverStation.reportWarning(String.format("Last acceleration integration is very state (%s seconds ago)", timeDiff), false);
         }
 
-        // Get accel\
+        // Get accel
         xAccel = xFilter.calculate(xAccel);
         yAccel = yFilter.calculate(yAccel);
 
@@ -71,11 +73,22 @@ public class InertialNavigator {
             Math.sin(Units.degreesToRadians(yaw + 90.0)) * xAccel
         );
 
+        Translation2d accel = new Translation2d(yReport.getX() + xReport.getX(), yReport.getY() + xReport.getY());
+
         // Get Velocity
-        velocity = velocity.plus(new Translation2d(
+
+        /*velocity = velocity.plus(new Translation2d(
             (yReport.getX() + xReport.getX()) * timeDiff, 
             (yReport.getY() + xReport.getY()) * timeDiff
+        ));*/
+
+        velocity = velocity.plus(new Translation2d(
+            (accel.getX() * timeDiff) + ((accel.getX() - prevAccel.getX()) / 2.0),
+            (accel.getY() * timeDiff) + ((accel.getY() - prevAccel.getY()) / 2.0)
         ));
+
+        // Store acceleration
+        prevAccel = accel;
 
         // Get Position
         pos = new Pose2d(
