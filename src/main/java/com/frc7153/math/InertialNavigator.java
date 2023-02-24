@@ -56,7 +56,7 @@ public class InertialNavigator {
             DriverStation.reportWarning(String.format("Last acceleration integration is very state (%s seconds ago)", timeDiff), false);
         }
 
-        // Get accel
+        // Get accel\
         xAccel = xFilter.calculate(xAccel);
         yAccel = yFilter.calculate(yAccel);
 

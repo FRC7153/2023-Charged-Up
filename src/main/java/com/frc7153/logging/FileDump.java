@@ -1,0 +1,81 @@
+package com.frc7153.logging;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import edu.wpi.first.wpilibj.DriverStation;
+
+/**
+ * Dumps strings to a specified file so they can be viewed later.
+ */
+public class FileDump {
+    // File Headers
+    private static String kHEADER = "-- Log File '%s', Created %s --";
+
+    // Path
+    private Path logPath;
+    private String name;
+
+    // Get date
+    private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    private static String getDate() { return LocalDateTime.now().format(dateFormat); }
+
+    /**
+     * Create new file dump.<br><br>
+     * Logged files can be viewed at <i>/tmp/{@code name}.txt</i>
+     * @param name The name of the file. This should be filepath-safe
+     */
+    public FileDump(String name) {
+        this.name = name;
+        logPath = Paths.get(String.format("/tmp/%s.txt", name));
+
+        if (!logPath.toFile().exists()) {
+            try {
+                Files.write(logPath, String.format(kHEADER, name, getDate()).getBytes(), StandardOpenOption.CREATE);
+            } catch (IOException e) {
+                DriverStation.reportError(String.format("Could not create new log file for %s: %s", name, e), false);
+            }
+        }
+    }
+
+    /**
+     * Adds a message to the file. A timestamp will be added with this, and it is added on a blank line.
+     * @param msg
+     * @return Success
+     */
+    public boolean log(String msg) {
+        try {
+            Files.write(logPath, String.format("%s -> %s\n", getDate(), msg).getBytes(), StandardOpenOption.APPEND);
+            return true;
+        } catch (IOException e) {
+            DriverStation.reportError(String.format("Could not append message to %s: %s", name, e), false);
+            return false;
+        }
+    }
+
+    /**
+     * Clears the log file.<br><br>
+     * Note that if {@code deleteFile == true} then future {@code log(msg)} calls may fail.
+     * @param deleteFile Whether the file should be deleted, rather than just cleared
+     * @return
+     */
+    public boolean clear(boolean deleteFile) {
+        try {
+            Files.write(logPath, "".getBytes(), StandardOpenOption.DELETE_ON_CLOSE);
+            
+            if (!deleteFile) {
+                Files.write(logPath, String.format(kHEADER, name, getDate()).getBytes(), StandardOpenOption.CREATE);
+            }
+
+            return true;
+        } catch (IOException e) {
+            DriverStation.reportError(String.format("Could not clear log file for %s: %s", name, e), false);
+            return false;
+        }
+    }
+}

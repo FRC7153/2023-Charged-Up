@@ -31,7 +31,9 @@ public class Robot extends TimedRobot {
 
   // Robot Init
   @Override
-  public void robotInit() {}
+  public void robotInit() {
+    imu.calibrate();
+  }
 
   // Robot Periodic
   @Override
