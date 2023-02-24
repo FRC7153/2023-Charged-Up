@@ -9,8 +9,6 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  * For communicating with the Raspberry Pi on the arm (over CAN bus)
@@ -79,10 +77,10 @@ public class ArmPI {
             System.out.println(canData.data);
 
             while (true) {
-                // Needs to reverse each byte individually (idk why lol)
                 if (pi.readPacketNew(0b0000010000, canData)) {
                     BitSet data = BitSet.valueOf(canData.data);
 
+                    // Reverse each byte individually
                     for (int x = 0; x < 8; x++) {
                         boolean[] newByte = new boolean[8];
 
@@ -97,11 +95,12 @@ public class ArmPI {
 
                     cache = bitsetToString(data); // TODO big problem below
 
+                    // Parse data
                     if (bitsetToInt(data.get(0, 16), 16) == 0) {
                         cache_hasTarget = false;
                     } else {
-                        cache_xAngle = bitsetToInt(data.get(0, 8), 8);
-                        cache_yAngle = bitsetToInt(data.get(8, 16), 8);
+                        cache_xAngle = bitsetToInt(data.get(1, 8), 8) * (data.get(0) ? 1 : -1);
+                        cache_yAngle = bitsetToInt(data.get(9, 16), 8) * (data.get(8) ? 1 : -1);
                         cache_target = data.get(26);
                         cache_hasTarget = true;
                     }
@@ -115,9 +114,11 @@ public class ArmPI {
                     cache_fps = bitsetToInt(data.get(50, 56), 6);
 
                     cache_age = Timer.getFPGATimestamp();
+
+                    output.setString(String.format("%s: %s, %s", cache_target, cache_xAngle, cache_yAngle));
                 }
 
-                Timer.delay(0.2);
+                Timer.delay(0.05);
             }
         }
     }
@@ -126,7 +127,7 @@ public class ArmPI {
     /**
      * Starts a HTTP camera server (port 5000)
      */
-    public void startCameraServer() { pi.writePacket(new byte[]{}, 0b0000100101); System.out.println(":)"); }
+    public void startCameraServer() { pi.writePacket(new byte[]{}, 0b0000100101); }
 
     /**
      * Pauses processing on the Pi
