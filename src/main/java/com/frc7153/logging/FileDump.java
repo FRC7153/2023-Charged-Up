@@ -62,7 +62,7 @@ public class FileDump {
      * Clears the log file.<br><br>
      * Note that if {@code deleteFile == true} then future {@code log(msg)} calls may fail.
      * @param deleteFile Whether the file should be deleted, rather than just cleared
-     * @return
+     * @return Success
      */
     public boolean clear(boolean deleteFile) {
         try {
@@ -78,4 +78,10 @@ public class FileDump {
             return false;
         }
     }
+
+    /**
+     * Clears the log file, without deleting it.
+     * @return Success
+     */
+    public boolean clear() { return clear(false); }
 }
