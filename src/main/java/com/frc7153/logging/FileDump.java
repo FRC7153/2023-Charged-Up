@@ -5,8 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -21,10 +19,6 @@ public class FileDump {
     private Path logPath;
     private String name;
 
-    // Get date
-    private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-    private static String getDate() { return LocalDateTime.now().format(dateFormat); }
-
     /**
      * Create new file dump.<br><br>
      * Logged files can be viewed at <i>/tmp/{@code name}.txt</i>
@@ -36,7 +30,7 @@ public class FileDump {
 
         if (!logPath.toFile().exists()) {
             try {
-                Files.write(logPath, String.format(kHEADER, name, getDate()).getBytes(), StandardOpenOption.CREATE);
+                Files.write(logPath, String.format(kHEADER, name, DateUtils.getInlineDate()).getBytes(), StandardOpenOption.CREATE);
             } catch (IOException e) {
                 DriverStation.reportError(String.format("Could not create new log file for %s: %s", name, e), false);
             }
@@ -50,7 +44,7 @@ public class FileDump {
      */
     public boolean log(String msg) {
         try {
-            Files.write(logPath, String.format("%s -> %s\n", getDate(), msg).getBytes(), StandardOpenOption.APPEND);
+            Files.write(logPath, String.format("%s -> %s\n", DateUtils.getInlineDate(), msg).getBytes(), StandardOpenOption.APPEND);
             return true;
         } catch (IOException e) {
             DriverStation.reportError(String.format("Could not append message to %s: %s", name, e), false);
@@ -69,7 +63,7 @@ public class FileDump {
             Files.write(logPath, "".getBytes(), StandardOpenOption.DELETE_ON_CLOSE);
             
             if (!deleteFile) {
-                Files.write(logPath, String.format(kHEADER, name, getDate()).getBytes(), StandardOpenOption.CREATE);
+                Files.write(logPath, String.format(kHEADER, name, DateUtils.getInlineDate()).getBytes(), StandardOpenOption.CREATE);
             }
 
             return true;

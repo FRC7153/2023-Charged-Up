@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.frc7153.inputs.XboxController;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Arm;
@@ -31,9 +33,7 @@ public class Robot extends TimedRobot {
 
   // Robot Init
   @Override
-  public void robotInit() {
-    imu.calibrate();
-  }
+  public void robotInit() {}
 
   // Robot Periodic
   @Override
@@ -53,7 +53,9 @@ public class Robot extends TimedRobot {
 
   // Teleop Init
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    driveBase.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)));
+  }
 
   // Teleop Periodic
   @Override

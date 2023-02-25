@@ -5,17 +5,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import edu.wpi.first.hal.CANData;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 /**
  * For communicating with the Raspberry Pi on the arm (over CAN bus)
  */
 public class ArmPI {
-    GenericEntry output = Shuffleboard.getTab("outputPi").add("output", "#").getEntry();
-
     // CAN objects
     private CAN pi = new CAN(19, 8, 10);
 
@@ -99,8 +95,8 @@ public class ArmPI {
                     if (bitsetToInt(data.get(0, 16), 16) == 0) {
                         cache_hasTarget = false;
                     } else {
-                        cache_xAngle = bitsetToInt(data.get(1, 8), 8) * (data.get(0) ? 1 : -1);
-                        cache_yAngle = bitsetToInt(data.get(9, 16), 8) * (data.get(8) ? 1 : -1);
+                        cache_xAngle = bitsetToInt(data.get(1, 8), 7) * (data.get(0) ? 1 : -1);
+                        cache_yAngle = bitsetToInt(data.get(9, 16), 7) * (data.get(8) ? 1 : -1);
                         cache_target = data.get(26);
                         cache_hasTarget = true;
                     }
@@ -114,8 +110,6 @@ public class ArmPI {
                     cache_fps = bitsetToInt(data.get(50, 56), 6);
 
                     cache_age = Timer.getFPGATimestamp();
-
-                    output.setString(String.format("%s: %s, %s", cache_target, cache_xAngle, cache_yAngle));
                 }
 
                 Timer.delay(0.05);

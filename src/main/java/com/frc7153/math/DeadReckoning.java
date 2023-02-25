@@ -28,7 +28,7 @@ public class DeadReckoning {
 
     // State
     private Double lastIntegration = Double.NaN;
-    private Translation2d velocity = new Translation2d(0.0, 0.0);
+    public Translation2d velocity = new Translation2d(0.0, 0.0);
     private Translation2d prevAccel = new Translation2d(0.0, 0.0);
     private Pose2d pos = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
 
@@ -86,6 +86,11 @@ public class DeadReckoning {
             (accel.getX() * timeDiff) + ((accel.getX() - prevAccel.getX()) / 2.0),
             (accel.getY() * timeDiff) + ((accel.getY() - prevAccel.getY()) / 2.0)
         ));
+
+        // If accel has not changed, velocity is probably 0
+        if (accel.getX() == prevAccel.getX() && accel.getY() == prevAccel.getY()) {
+            velocity = new Translation2d(0, 0);
+        }
 
         // Store acceleration
         prevAccel = accel;

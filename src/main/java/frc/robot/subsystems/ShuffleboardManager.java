@@ -31,6 +31,9 @@ public class ShuffleboardManager extends SubsystemBase {
     private GenericEntry piAge;
     private GenericEntry piCache;
 
+    // Gyro & Accelerometer
+    private GenericEntry gyroCalibrated;
+
     // Constructor (Init)
     public ShuffleboardManager() {
         // Controller Tab Init
@@ -102,6 +105,13 @@ public class ShuffleboardManager extends SubsystemBase {
         piTab.add("Resume", new ConfigCommand(Robot.armPi::resumeProcessing, "Resume")).withPosition(8, 4);
         piTab.add("Shutdown", new ConfigCommand(Robot.armPi::shutdown, "Shutdown")).withPosition(6, 5);
         piTab.add("Reboot", new ConfigCommand(Robot.armPi::reboot, "Reboot")).withPosition(7, 5);
+        
+        // Accelerometer & Gyro
+        ShuffleboardTab gyro = Shuffleboard.getTab("Gyro");
+
+        gyroCalibrated = gyro.add("Calibrated", false).getEntry();
+        
+        gyro.add("Calibrate", Robot.imu.imu.new CalibrateIMU()).withPosition(1, 0);
     }
 
     // Update Values
@@ -118,5 +128,8 @@ public class ShuffleboardManager extends SubsystemBase {
         piAge.setDouble(Robot.armPi.getAge());
         piVoltageStable.setBoolean(Robot.armPi.getVoltageStable());
         piCache.setString(Robot.armPi.getCache());
+
+        // Gyro
+        gyroCalibrated.setBoolean(Robot.imu.isCalibrated());
     }
 }
