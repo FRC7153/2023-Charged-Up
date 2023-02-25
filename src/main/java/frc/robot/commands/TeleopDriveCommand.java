@@ -36,7 +36,6 @@ public class TeleopDriveCommand extends CommandBase {
   @Override
   public void execute() {
     base.driveFieldOriented(xSupply.get(), ySupply.get(), rSupply.get());
-    System.out.println("telop drove");
   }
 
   // Called once the command ends or is interrupted.
