@@ -6,6 +6,8 @@ import zlib
 import cv2
 import bitarray
 import os
+import numpy
+import colorsys
 
 import FRCCAN as can
 from Logger import Logger
@@ -13,6 +15,7 @@ from ConePipeline import ConePipeline
 from CubePipeline import CubePipeline
 from CameraServer import CameraServer
 from SystemStats import Stats
+import VisionUtils
 
 ## INIT
 log = Logger("../logs")
@@ -35,6 +38,11 @@ LOOPS = 0
 ## CONTROL (restart, shutdown, stop, etc)
 @device.receive(2)
 def control(index, data):
+	global MODE
+	global START
+	global server
+	global CAMERA_SERVER_RUNNING
+
 	if index == 1: # pause
 		MODE = 1
 	elif index == 2: # resume
@@ -46,6 +54,8 @@ def control(index, data):
 	elif index == 4: # shutdown
 		os.system("sudo shutdown now")
 	elif index == 5: # start camera
+		if CAMERA_SERVER_RUNNING:
+			return
 		server.run()
 		CAMERA_SERVER_RUNNING = True
 	else:
@@ -106,30 +116,42 @@ while True:
 		continue
 
 	# Detect objects
-	cones = coneDetector.process(frame)
+	cones = coneDetector.process(numpy.copy(frame))
 	cones = sorted(cones, key=lambda x: cv2.contourArea(x))
 
-	cubes = cubeDetector.process(frame)
+	cubes = cubeDetector.process(numpy.copy(frame))
 	cubes = sorted(cubes, key=lambda x: cv2.contourArea(x))
 
 	# Determine primary target
 	target = None
 	targetType = True # True = cone, false = cube
+	contour = None
 
 	if len(cones) == 0 and len(cubes) == 0:
 		target = None
 	elif len(cones) == 0:
 		targetType = True
 		target = cv2.boundingRect(cubes[0])
+		contour = cubes[0]
 	elif len(cubes) == 0:
 		targetType = False
 		target = cv2.boundingRect(cones[0])
+		contour = cones[0]
 	elif cv2.contourArea(cubes[0]) > cv2.contourArea(cones[0]):
 		targetType = False
 		target = cv2.boundingRect(cubes[0])
+		contour = cubes[0]
 	else:
 		targetType = True
 		target = cv2.boundingRect(cones[0])
+		contour = cones[0]
+
+	# Get target type (much more accurate than different pipelines)
+	if target != None:
+		avg = VisionUtils.getColor(cubeDetector.cv_resize_output, contour, target)
+		if avg != -1:
+			avg = VisionUtils.getHSV(avg[0], avg[1], avg[2])
+			targetType = VisionUtils.distHSV(avg, [55, 0.93, 0.84]) > VisionUtils.distHSV(avg, [272, 0.53, 0.62])
 
 	# Send CAN packet
 	device.send(1, 0, buildPacket(
@@ -148,10 +170,15 @@ while True:
 
 	LOOPS+=1
 
-	if len(cones) != 0:
-		cv2.drawContours(coneDetector.cv_resize_output, cones, 0, (255, 0, 0), 3)
-
 	if CAMERA_SERVER_RUNNING:
+		if target != None:
+			cv2.drawContours(
+				coneDetector.cv_resize_output, 
+				[contour], 
+				0, 
+				(255, 0, 0) if targetType else (0, 0, 255), 
+				3
+			)
 		server.frame = coneDetector.cv_resize_output
 
 	# Don't run faster than once every 20 ms

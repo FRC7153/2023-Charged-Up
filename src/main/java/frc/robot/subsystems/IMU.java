@@ -37,9 +37,10 @@ public class IMU {
 
     // Round to 1 decimal point
     private static double round(double input) {
-        DecimalFormat format = new DecimalFormat("####.#");
-        format.setRoundingMode(RoundingMode.DOWN);
-        return Double.parseDouble(format.format(input));
+        return input;
+        //DecimalFormat format = new DecimalFormat("####.#");
+        //format.setRoundingMode(RoundingMode.DOWN);
+        //return Double.parseDouble(format.format(input));
     }
 
     // Get Position

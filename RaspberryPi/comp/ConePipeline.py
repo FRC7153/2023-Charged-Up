@@ -22,7 +22,7 @@ class ConePipeline:
         self.__hsl_threshold_input = self.cv_resize_output
         self.__hsl_threshold_hue = [16.949152542372882, 70.65174937489736]
         self.__hsl_threshold_saturation = [131.3582185099378, 255.0]
-        self.__hsl_threshold_luminance = [50.043693858472544, 255.0]
+        self.__hsl_threshold_luminance = [50.043693858472544, 225.4545454545]
 
         self.hsl_threshold_output = None
 

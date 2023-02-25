@@ -88,7 +88,7 @@ public class DeadReckoning {
         ));
 
         // If accel has not changed, velocity is probably 0
-        if (accel.getX() == prevAccel.getX() && accel.getY() == prevAccel.getY()) {
+        if (accel.getX() == prevAccel.getX() && accel.getY() == prevAccel.getY() && false) {
             velocity = new Translation2d(0, 0);
         }
 

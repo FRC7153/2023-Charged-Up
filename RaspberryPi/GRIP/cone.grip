@@ -1,31 +1,5 @@
 <grip:Pipeline>
   <sources>
-    <grip:MultiImageFile>
-      <property name="path[2]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_35_49_Pro.jpg"/>
-      <property name="path[5]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_37_20_Pro.jpg"/>
-      <property name="path[8]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_38_21_Pro.jpg"/>
-      <property name="path[20]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_49_46_Pro.jpg"/>
-      <property name="path[12]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_40_10_Pro.jpg"/>
-      <property name="path[15]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_42_06_Pro.jpg"/>
-      <property name="index" value="8"/>
-      <property name="path[18]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_43_41_Pro.jpg"/>
-      <property name="path[0]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_35_02_Pro.jpg"/>
-      <property name="path[3]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_36_01_Pro.jpg"/>
-      <property name="path[6]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_37_33_Pro.jpg"/>
-      <property name="path[9]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_39_11_Pro.jpg"/>
-      <property name="path[21]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_50_00_Pro.jpg"/>
-      <property name="path[10]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_39_33_Pro.jpg"/>
-      <property name="path[13]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_40_48_Pro.jpg"/>
-      <property name="path[16]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_42_54_Pro.jpg"/>
-      <property name="path[19]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_43_58_Pro.jpg"/>
-      <property name="numImages" value="22"/>
-      <property name="path[1]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_35_11_Pro.jpg"/>
-      <property name="path[4]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_37_09_Pro.jpg"/>
-      <property name="path[7]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_37_53_Pro.jpg"/>
-      <property name="path[11]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_39_50_Pro.jpg"/>
-      <property name="path[14]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_41_46_Pro.jpg"/>
-      <property name="path[17]" value="C:\Users\Default.DESKTOP-DO63H0N\Pictures\Camera Roll\WIN_20230216_19_43_30_Pro.jpg"/>
-    </grip:MultiImageFile>
   </sources>
   <steps>
     <grip:Step name="CV resize">
