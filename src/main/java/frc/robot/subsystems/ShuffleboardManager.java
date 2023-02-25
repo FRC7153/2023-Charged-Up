@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.util.Map;
 
 import com.frc7153.commands.ConfigCommand;
+import com.frc7153.inputs.XboxController;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -13,12 +14,18 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShuffleboardConstants;
-import frc.robot.Robot;
+import frc.robot.peripherals.ArmPI;
+import frc.robot.peripherals.IMU;
 
 /**
  * Handles all values and commands put on Shuffleboard
  */
 public class ShuffleboardManager extends SubsystemBase {
+    // Objects
+    private XboxController controller0;
+    private ArmPI armPi;
+    private IMU imu;
+
     // Controller Update Counter
     private GenericEntry controller0Update;
 
@@ -35,14 +42,19 @@ public class ShuffleboardManager extends SubsystemBase {
     private GenericEntry gyroCalibrated;
 
     // Constructor (Init)
-    public ShuffleboardManager() {
+    public ShuffleboardManager(XboxController controller0, ArmPI armPi, IMU imu) {
+        // Store objects
+        this.controller0 = controller0;
+        this.armPi = armPi;
+        this.imu = imu;
+
         // Controller Tab Init
         ShuffleboardTab controllerTab = Shuffleboard.getTab("Controllers");
         ShuffleboardLayout controllerRecalibrate = controllerTab.getLayout("Controllers", BuiltInLayouts.kList)
             .withSize(2, 4)
             .withProperties(Map.of("LABEL POSITION", "HIDDEN"));
 
-        controllerRecalibrate.add(Robot.controller0.new CalibrateOffsetCommand());
+        controllerRecalibrate.add(controller0.new CalibrateOffsetCommand());
 
         ShuffleboardLayout controllerUpdates = controllerTab.getLayout("Updates", BuiltInLayouts.kList)
             .withSize(2, 4)
@@ -100,36 +112,36 @@ public class ShuffleboardManager extends SubsystemBase {
             .withSize(2, 1)
             .getEntry();
         
-        piTab.add("Camera Server", new ConfigCommand(Robot.armPi::startCameraServer, "Start CS")).withPosition(6, 4);
-        piTab.add("Pause", new ConfigCommand(Robot.armPi::pauseProcessing, "Pause")).withPosition(7, 4);
-        piTab.add("Resume", new ConfigCommand(Robot.armPi::resumeProcessing, "Resume")).withPosition(8, 4);
-        piTab.add("Shutdown", new ConfigCommand(Robot.armPi::shutdown, "Shutdown")).withPosition(6, 5);
-        piTab.add("Reboot", new ConfigCommand(Robot.armPi::reboot, "Reboot")).withPosition(7, 5);
+        piTab.add("Camera Server", new ConfigCommand(armPi::startCameraServer, "Start CS")).withPosition(6, 4);
+        piTab.add("Pause", new ConfigCommand(armPi::pauseProcessing, "Pause")).withPosition(7, 4);
+        piTab.add("Resume", new ConfigCommand(armPi::resumeProcessing, "Resume")).withPosition(8, 4);
+        piTab.add("Shutdown", new ConfigCommand(armPi::shutdown, "Shutdown")).withPosition(6, 5);
+        piTab.add("Reboot", new ConfigCommand(armPi::reboot, "Reboot")).withPosition(7, 5);
         
         // Accelerometer & Gyro
         ShuffleboardTab gyro = Shuffleboard.getTab("Gyro");
 
         gyroCalibrated = gyro.add("Calibrated", false).getEntry();
         
-        gyro.add("Calibrate", Robot.imu.imu.new CalibrateIMU()).withPosition(1, 0);
+        gyro.add("Calibrate", imu.imu.new CalibrateIMU()).withPosition(1, 0);
     }
 
     // Update Values
     @Override
     public void periodic() {
         // Controllers
-        controller0Update.setString(String.format("%s seconds", Robot.controller0.getLastOffsetUpdate()));
+        controller0Update.setString(String.format("%s seconds", controller0.getLastOffsetUpdate()));
 
         // Pi
-        piCPUTemp.setDouble(Robot.armPi.getTemp());
-        piCPUUsage.setDouble(Robot.armPi.getCPU());
-        piMemUsage.setDouble(Robot.armPi.getMemory());
-        piFPS.setDouble(Robot.armPi.getFPS());
-        piAge.setDouble(Robot.armPi.getAge());
-        piVoltageStable.setBoolean(Robot.armPi.getVoltageStable());
-        piCache.setString(Robot.armPi.getCache());
+        piCPUTemp.setDouble(armPi.getTemp());
+        piCPUUsage.setDouble(armPi.getCPU());
+        piMemUsage.setDouble(armPi.getMemory());
+        piFPS.setDouble(armPi.getFPS());
+        piAge.setDouble(armPi.getAge());
+        piVoltageStable.setBoolean(armPi.getVoltageStable());
+        piCache.setString(armPi.getCache());
 
         // Gyro
-        gyroCalibrated.setBoolean(Robot.imu.isCalibrated());
+        gyroCalibrated.setBoolean(imu.isCalibrated());
     }
 }

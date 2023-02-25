@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.peripherals;
 
 import java.util.BitSet;
 import java.util.concurrent.Executors;
@@ -89,7 +89,7 @@ public class ArmPI {
                         }
                     }
 
-                    cache = bitsetToString(data); // TODO big problem below
+                    cache = bitsetToString(data);
 
                     // Parse data
                     if (bitsetToInt(data.get(0, 16), 16) == 0) {

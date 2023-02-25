@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.peripherals;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -10,6 +10,7 @@ import com.frc7153.math.DeadReckoning;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
 /**
@@ -30,8 +31,6 @@ public class IMU {
     // Set Position
     public void resetPose(Pose2d origin) {
         imu.reset();
-
-        Robot.driveBase.setPose(origin);
         navigator.resetPose(origin);
     }
 
@@ -44,7 +43,7 @@ public class IMU {
     }
 
     // Get Position
-    public void accumulatePosition() {
+    public void integrateAcceleration() {
         output2.setDouble(round(imu.getAccelX()));
         output3.setDouble(navigator.velocity.getX());
 
@@ -58,8 +57,6 @@ public class IMU {
         //output1.setString(navigator.toString());
         //output1.setString(String.format("accel: %s %s %s, ", ));
     }
-
-
 
     // Get Values
     public boolean isCalibrated() { return imu.isCalibrated(); }

@@ -54,9 +54,4 @@ public interface SwerveWheel {
      * @param coast
      */
     public void toggleCoastMode(boolean coast);
-
-    /**
-     * Needs to be called periodically to update PID loops
-     */
-    public void periodic();
 }

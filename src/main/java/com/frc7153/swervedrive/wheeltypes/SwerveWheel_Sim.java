@@ -14,25 +14,14 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class SwerveWheel_Sim implements SwerveWheel {
-    // States
-    private double currentAngle;
-    private double currentSpeed;
-    private boolean coast;
-    private int updates = 0;
-
-    // Config
-    private boolean configDriveInvert = false;
-    private boolean configSpinInvert = false;
-
     // Position
     private Translation2d pos;
+    private double currentSpeed;
+    private double currentAngle;
 
     // Shuffleboard
     private GenericPublisher shuffle_speed;
     private GenericPublisher shuffle_angle;
-    private GenericPublisher shuffle_updates;
-    private GenericPublisher shuffle_driveInvert;
-    private GenericPublisher shuffle_angleInvert;
     private GenericPublisher shuffle_coast;
 
     // Constructor
@@ -58,22 +47,9 @@ public class SwerveWheel_Sim implements SwerveWheel {
         shuffle_angle = column.add("Angle", 0.0)
             .getEntry();
         
-        shuffle_updates = column.add("Number of Updates", 0)
-            .getEntry();
-        
-        shuffle_driveInvert = column.add("Drive Inverted", false)
-            .withWidget(BuiltInWidgets.kBooleanBox)
-            .getEntry();
-        
-        shuffle_angleInvert = column.add("Angle Inverted", false)
-            .withWidget(BuiltInWidgets.kBooleanBox)
-            .getEntry();
-        
         shuffle_coast = column.add("Coasting?", false)
             .withWidget(BuiltInWidgets.kBooleanBox)
             .getEntry();
-        
-        periodic();
     }
 
     // Position
@@ -88,10 +64,10 @@ public class SwerveWheel_Sim implements SwerveWheel {
 
     // Set
     @Override
-    public void setAngle(double angle) { currentAngle = angle; }
+    public void setAngle(double angle) { currentAngle = angle; shuffle_angle.setDouble(currentAngle); }
 
     @Override
-    public void setSpeed(double speed) { currentSpeed = speed; }
+    public void setSpeed(double speed) { currentSpeed = speed; shuffle_speed.setDouble(speed); }
 
     @Override
     public void set(SwerveModuleState state) {
@@ -99,20 +75,5 @@ public class SwerveWheel_Sim implements SwerveWheel {
     }
 
     @Override
-    public void toggleCoastMode(boolean coast) {
-        this.coast = coast;
-    }
-
-    // Periodic
-    @Override
-    public void periodic() {
-        updates ++;
-
-        shuffle_speed.setDouble(currentSpeed);
-        shuffle_angle.setDouble(currentAngle);
-        shuffle_updates.setInteger(updates);
-        shuffle_driveInvert.setBoolean(configDriveInvert);
-        shuffle_angleInvert.setBoolean(configSpinInvert);
-        shuffle_coast.setBoolean(coast);
-    }
+    public void toggleCoastMode(boolean coast) { shuffle_coast.setBoolean(coast); }
 }

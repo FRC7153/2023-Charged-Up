@@ -8,9 +8,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
-public class Arm {
+public class Arm extends SubsystemBase {
     // Motors
     private CANSparkMax armMotor = new CANSparkMax(16, MotorType.kBrushless);
     private CANSparkMax winchMotor = new CANSparkMax(15, MotorType.kBrushless);

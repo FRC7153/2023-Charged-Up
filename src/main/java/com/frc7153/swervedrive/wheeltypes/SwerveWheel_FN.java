@@ -194,8 +194,4 @@ public class SwerveWheel_FN implements SwerveWheel {
         );
         set(state.angle.getDegrees(), state.speedMetersPerSecond);
     }
-
-    // Periodic
-    @Override
-    public void periodic() {}
 }

@@ -23,9 +23,6 @@ public class SwerveBase extends SubsystemBase {
     private SwerveDriveOdometry odometry;
     private Pose2d odometryPosition;
 
-    // State
-    private boolean periodicRunning = true;
-
     // Max Speeds
     private double maxDriveSpeed = 4.0;
     private double maxSpinSpeed = 360.0;
@@ -55,7 +52,7 @@ public class SwerveBase extends SubsystemBase {
 
         kinematics = new SwerveDriveKinematics(fl.getPosition(), fr.getPosition(), rl.getPosition(), rr.getPosition());
 
-        startOdometry(gyroAngle, 0.0, 0.0);
+        startOdometry(gyroAngle, 0.0, 0.0, 0.0);
     }
 
     /**
@@ -63,13 +60,14 @@ public class SwerveBase extends SubsystemBase {
      * @param gyroAngle The angle of the gyroscope (degrees)
      * @param startX Starting X position (meters)
      * @param startY Starting Y position (meters)
+     * @param startRot The starting rotation
      */
-    public void startOdometry(double gyroAngle, double startX, double startY) {
+    public void startOdometry(double gyroAngle, double startX, double startY, double startRot) {
         odometry = new SwerveDriveOdometry(
             kinematics, 
             Rotation2d.fromDegrees(gyroAngle), 
             getSwerveModulePositions(),
-            new Pose2d(startX, startY, Rotation2d.fromDegrees(0.0))
+            new Pose2d(startX, startY, Rotation2d.fromDegrees(startRot))
         );
     }
 
@@ -106,7 +104,6 @@ public class SwerveBase extends SubsystemBase {
         fr.set(states[1]);
         rl.set(states[2]);
         rr.set(states[3]);
-        periodicRunning = true;
     }
 
     /**
@@ -180,8 +177,6 @@ public class SwerveBase extends SubsystemBase {
         rl.set(0.0, SwerveMathUtils.symmetricClamp(left, maxDriveSpeed));
         fr.set(0.0, SwerveMathUtils.symmetricClamp(right, maxDriveSpeed));
         rr.set(0.0, SwerveMathUtils.symmetricClamp(right, maxDriveSpeed));
-
-        periodicRunning = true;
     }
 
     /**
@@ -232,16 +227,6 @@ public class SwerveBase extends SubsystemBase {
     }
 
     /**
-     * Stops the periodic methods.
-     * Periodic methods will resume as soon as one of the drive methods are called again.
-     * @param reset Whether the motor speeds should be set to 0 (if false, the robot may keep moving)
-     */
-    public void stopPeriodic(boolean reset) {
-        if (reset) { stop(false); periodic(); }
-        periodicRunning = false;
-    }
-
-    /**
      * @param coast Whether the wheels should coast or not (brake)
      * @param freeze Whether the wheels should stop moving
      */
@@ -266,20 +251,14 @@ public class SwerveBase extends SubsystemBase {
         return odometryPosition;
     }
 
-    // Periodic
-    public void periodic(double gyroAngle) {
-        if (!DriverStation.isDisabled() && periodicRunning) {
-            fl.periodic();
-            fr.periodic();
-            rl.periodic();
-            rr.periodic();
-        }
+    /**
+     * Updates the odometry
+     * @param gyroAngle
+     */
+    public void updateOdometry(double gyroAngle) {
         odometryPosition = odometry.update(
             Rotation2d.fromDegrees(gyroAngle), 
             getSwerveModulePositions()
         );
     }
-
-    @Override
-    public void periodic() { periodic(0.0); }
 }

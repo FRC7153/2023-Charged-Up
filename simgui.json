@@ -2,7 +2,13 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/Shuffleboard/Controllers/Controllers/XboxController$CalibrateOffsetCommand": "Command"
+      "/Shuffleboard/Controllers/Controllers/XboxController$CalibrateOffsetCommand": "Command",
+      "/Shuffleboard/Gyro/Calibrate": "Command",
+      "/Shuffleboard/Pi/Camera Server": "Command",
+      "/Shuffleboard/Pi/Pause": "Command",
+      "/Shuffleboard/Pi/Reboot": "Command",
+      "/Shuffleboard/Pi/Resume": "Command",
+      "/Shuffleboard/Pi/Shutdown": "Command"
     }
   }
 }

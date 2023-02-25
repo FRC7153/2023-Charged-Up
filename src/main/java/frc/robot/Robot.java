@@ -4,43 +4,24 @@
 
 package frc.robot;
 
-import com.frc7153.inputs.XboxController;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.ArmPI;
-import frc.robot.subsystems.IMU;
-import frc.robot.subsystems.ShuffleboardManager;
-import frc.robot.subsystems.SwerveDriveBase;
 
 public class Robot extends TimedRobot {
-  // Joysticks
-  public static XboxController controller0 = new XboxController(0);
-
-  // Peripherals
-  public static IMU imu = new IMU();
-  public static ArmPI armPi = new ArmPI();
-
-  // Actuators
-  public static SwerveDriveBase driveBase = new SwerveDriveBase();
-  public static Arm arm = new Arm();
-
-  // Shuffleboard
-  public static ShuffleboardManager shuffleboard = new ShuffleboardManager();
+  private RobotContainer container;
+  private Command autoCommand;
 
   // Robot Init
   @Override
-  public void robotInit() {}
+  public void robotInit() {
+    container = new RobotContainer();
+  }
 
   // Robot Periodic
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    
-    imu.accumulatePosition();
   }
 
   // Auto Init
@@ -49,18 +30,23 @@ public class Robot extends TimedRobot {
 
   // Auto Periodic
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    autoCommand = container.getAutonomousCommand();
+    if (autoCommand != null) {
+      autoCommand.schedule();
+    }
+  }
 
   // Teleop Init
   @Override
-  public void teleopInit() {
-    driveBase.setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)));
-  }
+  public void teleopInit() {}
 
   // Teleop Periodic
   @Override
   public void teleopPeriodic() {
-    driveBase.driveTeleop();
+    if (autoCommand != null) {
+      autoCommand.cancel();
+    }
   }
 
   // Disabled Init
