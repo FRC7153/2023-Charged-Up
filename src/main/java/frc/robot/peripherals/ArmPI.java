@@ -110,6 +110,8 @@ public class ArmPI {
                     cache_fps = bitsetToInt(data.get(50, 56), 6);
 
                     cache_age = Timer.getFPGATimestamp();
+
+                    System.out.println(cache_dist); // TODO wrong
                 }
 
                 Timer.delay(0.05);

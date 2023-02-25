@@ -16,12 +16,14 @@ from CubePipeline import CubePipeline
 from CameraServer import CameraServer
 from SystemStats import Stats
 import VisionUtils
+from Distance import UltrasonicSensor
 
 ## INIT
 log = Logger("../logs")
 bus = can.initCAN(log)
 device = can.Device(bus, 19, log)
 stat = Stats(log)
+distance = UltrasonicSensor(17, 27)
 
 camera1 = cv2.VideoCapture(0)
 server = CameraServer("output", 5000)
@@ -50,8 +52,10 @@ def control(index, data):
 		LOOPS = 0
 		MODE = 0
 	elif index == 3: # reboot
+		distance.cleanup()
 		os.system("sudo reboot")
 	elif index == 4: # shutdown
+		distance.cleanup()
 		os.system("sudo shutdown now")
 	elif index == 5: # start camera
 		if CAMERA_SERVER_RUNNING:
@@ -158,8 +162,8 @@ while True:
 		(target != None),
 		0 if target == None else target[0] + (target[2]/2),
 		0 if target == None else target[1] + (target[3]/2),
-		10,
-		targetType,
+		int(distance.getDist()),
+		not targetType,
 		False,
 		stat.voltage,
 		stat.temp,
