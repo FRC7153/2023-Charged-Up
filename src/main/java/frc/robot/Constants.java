@@ -38,8 +38,8 @@ public final class Constants {
      * Note that all distance measurements are in INCHES!
      */
     public static final class ArmConstants {
-        public static final PIDConstant kANGLE_PID = new PIDConstant(0, 0.5, 0.0, 0.0, -10.0, 10.0);
-        public static final PIDConstant kEXT_PID = new PIDConstant(0, 0.5, 0.0, 0.0, -10.0, 10.0);
+        public static final PIDConstant kANGLE_PID = new PIDConstant(0.5, 0, 0).withError(0.05).withOutputRange(-10.0, 10.0);
+        public static final PIDConstant kEXT_PID = new PIDConstant(0.5, 0, 0).withError(0.05).withOutputRange(-10.0, 10.0);
 
         public static final double kJOINT_TO_FLOOR_DIST = 10.0;
         public static final double kJOINT_TO_BUMPER_DIST = 7.0;

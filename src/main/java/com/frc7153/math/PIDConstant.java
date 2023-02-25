@@ -4,22 +4,52 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.SparkMaxPIDController;
 
 /**
- * PID values that can be applied to a number of controllers.
+ * PID values that can be applied to a number of controllers. This is made so that PID constants
+ * can be easily defined with other constants in Constants.java (or other constant locations)
  */
 public class PIDConstant {
     // Constants
-    public final int kSLOT;
+    public int kSLOT = 0;
 
-    public final double kP, kI, kD, kERR;
+    public double kP, kI, kD;
 
+    public Double kERR = Double.NaN;
     public Double kFF = Double.NaN;
     public Double kOUTPUT_MIN = Double.NaN;
     public Double kOUTPUT_MAX = Double.NaN;
 
     // Constructors
-    public PIDConstant(int slot, double p, double i, double d, double error) { kSLOT = slot; kP = p; kI = i; kD = d; kERR = error; }
-    public PIDConstant(int slot, double p, double i, double d, double error, double ff) { this(slot, p, i, d, error); kFF = ff; }
-    public PIDConstant(int slot, double p, double i, double d, double error, double min, double max) { this(slot, p, i, d, error); kOUTPUT_MIN = min; kOUTPUT_MAX = max; }
+    /**
+     * Create new PID Constant. Use modifier methods to further modify this in static constant classes.
+     * @param p kP coefficient
+     * @param i kI coefficient
+     * @param d kD coefficient
+     */
+    public PIDConstant(double p, double i, double d) { kP = p; kI = i; kD = d; }
+
+    // Modifiers
+    /**
+     * @param slot The slot to save these PID constants to
+     * @return This object (modifications are done in place)
+     */
+    public PIDConstant withSlot(int slot) { kSLOT = slot; return this; }
+    /**
+     * @param err The acceptable error
+     * @return This object (modifications are done in place)
+     */
+    public PIDConstant withError(double err) { kERR = err; return this; }
+    /**
+     * @param ff The feed-forward gain (kF or kFF)
+     * @return This object (modifications are done in place)
+     */
+    public PIDConstant withFF(double ff) { kFF = ff; return this; }
+    /**
+     * ({@code SparkMaxPIDController} only)
+     * @param min Minimum output
+     * @param max Maximum output
+     * @return This object (modifications are done in place)
+     */
+    public PIDConstant withOutputRange(double min, double max) { kOUTPUT_MIN = min; kOUTPUT_MAX = max; return this; } 
 
     // Apply
     /**
@@ -31,8 +61,7 @@ public class PIDConstant {
         pid.setI(kP, kSLOT);
         pid.setD(kP, kSLOT);
 
-        pid.setSmartMotionAllowedClosedLoopError(kERR, kSLOT);
-
+        if (!kERR.isNaN()) { pid.setSmartMotionAllowedClosedLoopError(kERR, kSLOT); }
         if (!kFF.isNaN()) { pid.setFF(kFF); }
         if (!kOUTPUT_MIN.isNaN() && !kOUTPUT_MAX.isNaN()) { pid.setOutputRange(kOUTPUT_MIN, kOUTPUT_MAX); }
     }
@@ -46,8 +75,7 @@ public class PIDConstant {
         controller.config_kI(kSLOT, kI);
         controller.config_kD(kSLOT, kD);
 
-        controller.configAllowableClosedloopError(kSLOT, kERR);
-
+        if (!kERR.isNaN()) { controller.configAllowableClosedloopError(kSLOT, kERR); }
         if (!kFF.isNaN()) { controller.config_kF(kSLOT, kFF); }
     }
 }
