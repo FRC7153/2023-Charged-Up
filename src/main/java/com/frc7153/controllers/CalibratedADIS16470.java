@@ -16,18 +16,21 @@ public class CalibratedADIS16470 {
 
     // IMU object
     private ADIS16470_IMU imu = new ADIS16470_IMU();
-
+    
     // State
     private boolean calibrated = false;
     private double[] offsets = {0.0, 0.0, 0.0};
+    private int pitchAxis = 0;
 
     /**
      * Creates new object, but does not calibrate it.<br><br>
      * @param yaw The yaw axis (0 = x, 1 = y, 2 = z)
+     * @param pitch The pitch axis (0 = x complimentary angle, 1 = y complimentary angle)
      */
-    public CalibratedADIS16470(int yaw) {
+    public CalibratedADIS16470(int yaw, int pitch) {
         imu.setYawAxis(axes[yaw]); 
         imu.configCalTime(CalibrationTime._4s);
+        pitchAxis = pitch;
     }
 
     // Calibrate
@@ -108,10 +111,10 @@ public class CalibratedADIS16470 {
     /**
      * @return Roll angle in degrees, CCW positive
      */
-    public double getRoll() { return imu.getXComplementaryAngle(); }
+    public double getRoll() { if (pitchAxis == 0) { return imu.getYComplementaryAngle(); } else { return imu.getXComplementaryAngle(); } }
 
     /**
      * @return Pitch angle in degrees, CCW positive
      */
-    public double getPitch() { return imu.getYComplementaryAngle(); }
+    public double getPitch() { if (pitchAxis == 0) { return imu.getXComplementaryAngle(); } else { return imu.getYComplementaryAngle(); } }
 }

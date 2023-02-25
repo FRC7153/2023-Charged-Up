@@ -19,8 +19,8 @@ public class SwerveDriveBase extends SubsystemBase {
     private SwerveWheel_FN rl = new SwerveWheel_FN(10, 6, 14, -SwerveConstants.kWHEEL_DISTANCE.getX(), -SwerveConstants.kWHEEL_DISTANCE.getY() , SwerveConstants.kRL_OFFSET);
     private SwerveWheel_FN rr = new SwerveWheel_FN(9, 5, 13, SwerveConstants.kWHEEL_DISTANCE.getX(), -SwerveConstants.kWHEEL_DISTANCE.getY(), SwerveConstants.kRR_OFFSET);
 
-    private SwerveBase base = new SwerveBase(fl, fr, rl, rr, 0.0);
     public IMU imu = new IMU();
+    private SwerveBase base = new SwerveBase(fl, fr, rl, rr, imu.getYaw());
 
     // Get Odometry Position
     public Pose2d getPose() { return base.getOdometricPosition(); }

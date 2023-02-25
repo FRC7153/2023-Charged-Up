@@ -55,4 +55,17 @@ public final class Constants {
         public static final double kMAX_REACH = 4.0 * 12.0;
         public static final double kMAX_HEIGHT = 6.0 * 12.0;
     }
+
+    /* CLAW CONSTANTS */
+    public static final class ClawConstants {
+        public static final PIDConstant kHAND_PID = new PIDConstant(0.5, 0, 0).withError(0.05).withOutputRange(-8.0, 8.0);
+        
+        public static final double kANGLE_RATIO = 12.0; // TODO not right
+
+        public static final double kLHAND_OFFSET = 0.0;
+        public static final double kRHAND_OFFSET = 0.0;
+
+        public static final double kMIN_ANGLE = -180.0;
+        public static final double kMAX_ANGLE = 10.0;
+    }
 }

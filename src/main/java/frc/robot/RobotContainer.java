@@ -3,6 +3,7 @@ package frc.robot;
 import com.frc7153.inputs.XboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.HomeClawCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.peripherals.ArmPI;
 import frc.robot.subsystems.Arm;
@@ -39,6 +40,8 @@ public class RobotContainer {
             () -> controller0.getLeftY(),
             () -> controller0.getRightX()
         ));
+
+        arm.setDefaultCommand(new HomeClawCommand(arm, claw));
     }
 
     // Get Auto Command

@@ -1,8 +1,5 @@
 package frc.robot.peripherals;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-
 import com.frc7153.controllers.CalibratedADIS16470;
 import com.frc7153.logging.FileDump;
 import com.frc7153.math.DeadReckoning;
@@ -10,15 +7,13 @@ import com.frc7153.math.DeadReckoning;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 
 /**
  * For reading rotation and acceleration of ADIS16470.
  */
 public class IMU {
     // IMU
-    public CalibratedADIS16470 imu = new CalibratedADIS16470(0);
+    public CalibratedADIS16470 imu = new CalibratedADIS16470(2, 0);
 
     // Odometry
     private DeadReckoning navigator = new DeadReckoning(10);
@@ -44,7 +39,7 @@ public class IMU {
 
     // Get Position
     public void integrateAcceleration() {
-        output2.setDouble(round(imu.getAccelX()));
+        output2.setDouble(imu.getPitch());
         output3.setDouble(navigator.velocity.getX());
 
         debug.log(String.format("accel: %s, %s, %s; gyro: %s, %s, %s", round(imu.getAccelX()), round(imu.getAccelY()), round(imu.getAccelZ()), imu.getYaw(), imu.getRoll(), imu.getPitch()));
