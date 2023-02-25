@@ -9,7 +9,7 @@ Charged Up, 2023 Season
     * Right Joystick: Spin (X)
 
 ## CAN IDs
-1. RoboRio
+1. RoboRio (This is CAN ID: 0)
 2. Main Power Distribution Hub (REV PDH)
 3. Front Right Swerve Drive Motor (Falcon500/TalonFX)
 4. Front Left Swerve Drive Motor (Falcon500/TalonFX)
@@ -28,3 +28,4 @@ Charged Up, 2023 Season
 17. Claw Left Motor (NEO 550/CAN Spark Max)
 18. Claw Right Motor (NEO 550/CAN Spark Max)
 19. Arm Vision Processor (RaspberryPi 4b)
+20. Flipper Neo (NEO 550/CAN Spark Max)
