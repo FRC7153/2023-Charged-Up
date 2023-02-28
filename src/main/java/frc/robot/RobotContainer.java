@@ -1,9 +1,9 @@
 package frc.robot;
 
-import com.frc7153.inputs.XboxController;
-
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.OI.Controller0;
 import frc.robot.commands.HomeClawCommand;
+import frc.robot.commands.PremoveClawCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.peripherals.ArmPI;
 import frc.robot.subsystems.Arm;
@@ -12,9 +12,6 @@ import frc.robot.subsystems.ShuffleboardManager;
 import frc.robot.subsystems.SwerveDriveBase;
 
 public class RobotContainer {
-    // Joysticks
-    private final XboxController controller0 = new XboxController(0);
-
     // Peripherals
     private final ArmPI armPi = new ArmPI();
 
@@ -29,19 +26,24 @@ public class RobotContainer {
         configureBindings();
 
         // Start Shuffleboard
-        new ShuffleboardManager(controller0, armPi, driveBase.imu);
+        new ShuffleboardManager(Controller0.controller, armPi, driveBase.imu);
     }
 
     // Configure Command Bindings
     private void configureBindings() {
+        // Default Teleop Commands
         driveBase.setDefaultCommand(new TeleopDriveCommand(
             driveBase,
-            () -> controller0.getLeftX(),
-            () -> controller0.getLeftY(),
-            () -> controller0.getRightX()
+            () -> Controller0.getLeftX(),
+            () -> Controller0.getLeftY(),
+            () -> Controller0.getRightX()
         ));
 
         arm.setDefaultCommand(new HomeClawCommand(arm, claw));
+
+        // Auto Move Arm
+        Controller0.lBumper.and(Controller0.lTrigger.negate()).onTrue(new PremoveClawCommand(arm, claw));
+        Controller0.lTrigger.onTrue(new GrabCom)
     }
 
     // Get Auto Command

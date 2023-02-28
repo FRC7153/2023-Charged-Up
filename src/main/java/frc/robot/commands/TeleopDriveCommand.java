@@ -9,6 +9,9 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveDriveBase;
 
+/**
+ * Command to drive swerve drive base in teleop
+ */
 public class TeleopDriveCommand extends CommandBase {
   private SwerveDriveBase base;
 
@@ -16,7 +19,6 @@ public class TeleopDriveCommand extends CommandBase {
   private Supplier<Double> ySupply;
   private Supplier<Double> rSupply;
 
-  /** Creates a new SwerveDriveTeleop. */
   public TeleopDriveCommand(SwerveDriveBase swerveSubsystem, Supplier<Double> xSupplier, Supplier<Double> ySupplier, Supplier<Double> rotSupplier) {
     base = swerveSubsystem;
     xSupply = xSupplier;

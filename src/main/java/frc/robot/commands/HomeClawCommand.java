@@ -5,6 +5,10 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 
+/**
+ * Command to home the claw, moving it to 0 extensions straight up and down
+ * with the hands facing upward.
+ */
 public class HomeClawCommand extends CommandBase {
     // Subsystems
     private Arm arm;
