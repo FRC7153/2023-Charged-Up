@@ -186,6 +186,12 @@ public class SwerveBase extends SubsystemBase {
      */
     public void tankDrive(double left, double right) { tankDriveAbsolute(left*maxDriveSpeed, right*maxDriveSpeed); }
 
+    public void setChassisSpeeds(ChassisSpeeds speeds) {
+        SwerveModuleState[] state = kinematics.toSwerveModuleStates(speeds);
+        
+        scaleAndDistribute(state);
+    }
+
     /**
      * Sets all the motors to a specific angle (for testing usually).
      * @param angle in degrees

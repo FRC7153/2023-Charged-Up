@@ -1,7 +1,17 @@
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
+import com.frc7153.commands.SwerveTrajectoryFollow;
+
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI.Controller0;
+import frc.robot.commands.GrabCommand;
 import frc.robot.commands.HomeClawCommand;
 import frc.robot.commands.PremoveClawCommand;
 import frc.robot.commands.TeleopDriveCommand;
@@ -16,7 +26,7 @@ public class RobotContainer {
     private final ArmPI armPi = new ArmPI();
 
     // Subsystems
-    private final SwerveDriveBase driveBase = new SwerveDriveBase();
+    public final SwerveDriveBase driveBase = new SwerveDriveBase();
     private final Arm arm = new Arm();
     private final Claw claw = new Claw();
 
@@ -43,11 +53,24 @@ public class RobotContainer {
 
         // Auto Move Arm
         Controller0.lBumper.and(Controller0.lTrigger.negate()).onTrue(new PremoveClawCommand(arm, claw));
-        Controller0.lTrigger.onTrue(new GrabCom)
+        Controller0.lTrigger.onTrue(new GrabCommand());
     }
 
     // Get Auto Command
     public Command getAutonomousCommand() {
-        return null;
+        Trajectory loaded = new Trajectory();
+        try {
+            Path traj = Filesystem.getDeployDirectory().toPath().resolve("paths/straightTest2.wpilib.json");
+            loaded = TrajectoryUtil.fromPathweaverJson(traj);
+        } catch (IOException e) {
+            return null;
+        }
+
+        return new SwerveTrajectoryFollow(
+            new RamseteController(2.1, 0.8), 
+            loaded, 
+            driveBase.base,
+            () -> driveBase.getPose()
+        );
     }
 }
