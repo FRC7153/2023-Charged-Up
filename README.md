@@ -10,8 +10,8 @@ Charged Up, 2023 Season
 
 ## CAN IDs
 0. RoboRio (This is CAN ID: 0)
-1. (unasigned)
-2. Main Power Distribution Hub (REV PDH)
+1. Main Power Distribution Hub (REV PDH)
+2. (unassigned) 
 3. Front Right Swerve Drive Motor (Falcon500/TalonFX)
 4. Front Left Swerve Drive Motor (Falcon500/TalonFX)
 5. Rear Right Swerve Drive Motor (Falcon500/TalonFX)
