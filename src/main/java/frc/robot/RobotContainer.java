@@ -58,6 +58,8 @@ public class RobotContainer {
 
     // Get Auto Command
     public Command getAutonomousCommand() {
+        return null;
+        /*
         Trajectory loaded = new Trajectory();
         try {
             Path traj = Filesystem.getDeployDirectory().toPath().resolve("paths/straightTest2.wpilib.json");
@@ -71,6 +73,6 @@ public class RobotContainer {
             loaded, 
             driveBase.base,
             () -> driveBase.getPose()
-        );
+        );*/
     }
 }
