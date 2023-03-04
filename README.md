@@ -30,3 +30,8 @@ Charged Up, 2023 Season
 18. Claw Right Motor (NEO 550/CAN Spark Max)
 19. Arm Vision Processor (RaspberryPi 4b)
 20. Flipper Neo (NEO 550/CAN Spark Max)
+
+## PWM
+
+8. arm angle
+9. flipepr angel
