@@ -1,16 +1,18 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.HardwareConstants;
 
 public class Arm extends SubsystemBase {
     // Motors
@@ -18,27 +20,33 @@ public class Arm extends SubsystemBase {
     private CANSparkMax winchMotor = new CANSparkMax(15, MotorType.kBrushless);
 
     // PID
-    private SparkMaxPIDController armPID = armMotor.getPIDController();
+    private PIDController anglePID = new PIDController(ArmConstants.kANGLE_P, ArmConstants.kANGLE_I, ArmConstants.kANGLE_D);
     private SparkMaxPIDController winchPID = winchMotor.getPIDController();
 
     private double angleSP = 0.0;
     private double extSP = 0.0;
 
+    private double angleVoltage = 0.0;
+
     // Encoders
-    private SparkMaxAbsoluteEncoder angleEncoder = armMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
-    // TODO other sensor
+    private DutyCycleEncoder angleAbsEncoder = new DutyCycleEncoder(8);
 
     // Init
     public Arm() {
         // Config Arm
-        angleEncoder.setZeroOffset(ArmConstants.kANGLE_0_ANGLE);
-        angleEncoder.setPositionConversionFactor(ArmConstants.kANGLE_RATIO);
-
-        ArmConstants.kANGLE_PID.apply(armPID);
-        armPID.setFeedbackDevice(angleEncoder);
+        angleAbsEncoder.setDutyCycleRange(HardwareConstants.kREV_TB_ENCODER_MIN_FREQ, HardwareConstants.kREV_TB_ENCODER_MAX_FREQ);
+        anglePID.setSetpoint(0.0);
 
         // Config Winch
         ArmConstants.kEXT_PID.apply(winchPID);
+    }
+
+    // Go to setpoint
+    @Override
+    public void periodic() {
+        if (DriverStation.isDisabled()) { return; }
+        angleVoltage = anglePID.calculate(getAngleActual());
+        armMotor.setVoltage(angleVoltage);
     }
 
     /**
@@ -50,7 +58,7 @@ public class Arm extends SubsystemBase {
         if (!sanityCheckPosition(kinematics(extSP, angle))) { return false; }
 
         angleSP = angle;
-        armPID.setReference(angleSP, ControlType.kPosition, ArmConstants.kANGLE_PID.kSLOT);
+        anglePID.setSetpoint(angleSP);
         return true;
     }
     
@@ -136,4 +144,9 @@ public class Arm extends SubsystemBase {
 
         return true;
     }
+
+    // Getters
+    public double getAngleSetpoint() { return anglePID.getSetpoint(); }
+    public double getAngleActual() { return angleAbsEncoder.getAbsolutePosition() * 360.0; }
+    public double getAngleVoltage() { return angleVoltage; }
 }

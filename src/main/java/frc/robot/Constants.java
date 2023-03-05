@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.frc7153.math.PIDConstant;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -18,19 +19,27 @@ public final class Constants {
     /* SHUFFLEBOARD CONFIG */
     public static final class ShuffleboardConstants {
         public static final boolean kPI_GRAPHS = false;
+        public static final boolean kARM_GRAPHS = true;
+    }
+
+    /* GENERIC HARDWARE CONSTANTS */
+    public static final class HardwareConstants {
+        // REV Through-Bore Encoder Range
+        public static final double kREV_TB_ENCODER_MIN_FREQ = 1.0;
+        public static final double kREV_TB_ENCODER_MAX_FREQ = 1024.0;
     }
 
     /* SWERVE DRIVE CONSTANTS */
     public static final class SwerveConstants {
         public static final Translation2d kWHEEL_DISTANCE = new Translation2d(
-            Units.inchesToMeters(20.0)/2.0,
-            Units.inchesToMeters(30.5)/2.0
+            Units.inchesToMeters(19.0)/2.0,
+            Units.inchesToMeters(29.5)/2.0
         );
 
-        public static final double kFL_OFFSET = 181.67;
-        public static final double kFR_OFFSET = 178.77;
-        public static final double kRL_OFFSET = 8.35;
-        public static final double kRR_OFFSET = 17.139;
+        public static final double kFL_OFFSET = 16.523;
+        public static final double kFR_OFFSET = 9.58;
+        public static final double kRL_OFFSET = 177.803;
+        public static final double kRR_OFFSET = 181.143;
     }
 
     /* ARM MOVEMENT CONSTANTS */
@@ -38,7 +47,10 @@ public final class Constants {
      * Note that all distance measurements are in INCHES!
      */
     public static final class ArmConstants {
-        public static final PIDConstant kANGLE_PID = new PIDConstant(0.5, 0, 0).withError(0.05).withOutputRange(-10.0, 10.0);
+        public static final double kANGLE_P = 0.1;
+        public static final double kANGLE_I = 0.01;
+        public static final double kANGLE_D = 0.0;
+
         public static final PIDConstant kEXT_PID = new PIDConstant(0.5, 0, 0).withError(0.05).withOutputRange(-10.0, 10.0);
 
         public static final double kJOINT_TO_FLOOR_DIST = 10.0;
@@ -67,5 +79,13 @@ public final class Constants {
 
         public static final double kMIN_ANGLE = -180.0;
         public static final double kMAX_ANGLE = 10.0;
+    }
+
+    /* FLIPPER CONSTANTS */
+    public static final class FlipperConstants {
+        public static final double k0_ANGLE = 0.4;
+        public static final double kGEAR_RATIO = 25.0;
+
+        public static final double kMAX_ANGLE = 150.0; // Assumed that min is 0
     }
 }

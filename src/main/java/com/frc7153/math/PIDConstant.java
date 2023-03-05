@@ -3,6 +3,8 @@ package com.frc7153.math;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.math.controller.PIDController;
+
 /**
  * PID values that can be applied to a number of controllers. This is made so that PID constants
  * can be easily defined with other constants in Constants.java (or other constant locations)
@@ -39,6 +41,7 @@ public class PIDConstant {
      */
     public PIDConstant withError(double err) { kERR = err; return this; }
     /**
+     * ({@code PIDController} does not support this)
      * @param ff The feed-forward gain (kF or kFF)
      * @return This object (modifications are done in place)
      */
@@ -77,5 +80,15 @@ public class PIDConstant {
 
         if (!kERR.isNaN()) { controller.configAllowableClosedloopError(kSLOT, kERR); }
         if (!kFF.isNaN()) { controller.config_kF(kSLOT, kFF); }
+    }
+
+    /**
+     * Apply these values to WPI's PID controller. This has not SLOTs.
+     * @param controller WPI pid controller
+     */
+    public void apply(PIDController controller) {
+        controller.setPID(kP, kI, kD);
+
+        if (!kERR.isNaN()) { controller.setTolerance(kERR); }
     }
 }

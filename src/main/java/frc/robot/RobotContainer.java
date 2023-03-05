@@ -36,7 +36,7 @@ public class RobotContainer {
         configureBindings();
 
         // Start Shuffleboard
-        new ShuffleboardManager(Controller0.controller, armPi, driveBase.imu);
+        new ShuffleboardManager(Controller0.controller, armPi, driveBase.imu, arm);
     }
 
     // Configure Command Bindings

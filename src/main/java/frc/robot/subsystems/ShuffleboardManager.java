@@ -25,6 +25,7 @@ public class ShuffleboardManager extends SubsystemBase {
     private XboxController controller0;
     private ArmPI armPi;
     private IMU imu;
+    private Arm arm;
 
     // Controller Update Counter
     private GenericEntry controller0Update;
@@ -41,12 +42,18 @@ public class ShuffleboardManager extends SubsystemBase {
     // Gyro & Accelerometer
     private GenericEntry gyroCalibrated;
 
+    // Arm
+    private GenericEntry armAngle;
+    private GenericEntry armSP;
+    private GenericEntry armVolt;
+
     // Constructor (Init)
-    public ShuffleboardManager(XboxController controller0, ArmPI armPi, IMU imu) {
+    public ShuffleboardManager(XboxController controller0, ArmPI armPi, IMU imu, Arm arm) {
         // Store objects
         this.controller0 = controller0;
         this.armPi = armPi;
         this.imu = imu;
+        this.arm = arm;
 
         // Controller Tab Init
         ShuffleboardTab controllerTab = Shuffleboard.getTab("Controllers");
@@ -124,6 +131,23 @@ public class ShuffleboardManager extends SubsystemBase {
         gyroCalibrated = gyro.add("Calibrated", false).getEntry();
         
         gyro.add("Calibrate", imu.imu.new CalibrateIMU()).withPosition(1, 0);
+
+        // Arm
+        ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
+
+        armSP = armTab.add("Angle Setpoint", 0.0)
+            .withPosition(3, 0)
+            .getEntry();
+        
+        armAngle = armTab.add("Angle Actual", 0.0)
+            .withPosition(3, 1)
+            .getEntry();
+
+        armVolt = armTab.add("Angle Voltage", 0.0)
+            .withSize(3, 3)
+            .withWidget((ShuffleboardConstants.kARM_GRAPHS) ? BuiltInWidgets.kGraph : BuiltInWidgets.kTextView)
+            .getEntry();
+
     }
 
     // Update Values
@@ -143,5 +167,10 @@ public class ShuffleboardManager extends SubsystemBase {
 
         // Gyro
         gyroCalibrated.setBoolean(imu.isCalibrated());
+
+        // Arm
+        armSP.setDouble(arm.getAngleSetpoint());
+        armAngle.setDouble(arm.getAngleActual());
+        armVolt.setDouble(arm.getAngleVoltage());
     }
 }
