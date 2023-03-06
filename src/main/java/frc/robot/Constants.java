@@ -22,13 +22,6 @@ public final class Constants {
         public static final boolean kARM_GRAPHS = true;
     }
 
-    /* GENERIC HARDWARE CONSTANTS */
-    public static final class HardwareConstants {
-        // REV Through-Bore Encoder Range
-        public static final double kREV_TB_ENCODER_MIN_FREQ = 1.0;
-        public static final double kREV_TB_ENCODER_MAX_FREQ = 1024.0;
-    }
-
     /* SWERVE DRIVE CONSTANTS */
     public static final class SwerveConstants {
         public static final Translation2d kWHEEL_DISTANCE = new Translation2d(
@@ -47,10 +40,7 @@ public final class Constants {
      * Note that all distance measurements are in INCHES!
      */
     public static final class ArmConstants {
-        public static final double kANGLE_P = 0.1;
-        public static final double kANGLE_I = 0.01;
-        public static final double kANGLE_D = 0.0;
-
+        public static final PIDConstant kARM_PID = new PIDConstant(1e-7, 0.0, 0.0).withOutputRange(-11.0, 11.0);
         public static final PIDConstant kEXT_PID = new PIDConstant(0.5, 0, 0).withError(0.05).withOutputRange(-10.0, 10.0);
 
         public static final double kJOINT_TO_FLOOR_DIST = 10.0;

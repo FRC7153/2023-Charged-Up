@@ -21,6 +21,7 @@ public class Arm extends SubsystemBase {
 
     // PID
     private PIDController anglePID = new PIDController(ArmConstants.kANGLE_P, ArmConstants.kANGLE_I, ArmConstants.kANGLE_D);
+    private SparkMaxPIDController anglePID = armMotor.getPIDController();
     private SparkMaxPIDController winchPID = winchMotor.getPIDController();
 
     private double angleSP = 0.0;
@@ -34,8 +35,16 @@ public class Arm extends SubsystemBase {
     // Init
     public Arm() {
         // Config Arm
-        angleAbsEncoder.setDutyCycleRange(HardwareConstants.kREV_TB_ENCODER_MIN_FREQ, HardwareConstants.kREV_TB_ENCODER_MAX_FREQ);
+        ArmConstants.kARM_PID.apply(anglePID);
         anglePID.setSetpoint(0.0);
+
+        // Veryify values have been set
+        System.out.println(String.format(
+            "Angle PID coefficients -> %s, %s, %s",
+            anglePID.getP(ArmConstants.kARM_PID.kSLOT),
+            anglePID.getI(ArmConstants.kARM_PID.kSLOT),
+            anglePID.setD(ArmConstants.kARM_PID.kSLOT)
+        ));
 
         // Config Winch
         ArmConstants.kEXT_PID.apply(winchPID);
