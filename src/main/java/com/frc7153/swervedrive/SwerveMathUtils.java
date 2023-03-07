@@ -2,26 +2,6 @@ package com.frc7153.swervedrive;
 
 public class SwerveMathUtils {
     /**
-     * Takes an angle and normalizes it to a range of -180 to 180
-     * @param angle
-     * @return The angle, normalized
-     */
-    public static double normalizeAngle180(double angle) {
-        angle = normalizeAngle360(angle);
-        if (angle > 180) { angle -= 360.0; }
-        return angle;
-    }
-
-    /**
-     * Takes an angle and normalizes it to a range of 0 - 360
-     * @param angle
-     * @return The angle, normalizes
-     */
-    public static double normalizeAngle360(double angle) {
-        return angle - (360.0 * Math.floor(angle / 360.0));
-    }
-
-    /**
      * Determines how many times you have to add {@code gearRatio} to {@code setPoint} to get it as close
      * as possible to {@code currentPos} to ensure motor moves to least amount possible.<br><br>
      * Ex: If set-point is 5, gearing ratio is 360 (degrees), and it is currently at 4000, it will return 3965, 
@@ -35,17 +15,6 @@ public class SwerveMathUtils {
         //return Math.round(currentPos / gearRatio) * gearRatio + setPoint; // This line is questionable
         setPoint = setPoint / gearRatio;
         return (Math.round((currentPos/gearRatio) - setPoint) + setPoint) * gearRatio;
-    }
-
-    /**
-     * Clamps a speed to the specified range, assuming the lower bound is the opposite of the upper bound
-     * @param value The input value
-     * @param clamp The upper bound, and opposite of the lower bound
-     * @return The clamped value
-     */
-    public static double symmetricClamp(double value, double clamp) {
-        if (clamp < 0) { clamp = -clamp;}
-        return Math.min(Math.max(value, -clamp), clamp);
     }
 
     /**

@@ -61,8 +61,8 @@ public class PIDConstant {
      */
     public void apply(SparkMaxPIDController pid) {
         pid.setP(kP, kSLOT);
-        pid.setI(kP, kSLOT);
-        pid.setD(kP, kSLOT);
+        pid.setI(kI, kSLOT);
+        pid.setD(kD, kSLOT);
 
         if (!kERR.isNaN()) { pid.setSmartMotionAllowedClosedLoopError(kERR, kSLOT); }
         if (!kFF.isNaN()) { pid.setFF(kFF); }

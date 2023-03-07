@@ -42,14 +42,14 @@ public class RobotContainer {
     // Configure Command Bindings
     private void configureBindings() {
         // Default Teleop Commands
-        driveBase.setDefaultCommand(new TeleopDriveCommand(
+        /*driveBase.setDefaultCommand(new TeleopDriveCommand(
             driveBase,
             () -> Controller0.getLeftX(),
             () -> Controller0.getLeftY(),
             () -> Controller0.getRightX()
-        ));
+        ));*/
 
-        arm.setDefaultCommand(new HomeClawCommand(arm, claw));
+        arm.setDefaultCommand(new HomeClawCommand(arm, claw, () -> Controller0.getLeftX()));
 
         // Auto Move Arm
         Controller0.lBumper.and(Controller0.lTrigger.negate()).onTrue(new PremoveClawCommand(arm, claw));

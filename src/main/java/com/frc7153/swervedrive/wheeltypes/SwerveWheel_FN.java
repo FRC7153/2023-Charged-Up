@@ -23,6 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 
+import com.frc7153.math.MathUtils;
 import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.SwerveMathUtils;
 
@@ -150,7 +151,7 @@ public class SwerveWheel_FN implements SwerveWheel {
 
     // Get Angle from Relative Encoder (degrees)
     private double getAngleFromRelative() {
-        return SwerveMathUtils.normalizeAngle180(spinRelEncoder.getPosition() * 360.0 / k_SPIN_RATIO);
+        return MathUtils.normalizeAngle180(spinRelEncoder.getPosition() * 360.0 / k_SPIN_RATIO);
     }
 
     // Coast
@@ -165,14 +166,14 @@ public class SwerveWheel_FN implements SwerveWheel {
     public SwerveModulePosition getState() {
         return new SwerveModulePosition(
             SwerveMathUtils.falcon500PositionToRotations(driveWheel.getSelectedSensorPosition()) / k_DRIVE_RATIO * k_WHEEL_CIRCUMFERENCE,
-            Rotation2d.fromDegrees(SwerveMathUtils.normalizeAngle360(getAngleFromRelative()))
+            Rotation2d.fromDegrees(MathUtils.normalizeAngle360(getAngleFromRelative()))
         );
     }
 
     // Set State
     @Override
     public void setAngle(double angle) {
-        angle = SwerveMathUtils.normalizeAngle180(angle); // Normalize -180 to 180
+        angle = MathUtils.normalizeAngle180(angle); // Normalize -180 to 180
         angle = (angle / 360.0 * k_SPIN_RATIO); // Convert to NEO position
         angle = SwerveMathUtils.calculateContinuousMovement(spinRelEncoder.getPosition(), angle, k_SPIN_RATIO); // Find quickest route
         spinPID.setReference(angle, ControlType.kPosition, k_SPIN_PID_INDEX); // Set PID setpoint
@@ -190,7 +191,7 @@ public class SwerveWheel_FN implements SwerveWheel {
     public void set(SwerveModuleState state) {
         state = SwerveModuleState.optimize(
             state, 
-            Rotation2d.fromDegrees(SwerveMathUtils.normalizeAngle360(getAngleFromRelative()))
+            Rotation2d.fromDegrees(MathUtils.normalizeAngle360(getAngleFromRelative()))
         );
         set(state.angle.getDegrees(), state.speedMetersPerSecond);
     }

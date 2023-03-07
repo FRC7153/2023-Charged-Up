@@ -29,10 +29,10 @@ public final class Constants {
             Units.inchesToMeters(29.5)/2.0
         );
 
-        public static final double kFL_OFFSET = 16.523;
-        public static final double kFR_OFFSET = 9.58;
-        public static final double kRL_OFFSET = 177.803;
-        public static final double kRR_OFFSET = 181.143;
+        public static final double kFL_OFFSET = 16.523+180.0;
+        public static final double kFR_OFFSET = 9.58+180.0;
+        public static final double kRL_OFFSET = 177.803+180.0;
+        public static final double kRR_OFFSET = 181.143-180.0;
     }
 
     /* ARM MOVEMENT CONSTANTS */
@@ -40,13 +40,13 @@ public final class Constants {
      * Note that all distance measurements are in INCHES!
      */
     public static final class ArmConstants {
-        public static final PIDConstant kARM_PID = new PIDConstant(1e-7, 0.0, 0.0).withOutputRange(-11.0, 11.0);
+        public static final PIDConstant kARM_PID = new PIDConstant(0.0084, 1e-6, 0.0).withOutputRange(-11.0, 11.0);
         public static final PIDConstant kEXT_PID = new PIDConstant(0.5, 0, 0).withError(0.05).withOutputRange(-10.0, 10.0);
 
         public static final double kJOINT_TO_FLOOR_DIST = 10.0;
         public static final double kJOINT_TO_BUMPER_DIST = 7.0;
 
-        public static final double kANGLE_RATIO = 12.0; // TODO add chain ratio
+        public static final double kANGLE_RATIO = 96.0;
         public static final double kANGLE_0_ANGLE = 100.0;
 
         public static final double kMIN_EXTENSION = 12.0;

@@ -11,6 +11,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.frc7153.math.MathUtils;
 import com.frc7153.swervedrive.wheeltypes.SwerveWheel;
 
 public class SwerveBase extends SubsystemBase {
@@ -173,10 +175,10 @@ public class SwerveBase extends SubsystemBase {
      * @param right The speed of the right side of the robot (meters/second)
      */
     public void tankDriveAbsolute(double left, double right) {
-        fl.set(0.0, SwerveMathUtils.symmetricClamp(left, maxDriveSpeed));
-        rl.set(0.0, SwerveMathUtils.symmetricClamp(left, maxDriveSpeed));
-        fr.set(0.0, SwerveMathUtils.symmetricClamp(right, maxDriveSpeed));
-        rr.set(0.0, SwerveMathUtils.symmetricClamp(right, maxDriveSpeed));
+        fl.set(0.0, MathUtils.symmetricClamp(left, maxDriveSpeed));
+        rl.set(0.0, MathUtils.symmetricClamp(left, maxDriveSpeed));
+        fr.set(0.0, MathUtils.symmetricClamp(right, maxDriveSpeed));
+        rr.set(0.0, MathUtils.symmetricClamp(right, maxDriveSpeed));
     }
 
     /**

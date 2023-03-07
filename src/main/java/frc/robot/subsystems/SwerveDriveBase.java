@@ -42,6 +42,8 @@ public class SwerveDriveBase extends SubsystemBase {
     @Override
     public void periodic() {
         base.updateOdometry(imu.getYaw());
+        // TODO this is wrong
+        base.setMaxSpeed(1.0, 360.0);
         //imu.integrateAcceleration();
     }
     
