@@ -2,20 +2,17 @@ package frc.robot.subsystems;
 
 import com.frc7153.controllers.AbsoluteDutyCycleEncoder;
 import com.frc7153.controllers.AbsoluteDutyCycleEncoder.Range;
-import com.frc7153.math.MathUtils;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
@@ -27,20 +24,15 @@ public class Arm extends SubsystemBase {
     // PID
     //private SparkMaxPIDController anglePID = angleMotor.getPIDController();
     //private PIDController anglePID = new PIDController(0.0084, 1e-6, 0.0);
-    private PIDController anglePID = new PIDController(0.09, 0.01, 0.0);
+    //private PIDController anglePID = new PIDController(0.09, 0.01, 0.0); // previous
+    private ProfiledPIDController anglePID = new ProfiledPIDController(0.09, 0.01, 0.0, new Constraints(0.1, 0.1));
     private SparkMaxPIDController winchPID = winchMotor.getPIDController();
 
     private double angleSP = 0.0;
     private double extSP = 0.0;
 
-    private double angleVoltage = 0.0;
-
     // Encoders
     private AbsoluteDutyCycleEncoder angleAbsEncoder = new AbsoluteDutyCycleEncoder(8);
-    private RelativeEncoder angleRelEncoder = angleMotor.getEncoder();
-
-    private boolean angleEncSetupYet = false;
-    private double angleEncBootTime = -1.0;
 
     // Init
     public Arm() {
@@ -71,17 +63,6 @@ public class Arm extends SubsystemBase {
     // Go to setpoint
     @Override
     public void periodic() {
-        //angleVoltage = anglePID.calculate(getAngleActual());
-        //armMotor.setVoltage(angleVoltage);
-
-        if (!angleEncSetupYet && angleEncBootTime == -1.0 && angleAbsEncoder.isConnected()) {
-            angleEncBootTime = Timer.getFPGATimestamp();
-        } else if (!angleEncSetupYet && Timer.getFPGATimestamp() - angleEncBootTime > 1.0 && angleEncBootTime != -1.0) {
-            angleEncSetupYet = true;
-            angleRelEncoder.setPosition(angleAbsEncoder.getAbsolutePosition() / 360.0 * ArmConstants.kANGLE_RATIO);
-            System.out.println(String.format("Angle Rel Encoder Configed -> %s", angleAbsEncoder.getAbsolutePosition()));
-        }
-
         // TODO max min
         if (!DriverStation.isDisabled()) {
             angleMotor.setVoltage(
@@ -101,7 +82,8 @@ public class Arm extends SubsystemBase {
 
         angleSP = angle;
         //anglePID.setReference(angle / 360.0 * ArmConstants.kANGLE_RATIO, ControlType.kPosition, ArmConstants.kARM_PID.kSLOT);
-        anglePID.setSetpoint(angle);
+        //anglePID.setSetpoint(angle);
+        anglePID.setGoal(angle);
         return true;
     }
     

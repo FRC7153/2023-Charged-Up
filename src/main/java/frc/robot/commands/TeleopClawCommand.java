@@ -11,17 +11,17 @@ import frc.robot.subsystems.Claw;
  * Command to home the claw, moving it to 0 extensions straight up and down
  * with the hands facing upward.
  */
-public class HomeClawCommand extends CommandBase {
+public class TeleopClawCommand extends CommandBase {
     // Subsystems
     private Arm arm;
     private Claw claw;
-    private Supplier<Double> posSupplier; // TODO temp
+    private Supplier<Double> angleSupplier;
 
     // Constructor
-    public HomeClawCommand(Arm armSubsys, Claw clawSubsys, Supplier<Double> supp) {
+    public TeleopClawCommand(Arm armSubsys, Claw clawSubsys, Supplier<Double> angleSupp) {
         claw = clawSubsys;
         arm = armSubsys;
-        posSupplier = supp;
+        angleSupplier = angleSupp;
     
         addRequirements(claw, arm);    
     }
@@ -36,7 +36,13 @@ public class HomeClawCommand extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setAngle(posSupplier.get() * 90.0);
+        arm.setAngle(0.0);
+    }
+
+    // Give priority to ALL other commands
+    @Override
+    public InterruptionBehavior getInterruptionBehavior() {
+        return InterruptionBehavior.kCancelSelf;
     }
 
     // Never finished

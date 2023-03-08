@@ -1,18 +1,10 @@
 package frc.robot;
 
-import java.io.IOException;
-import java.nio.file.Path;
-
-import com.frc7153.commands.SwerveTrajectoryFollow;
-
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI.Controller0;
+import frc.robot.OI.Controller1;
 import frc.robot.commands.GrabCommand;
-import frc.robot.commands.HomeClawCommand;
+import frc.robot.commands.TeleopClawCommand;
 import frc.robot.commands.PremoveClawCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.peripherals.ArmPI;
@@ -42,14 +34,14 @@ public class RobotContainer {
     // Configure Command Bindings
     private void configureBindings() {
         // Default Teleop Commands
-        /*driveBase.setDefaultCommand(new TeleopDriveCommand(
+        driveBase.setDefaultCommand(new TeleopDriveCommand(
             driveBase,
-            () -> Controller0.getLeftX(),
-            () -> Controller0.getLeftY(),
-            () -> Controller0.getRightX()
-        ));*/
+            Controller0::getLeftX,
+            Controller0::getLeftY,
+            Controller0::getRightX
+        ));
 
-        arm.setDefaultCommand(new HomeClawCommand(arm, claw, () -> Controller0.getLeftX()));
+        arm.setDefaultCommand(new TeleopClawCommand(arm, claw, Controller1::getY));
 
         // Auto Move Arm
         Controller0.lBumper.and(Controller0.lTrigger.negate()).onTrue(new PremoveClawCommand(arm, claw));

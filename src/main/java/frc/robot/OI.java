@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.frc7153.inputs.Joystick;
 import com.frc7153.inputs.XboxController;
 
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -21,5 +22,13 @@ public class OI {
         // Buttons
         public static final JoystickButton lBumper = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
         public static final Trigger lTrigger = new Trigger(() -> controller.getRightTrigger());
+    }
+
+    /** Secondary Joystick Arm Controller */
+    public static final class Controller1 {
+        public static final Joystick controller = new Joystick(1);
+
+        // Getters
+        public static final double getY() { return controller.getY(); }
     }
 }
