@@ -41,12 +41,14 @@ public final class Constants {
      */
     public static final class ArmConstants {
         public static final PIDConstant kARM_PID = new PIDConstant(0.0084, 1e-6, 0.0).withOutputRange(-11.0, 11.0);
-        public static final PIDConstant kEXT_PID = new PIDConstant(0.5, 0, 0).withError(0.05).withOutputRange(-10.0, 10.0);
+        public static final PIDConstant kEXT_PID = new PIDConstant(0.01, 0, 0).withError(0.05).withOutputRange(-10.0, 10.0);
 
         public static final double kJOINT_TO_FLOOR_DIST = 10.0;
         public static final double kJOINT_TO_BUMPER_DIST = 7.0;
 
         public static final double kANGLE_RATIO = 96.0;
+        public static final double kWINCH_RATIO = 20.0;
+
         public static final double kANGLE_0_ANGLE = 100.0;
 
         public static final double kMIN_EXTENSION = 12.0;

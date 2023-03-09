@@ -19,8 +19,10 @@ public class RobotContainer {
 
     // Subsystems
     public final SwerveDriveBase driveBase = new SwerveDriveBase();
-    private final Arm arm = new Arm();
+    public final Arm arm = new Arm();
     private final Claw claw = new Claw();
+
+    public final ShuffleboardManager shuffleboard;
 
     // Constructor
     public RobotContainer() {
@@ -28,7 +30,7 @@ public class RobotContainer {
         configureBindings();
 
         // Start Shuffleboard
-        new ShuffleboardManager(Controller0.controller, armPi, driveBase.imu, arm);
+        shuffleboard = new ShuffleboardManager(Controller0.controller, armPi, driveBase.imu, arm);
     }
 
     // Configure Command Bindings
@@ -41,11 +43,11 @@ public class RobotContainer {
             Controller0::getRightX
         ));
 
-        arm.setDefaultCommand(new TeleopClawCommand(arm, claw, Controller1::getY));
+        arm.setDefaultCommand(new TeleopClawCommand(arm, claw, Controller1::getY, Controller1::getThrottle));
 
         // Auto Move Arm
-        Controller0.lBumper.and(Controller0.lTrigger.negate()).onTrue(new PremoveClawCommand(arm, claw));
-        Controller0.lTrigger.onTrue(new GrabCommand());
+        //Controller0.lBumper.and(Controller0.lTrigger.negate()).onTrue(new PremoveClawCommand(arm, claw));
+        //Controller0.lTrigger.onTrue(new GrabCommand());
     }
 
     // Get Auto Command

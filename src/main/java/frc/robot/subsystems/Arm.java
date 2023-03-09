@@ -3,14 +3,13 @@ package frc.robot.subsystems;
 import com.frc7153.controllers.AbsoluteDutyCycleEncoder;
 import com.frc7153.controllers.AbsoluteDutyCycleEncoder.Range;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,13 +18,13 @@ import frc.robot.Constants.ArmConstants;
 public class Arm extends SubsystemBase {
     // Motors
     private CANSparkMax angleMotor = new CANSparkMax(16, MotorType.kBrushless);
-    private CANSparkMax winchMotor = new CANSparkMax(15, MotorType.kBrushless);
+    public CANSparkMax winchMotor = new CANSparkMax(15, MotorType.kBrushless);
 
     // PID
     //private SparkMaxPIDController anglePID = angleMotor.getPIDController();
     //private PIDController anglePID = new PIDController(0.0084, 1e-6, 0.0);
-    //private PIDController anglePID = new PIDController(0.09, 0.01, 0.0); // previous
-    private ProfiledPIDController anglePID = new ProfiledPIDController(0.09, 0.01, 0.0, new Constraints(0.1, 0.1));
+    private PIDController anglePID = new PIDController(0.09, 0.01, 0.0); // previous
+    //private ProfiledPIDController anglePID = new ProfiledPIDController(0.09, 0.01, 0.0, new Constraints(0.1, 0.1));
     private SparkMaxPIDController winchPID = winchMotor.getPIDController();
 
     private double angleSP = 0.0;
@@ -33,6 +32,7 @@ public class Arm extends SubsystemBase {
 
     // Encoders
     private AbsoluteDutyCycleEncoder angleAbsEncoder = new AbsoluteDutyCycleEncoder(8);
+    public RelativeEncoder winchEnc = winchMotor.getEncoder();
 
     // Init
     public Arm() {
@@ -57,6 +57,7 @@ public class Arm extends SubsystemBase {
         ));*/
 
         // Config Winch
+        winchMotor.setInverted(true);
         ArmConstants.kEXT_PID.apply(winchPID);
     }
 
@@ -82,8 +83,8 @@ public class Arm extends SubsystemBase {
 
         angleSP = angle;
         //anglePID.setReference(angle / 360.0 * ArmConstants.kANGLE_RATIO, ControlType.kPosition, ArmConstants.kARM_PID.kSLOT);
-        //anglePID.setSetpoint(angle);
-        anglePID.setGoal(angle);
+        anglePID.setSetpoint(angle);
+        //anglePID.setGoal(angle);
         return true;
     }
     
@@ -93,10 +94,10 @@ public class Arm extends SubsystemBase {
      * @return Whether this position is legal
      */
     public boolean setExtension(double ext) {
-        if (!sanityCheckPosition(kinematics(ext, angleSP))) { return false; }
+        //if (!sanityCheckPosition(kinematics(ext, angleSP))) { return false; }
 
-        extSP = ext - ArmConstants.kMIN_EXTENSION;
-        winchPID.setReference(extSP, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
+        extSP = ext;
+        winchPID.setReference(extSP * ArmConstants.kWINCH_RATIO, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
         return true;
     }
 

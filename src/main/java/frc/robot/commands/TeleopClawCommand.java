@@ -16,14 +16,16 @@ public class TeleopClawCommand extends CommandBase {
     private Arm arm;
     private Claw claw;
     private Supplier<Double> angleSupplier;
+    private Supplier<Double> extensionSupplier;
 
     // Constructor
-    public TeleopClawCommand(Arm armSubsys, Claw clawSubsys, Supplier<Double> angleSupp) {
+    public TeleopClawCommand(Arm armSubsys, Claw clawSubsys, Supplier<Double> angleSupp, Supplier<Double> extSupplier) {
         claw = clawSubsys;
         arm = armSubsys;
         angleSupplier = angleSupp;
+        extensionSupplier = extSupplier;
     
-        addRequirements(claw, arm);    
+        addRequirements(claw, arm);
     }
 
     // Setup
@@ -36,7 +38,8 @@ public class TeleopClawCommand extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setAngle(0.0);
+        arm.setAngle(angleSupplier.get()*90.0);
+        arm.setExtension(((extensionSupplier.get() + 1.0) / 2.0) * 100.0);
     }
 
     // Give priority to ALL other commands

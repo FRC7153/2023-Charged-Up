@@ -46,6 +46,7 @@ public class ShuffleboardManager extends SubsystemBase {
     private GenericEntry armAngle;
     private GenericEntry armSP;
     private GenericEntry armVolt;
+    private GenericEntry armWinchPos;
 
     // Constructor (Init)
     public ShuffleboardManager(XboxController controller0, ArmPI armPi, IMU imu, Arm arm) {
@@ -148,6 +149,8 @@ public class ShuffleboardManager extends SubsystemBase {
             .withWidget((ShuffleboardConstants.kARM_GRAPHS) ? BuiltInWidgets.kGraph : BuiltInWidgets.kTextView)
             .getEntry();
 
+        armWinchPos = armTab.add("Arm Winch Rot", 0.0)
+            .getEntry();
     }
 
     // Update Values
@@ -172,5 +175,6 @@ public class ShuffleboardManager extends SubsystemBase {
         armSP.setDouble(arm.getAngleSetpoint());
         armAngle.setDouble(arm.getAngleActual());
         armVolt.setDouble(arm.getAngleVoltage());
+        armWinchPos.setDouble(arm.winchEnc.getPosition());
     }
 }
