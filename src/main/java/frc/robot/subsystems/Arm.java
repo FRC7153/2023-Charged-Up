@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -66,10 +67,14 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         // TODO max min
         if (!DriverStation.isDisabled()) {
+            // Set angle voltage
             angleMotor.setVoltage(
                 //MathUtils.symmetricClamp(anglePID.calculate(angleAbsEncoder.getAbsolutePosition()), 0.5)
                 anglePID.calculate(angleAbsEncoder.getAbsolutePosition())
             );
+
+            // Safety Check Position
+            Translation2d pose = kinematics(winchEnc.getPosition() + ArmConstants.kMIN_EXTENSION, angleAbsEncoder.getAbsolutePosition());
         }
     }
 
@@ -87,6 +92,8 @@ public class Arm extends SubsystemBase {
         //anglePID.setGoal(angle);
         return true;
     }
+
+    public void setWinchPos(double pos) { winchPID.setReference(pos, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT); }
     
     /**
      * Set the extension
@@ -97,7 +104,7 @@ public class Arm extends SubsystemBase {
         //if (!sanityCheckPosition(kinematics(ext, angleSP))) { return false; }
 
         extSP = ext;
-        winchPID.setReference(extSP * ArmConstants.kWINCH_RATIO, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
+        winchPID.setReference(extSP * 150.0, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
         return true;
     }
 

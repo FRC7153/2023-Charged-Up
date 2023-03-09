@@ -26,6 +26,7 @@ public class ShuffleboardManager extends SubsystemBase {
     private ArmPI armPi;
     private IMU imu;
     private Arm arm;
+    private Claw claw;
 
     // Controller Update Counter
     private GenericEntry controller0Update;
@@ -47,14 +48,17 @@ public class ShuffleboardManager extends SubsystemBase {
     private GenericEntry armSP;
     private GenericEntry armVolt;
     private GenericEntry armWinchPos;
+    private GenericEntry armLHand;
+    private GenericEntry armRHand;
 
     // Constructor (Init)
-    public ShuffleboardManager(XboxController controller0, ArmPI armPi, IMU imu, Arm arm) {
+    public ShuffleboardManager(XboxController controller0, ArmPI armPi, IMU imu, Arm arm, Claw claw) {
         // Store objects
         this.controller0 = controller0;
         this.armPi = armPi;
         this.imu = imu;
         this.arm = arm;
+        this.claw = claw;
 
         // Controller Tab Init
         ShuffleboardTab controllerTab = Shuffleboard.getTab("Controllers");
@@ -151,6 +155,12 @@ public class ShuffleboardManager extends SubsystemBase {
 
         armWinchPos = armTab.add("Arm Winch Rot", 0.0)
             .getEntry();
+
+        armLHand = armTab.add("Left Hand Claw", 0.0)
+            .getEntry();
+        
+        armRHand = armTab.add("Right Hand Claw", 0.0)
+            .getEntry();
     }
 
     // Update Values
@@ -176,5 +186,8 @@ public class ShuffleboardManager extends SubsystemBase {
         armAngle.setDouble(arm.getAngleActual());
         armVolt.setDouble(arm.getAngleVoltage());
         armWinchPos.setDouble(arm.winchEnc.getPosition());
+
+        armLHand.setDouble(claw.getLHandPos());
+        armRHand.setDouble(claw.getRHandPos());
     }
 }

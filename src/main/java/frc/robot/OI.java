@@ -31,5 +31,15 @@ public class OI {
         // Getters
         public static final double getY() { return controller.getY(); }
         public static final double getThrottle() { return controller.getThrottle(); }
+
+        // Buttons
+        public static final Trigger trigger = new Trigger(() -> controller.getTrigger());
+
+        public static final JoystickButton button7 = new JoystickButton(controller, 7);
+        public static final JoystickButton button8 = new JoystickButton(controller, 8);
+        public static final JoystickButton button9 = new JoystickButton(controller, 9);
+        public static final JoystickButton button10 = new JoystickButton(controller, 10);
+        public static final JoystickButton button11 = new JoystickButton(controller, 11);
+        public static final JoystickButton button12 = new JoystickButton(controller, 12);
     }
 }
