@@ -14,8 +14,8 @@ Charged Up, 2023 Season
     * Slider Down: Extend Arm
     * Trigger: Hold to close claw, release to open 
     * Button 5: Reset Claw Hand Encoders (Test)
-    * Button 11: Arm Down Front/Back On Hold
-    * Button 12: Arm Down Front/Back On Hold
+    * Button 11: Arm Down Front On Hold
+    * Button 12: Arm Down Back On Hold
 
 
 ## CAN IDs
