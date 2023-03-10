@@ -1,11 +1,12 @@
 package frc.robot;
 
+import com.frc7153.commands.ConfigCommand;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
 import frc.robot.commands.GrabCommand;
 import frc.robot.commands.TeleopArmCommand;
-import frc.robot.commands.PremoveClawCommand;
 import frc.robot.commands.PresetArmCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.peripherals.ArmPI;
@@ -21,7 +22,7 @@ public class RobotContainer {
     // Subsystems
     public final SwerveDriveBase driveBase = new SwerveDriveBase();
     public final Arm arm = new Arm();
-    private final Claw claw = new Claw();
+    public final Claw claw = new Claw();
 
     public final ShuffleboardManager shuffleboard;
 
@@ -45,13 +46,19 @@ public class RobotContainer {
         ));
 
         arm.setDefaultCommand(new TeleopArmCommand(arm, claw, Controller1::getY, Controller1::getThrottle));
+        claw.setDefaultCommand(new GrabCommand(claw, 0.0));
 
         // Arm to Preset
         Controller1.button11.whileTrue(new PresetArmCommand(arm, 119.09, 0.90));
         Controller1.button12.whileTrue(new PresetArmCommand(arm, -114.6, 0.0));
 
         // Claw
-        Controller1.trigger.whileTrue(new GrabCommand(claw));
+        Controller1.trigger.whileTrue(new GrabCommand(claw, 180.0));
+
+        // Testing Commands
+        if (Constants.kTEST_DEPLOY) {
+            Controller1.button5.onTrue(new ConfigCommand(claw::resetEncoders, "", claw));
+        }
 
         // Auto Move Arm
         //Controller0.lBumper.and(Controller0.lTrigger.negate()).onTrue(new PremoveClawCommand(arm, claw));

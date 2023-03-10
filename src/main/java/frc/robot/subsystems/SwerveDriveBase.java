@@ -4,6 +4,7 @@ import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.wheeltypes.SwerveWheel_FN;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.peripherals.IMU;
@@ -43,7 +44,7 @@ public class SwerveDriveBase extends SubsystemBase {
     public void periodic() {
         base.updateOdometry(imu.getYaw());
         // TODO this is wrong
-        base.setMaxSpeed(1.0, 360.0);
+        base.setMaxSpeed(2.0, 360.0);
         //imu.integrateAcceleration();
     }
     

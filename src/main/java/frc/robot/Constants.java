@@ -16,6 +16,8 @@ import edu.wpi.first.math.util.Units;
  * </ul>
  */
 public final class Constants {
+    public static final boolean kTEST_DEPLOY = true;
+
     /* SHUFFLEBOARD CONFIG */
     public static final class ShuffleboardConstants {
         public static final boolean kPI_GRAPHS = false;
@@ -40,7 +42,7 @@ public final class Constants {
      * Note that all distance measurements are in INCHES!
      */
     public static final class ArmConstants {
-        public static final PIDConstant kARM_PID = new PIDConstant(0.0084, 1e-6, 0.0).withOutputRange(-12.0, 12.0);
+        public static final PIDConstant kARM_PID = new PIDConstant(0.0084, 1e-6, 0.0).withError(0.5).withOutputRange(-12.0, 12.0);
         public static final PIDConstant kEXT_PID = new PIDConstant(0.01, 0.000001, 0).withError(0.05).withOutputRange(-8.0, 8.0);
 
         public static final double kJOINT_TO_FLOOR_DIST = 10.0;
@@ -62,15 +64,15 @@ public final class Constants {
 
     /* CLAW CONSTANTS */
     public static final class ClawConstants {
-        public static final PIDConstant kHAND_PID = new PIDConstant(0.001, 0, 0).withError(0.05).withOutputRange(-8.0, 8.0);
+        public static final PIDConstant kHAND_PID = new PIDConstant(0.01, 0.000006, 0).withOutputRange(-10.0, 10.0);
         
-        public static final double kANGLE_RATIO = 12.0; // TODO not right
+        public static final double kANGLE_RATIO = 25.0 * (36.0 / 16.0);
 
         public static final double kLHAND_OFFSET = 0.0;
         public static final double kRHAND_OFFSET = 0.0;
 
-        public static final double kMIN_ANGLE = -180.0;
-        public static final double kMAX_ANGLE = 10.0;
+        public static final double kMIN_ANGLE = 0.0;
+        public static final double kMAX_ANGLE = 180.0;
     }
 
     /* FLIPPER CONSTANTS */

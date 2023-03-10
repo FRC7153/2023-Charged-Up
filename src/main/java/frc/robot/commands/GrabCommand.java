@@ -6,35 +6,33 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.Joystick;
 
 
 public class GrabCommand extends CommandBase {
     private Claw claw;
+    private double angle;
 
     /** Creates a new GrabCommand. */
-    public GrabCommand(Claw clawSubsys) {
+    public GrabCommand(Claw clawSubsys, double angle) {
         // Use addRequirements() here to declare subsystem dependencies.
         claw = clawSubsys;
+        this.angle = angle;
 
         addRequirements(claw);
     }
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+        claw.setSymmetricPosition(angle);
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() { 
-        claw.setSymmetricPosition(180.0);
-    }
+    public void execute() {}
 
     // Called once the command ends or is interrupted.
     @Override

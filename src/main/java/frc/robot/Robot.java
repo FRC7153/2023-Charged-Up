@@ -53,22 +53,25 @@ public class Robot extends TimedRobot {
 
   // Disabled Init
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    // Set arms to coast to be reset
+    container.claw.setCoastMode(true);
+  }
 
   // Test Init
   @Override
   public void testInit() {
-    container.arm.winchEnc.setPosition(0.0);
-    container.arm.setAngle(90.0);
+    container.arm.setAngle(0.0);
   }
 
   // Test Periodic
   @Override
   public void testPeriodic() {
-    container.arm.winchMotor.set(Controller1.getThrottle());
-    System.out.println(container.arm.winchEnc.getPosition());
+    container.arm.winchMotor.set(-Controller1.getThrottle());
 
     container.arm.periodic();
     container.shuffleboard.periodic();
+
+    container.arm.winchEnc.setPosition(0.0);
   }
 }

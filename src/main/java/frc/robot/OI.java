@@ -33,8 +33,9 @@ public class OI {
         public static final double getThrottle() { return controller.getThrottle(); }
 
         // Buttons
-        public static final Trigger trigger = new Trigger(() -> controller.getTrigger());
+        public static final JoystickButton trigger = new JoystickButton(controller, Joystick.ButtonType.kTrigger.value);
 
+        public static final JoystickButton button5 = new JoystickButton(controller, 5);
         public static final JoystickButton button7 = new JoystickButton(controller, 7);
         public static final JoystickButton button8 = new JoystickButton(controller, 8);
         public static final JoystickButton button9 = new JoystickButton(controller, 9);

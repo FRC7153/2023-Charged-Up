@@ -25,7 +25,7 @@ public class TeleopArmCommand extends CommandBase {
         angleSupplier = angleSupp;
         extensionSupplier = extSupplier;
     
-        addRequirements(claw, arm);
+        addRequirements(arm);
     }
 
     // Setup
@@ -38,8 +38,8 @@ public class TeleopArmCommand extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setAngle(angleSupplier.get()*125.0);
-        arm.setExtension((extensionSupplier.get() + 1.0) / 2.0);
+        arm.setAngle(-angleSupplier.get()*125.0);
+        arm.setExtension((-extensionSupplier.get() + 1.0) / 2.0);
         //System.out.println(((extensionSupplier.get() + 1.0) / 2.0) * 10.0);
     }
 
