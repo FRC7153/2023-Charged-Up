@@ -8,8 +8,8 @@ Charged Up, 2023 Season
     * Left Joystick: Forward/backward, right/left
     * Right Joystick: Spin (X)
 * Logitech Joystick 1:
-    * Forward: Arm Forward
-    * Backward: Arm Backward
+    * Joystick Forward: Arm Forward
+    * Joystick Backward: Arm Backward
     * Slider Up: Retract Arm
     * Slider Down: Extend Arm
     * Trigger: Hold to close claw, release to open 
