@@ -7,6 +7,13 @@ Charged Up, 2023 Season
 * Xbox Controller 0: 
     * Left Joystick: Forward/backward, right/left
     * Right Joystick: Spin (X)
+* Logitech Joystick 1:
+    * Forward: Arm Forward
+    * Backward: Arm Backward
+    * Slider Up: Retract Arm
+    * Slider Down: Extend Arm
+    * Trigger: Hold to close claw, release to open 
+
 
 ## CAN IDs
 0. RoboRio (This is CAN ID: 0)
