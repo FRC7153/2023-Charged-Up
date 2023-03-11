@@ -13,13 +13,15 @@ import frc.robot.subsystems.Claw;
 
 public class GrabCommand extends CommandBase {
     private Claw claw;
-    private double angle;
+    private double lRots;
+    private double rRots;
 
     /** Creates a new GrabCommand. */
-    public GrabCommand(Claw clawSubsys, double angle) {
+    public GrabCommand(Claw clawSubsys, double lPos, double rPos) {
         // Use addRequirements() here to declare subsystem dependencies.
         claw = clawSubsys;
-        this.angle = angle;
+        lRots = lPos;
+        rRots = rPos;
 
         addRequirements(claw);
     }
@@ -27,7 +29,7 @@ public class GrabCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        claw.setSymmetricPosition(angle);
+        claw.setPosition(lRots, rRots);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

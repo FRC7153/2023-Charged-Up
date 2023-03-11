@@ -12,7 +12,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ClawConstants;
 
 public class Claw extends SubsystemBase {
@@ -36,21 +38,31 @@ public class Claw extends SubsystemBase {
     // Constructor
     public Claw() {
         // Config encoders
-        lHandEnc.setInverted(true);
+        lHandEnc.setInverted(false);
+        rHandEnc.setInverted(false);
+
+        lHandEnc.setZeroOffset(ClawConstants.kL_HAND_OFFSET);
+        rHandEnc.setZeroOffset(ClawConstants.kR_HAND_OFFSET);
 
         // Config PID
         lHandPid.setFeedbackDevice(lHandEnc);
         rHandPid.setFeedbackDevice(rHandEnc);
 
         // Config motors
-        lHand.setInverted(false);
+        lHand.setInverted(true);
         rHand.setInverted(true);
+
+        lHand.setSmartCurrentLimit(ClawConstants.kCURRENT_LIMIT);
+        rHand.setSmartCurrentLimit(ClawConstants.kCURRENT_LIMIT);
 
         setCoastMode(false);
 
         // Config PID
         ClawConstants.kHAND_PID.apply(lHandPid);
         ClawConstants.kHAND_PID.apply(rHandPid);
+
+        lHandPid.setPositionPIDWrappingEnabled(false);
+        rHandPid.setPositionPIDWrappingEnabled(false);
     }
 
     // Set Coast/Brake Mode
@@ -59,38 +71,20 @@ public class Claw extends SubsystemBase {
         rHand.setIdleMode(coast ? IdleMode.kCoast : IdleMode.kBrake);
     }
 
-    // Checks if value is possible
-    private boolean isPossible(double value) {
-        return (value <= ClawConstants.kMAX_ANGLE && value >= ClawConstants.kMIN_ANGLE);
-    }
-
     /**
-     * Sets the position of each individual hand.
+     * Sets the position of each individual hand in rotations (0 - 1).
      * Also disabled coast mode<br><br>
-     * 0 degrees is downward, positive is outwards for both
+     * 0 degrees is forward, positive is outwards for both
      * @param lAngle Angle of left hand
      * @param rAngle Angle of right hand
      * @return True, if this is a possible location
      */
-    public boolean setPosition(double lAngle, double rAngle) {
+    public void setPosition(double lAngle, double rAngle) {
         setCoastMode(false);
 
-        if (isPossible(lAngle)) {
-            lHandPid.setReference(MathUtils.wrap0To1((lAngle/360.0) - 0.25), ControlType.kPosition, ClawConstants.kHAND_PID.kSLOT);
-        }
-        if (isPossible(rAngle)) {
-            rHandPid.setReference(MathUtils.wrap0To1((rAngle/360.0) - 0.11), ControlType.kPosition, ClawConstants.kHAND_PID.kSLOT);
-        }
-
-        return (isPossible(lAngle) && isPossible(rAngle));
+        lHandPid.setReference(MathUtils.wrap0To1(lAngle), ControlType.kPosition, ClawConstants.kHAND_PID.kSLOT);
+        rHandPid.setReference(MathUtils.wrap0To1(rAngle), ControlType.kPosition, ClawConstants.kHAND_PID.kSLOT);
     }
-
-    /**
-     * Sets the position of both claws to the same
-     * @param angle The angle (0 is forward, negative is outward)
-     * @return True, if this is a possible location
-     */
-    public boolean setSymmetricPosition(double angle) { return setPosition(angle, angle); }
 
     // Angle getters
     public double getLHandPos() { return lHandEnc.getPosition(); }

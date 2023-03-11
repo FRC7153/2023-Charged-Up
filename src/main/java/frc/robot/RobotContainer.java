@@ -3,6 +3,7 @@ package frc.robot;
 import com.frc7153.commands.ConfigCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
 import frc.robot.commands.GrabCommand;
@@ -46,15 +47,20 @@ public class RobotContainer {
         ));
 
         arm.setDefaultCommand(new TeleopArmCommand(arm, claw, Controller1::getY, Controller1::getThrottle));
-        claw.setDefaultCommand(new GrabCommand(claw, .0));
+        claw.setDefaultCommand(new GrabCommand(claw, 0.47, 0.81));
 
         // Arm to Preset
         Controller1.button11.whileTrue(new PresetArmCommand(arm, 119.09, 0.90));
         Controller1.button12.whileTrue(new PresetArmCommand(arm, -114.6, 0.0));
 
         // Claw
-        Controller1.trigger.whileTrue(new GrabCommand(claw, 180.0));
-        Controller1.button2.whileTrue(new PresetArmCommand(arm, 34.0, 1.0));
+        Controller1.trigger.whileTrue(new GrabCommand(claw, 0.26, 0.98));
+
+        // Stow Position
+        Controller1.button2.whileTrue(new ParallelCommandGroup(
+            new PresetArmCommand(arm, 34.0, 1.0),
+            new GrabCommand(claw, 0.89, 0.39)
+        ));
 
         // Testing Commands
         if (Constants.kTEST_DEPLOY) {

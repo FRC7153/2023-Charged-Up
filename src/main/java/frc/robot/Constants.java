@@ -2,7 +2,6 @@ package frc.robot;
 
 import com.frc7153.math.PIDConstant;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -84,14 +83,12 @@ public final class Constants {
     public static final class ClawConstants {
         public static final double kANGLE_RATIO = 25.0 * (36.0 / 16.0); 
         
-        //public static final PIDConstant kHAND_PID = new PIDConstant(0.01 * kANGLE_RATIO, 0.000006 * kANGLE_RATIO, 0).withOutputRange(-10.0, 10.0);
-        public static final PIDConstant kHAND_PID = new PIDConstant(0.01, 0.0, 0.0).withOutputRange(-8.0, 8.0);
+        public static final PIDConstant kHAND_PID = new PIDConstant(1.5, 0.0, 0.0).withOutputRange(-8.0, 8.0);
 
-        public static final double kLHAND_OFFSET = 0.0;
-        public static final double kRHAND_OFFSET = 0.0;
+        public static final double kL_HAND_OFFSET = 0.9;
+        public static final double kR_HAND_OFFSET = 0.2;
 
-        public static final double kMIN_ANGLE = 0.0;
-        public static final double kMAX_ANGLE = 180.0;
+        public static final int kCURRENT_LIMIT = 5;
     }
 
     /* FLIPPER CONSTANTS */
