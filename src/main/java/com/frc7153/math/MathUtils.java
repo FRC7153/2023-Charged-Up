@@ -6,6 +6,13 @@ package com.frc7153.math;
  */
 public class MathUtils {
     /**
+     * Wraps a double value from 0.0 to 1.0
+     * @param value
+     * @return
+     */
+    public static double wrap0To1(double value) { return value % 1.0; }
+
+    /**
      * Takes an angle and normalizes it to a range of 0 - 360
      * @param angle
      * @return The angle, normalizes

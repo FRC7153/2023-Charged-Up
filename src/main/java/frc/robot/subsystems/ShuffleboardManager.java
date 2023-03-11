@@ -161,8 +161,6 @@ public class ShuffleboardManager extends SubsystemBase {
         
         armRHand = armTab.add("Right Hand Claw", 0.0)
             .getEntry();
-
-        armTab.add("Reset Hands", new ConfigCommand(claw::resetEncoders, "Reset Hand Encoders", claw));
     }
 
     // Update Values

@@ -83,12 +83,22 @@ public class PIDConstant {
     }
 
     /**
-     * Apply these values to WPI's PID controller. This has not SLOTs.
+     * Apply these values to WPI's PID controller. This has no SLOTs.
      * @param controller WPI pid controller
      */
     public void apply(PIDController controller) {
         controller.setPID(kP, kI, kD);
 
         if (!kERR.isNaN()) { controller.setTolerance(kERR); }
+    }
+
+    /**
+     * Creates a new WPI PID controller and returns it.
+     * @return
+     */
+    public PIDController toWPIPidController() {
+        PIDController pid = new PIDController(0.0, 0.0, 0.0);
+        apply(pid);
+        return pid;
     }
 }

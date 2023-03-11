@@ -42,7 +42,7 @@ public final class Constants {
      * Note that all distance measurements are in INCHES!
      */
     public static final class ArmConstants {
-        public static final PIDConstant kARM_PID = new PIDConstant(0.0084, 1e-6, 0.0).withError(0.5).withOutputRange(-12.0, 12.0);
+        public static final PIDConstant kARM_PID = new PIDConstant(0.09, 0.01, 0.0).withOutputRange(-12.0, 12.0);
         public static final PIDConstant kEXT_PID = new PIDConstant(0.01, 0.000001, 0).withError(0.05).withOutputRange(-8.0, 8.0);
 
         public static final double kJOINT_TO_FLOOR_DIST = 10.0;
@@ -60,13 +60,32 @@ public final class Constants {
         
         public static final double kMAX_REACH = 4.0 * 12.0;
         public static final double kMAX_HEIGHT = 6.0 * 12.0;
+
+        /**
+         * Uses polynomial regression to calculate the number of rotations of the winch motor to achieve specific lengths
+         * @param ext Joint to claw edge extension, inches
+         * @return Number of rotations
+         */
+        public static final double extToWinchRots(double ext) {
+            return (0.0216 * Math.pow(ext, 2)) + (3.967 * ext) - 127.8875;
+        }
+
+        /**
+         * Uses polynomial regression to calculate the extension in inches from the winch rotations.
+         * @param rots Number of rotations
+         * @return Inches, joint to edge
+         */
+        public static final double winchRotsToTargetExt(double rots) {
+            return (-0.0001 * Math.pow(rots, 2)) + (0.19 * rots) + 28.0018;
+        }
     }
 
     /* CLAW CONSTANTS */
     public static final class ClawConstants {
-        public static final PIDConstant kHAND_PID = new PIDConstant(0.01, 0.000006, 0).withOutputRange(-10.0, 10.0);
+        public static final double kANGLE_RATIO = 25.0 * (36.0 / 16.0); 
         
-        public static final double kANGLE_RATIO = 25.0 * (36.0 / 16.0);
+        //public static final PIDConstant kHAND_PID = new PIDConstant(0.01 * kANGLE_RATIO, 0.000006 * kANGLE_RATIO, 0).withOutputRange(-10.0, 10.0);
+        public static final PIDConstant kHAND_PID = new PIDConstant(0.01, 0.0, 0.0).withOutputRange(-8.0, 8.0);
 
         public static final double kLHAND_OFFSET = 0.0;
         public static final double kRHAND_OFFSET = 0.0;

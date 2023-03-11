@@ -1,30 +1,26 @@
-package com.frc7153.controllers;
+package com.frc7153.math;
 
-import com.frc7153.math.MathUtils;
+import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.DigitalSource;
-import edu.wpi.first.wpilibj.DutyCycle;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
+public class Encoder {
+    /** Ranges that can be used to wrap the output*/
+    public static enum Range {FROM_0_TO_360, FROM_NEGATIVE_180_TO_180, FROM_0_TO_1, INFINITE};
 
-/**
- * Encoder class that wraps WPI's {@code DutyCycleEncoder} to add support for position offset, inversion, and conversion.
- */
-public class AbsoluteDutyCycleEncoder extends DutyCycleEncoder {
+    // Input
+    private Supplier<Double> encSupply;
+    
     // Config Values
-    public static enum Range {FROM_0_TO_360, FROM_NEGATIVE_180_TO_180, INFINITE};
-
-    // Config
     private boolean inverted = false;
-    private double zeroOffset = 0;
+    private double zeroOffset = 0.0;
     private double conversion = 1.0;
-    private Range range = Range.FROM_0_TO_360;
+    private Range range = Range.INFINITE;
 
-    // Constructors
-    public AbsoluteDutyCycleEncoder(int channel) { super(channel); }
-    public AbsoluteDutyCycleEncoder(DutyCycle cycle) { super(cycle); }
-    public AbsoluteDutyCycleEncoder(DigitalSource source) { super(source); }
+    // Constructor
+    public Encoder(Supplier<Double> encSupplier) {
+        encSupply = encSupplier;
+    }
 
-    // Setters
+    // Configure
     /**
      * Sets whether the output is inverted
      * @param inverted
@@ -52,24 +48,28 @@ public class AbsoluteDutyCycleEncoder extends DutyCycleEncoder {
 
     // Getters
     /**
-     * Gets the absolute position of the encoder.
+     * Gets the position of the encoder.
      * @param altered Whether the inversion, offset, conversion, or continuous range should be accounted for.
      * @return Position
      */
-    public double getAbsolutePosition(boolean altered) {
-        if (altered) {
-            double angle = (super.getAbsolutePosition() - zeroOffset * (inverted ? -1 : 1)) * conversion;
+    public double getPosition(boolean alter) {
+        if (alter) {
+            double angle = (encSupply.get() - zeroOffset) * (inverted ? -1 : 1) * conversion;
 
             switch (range) {
+                case FROM_0_TO_1:
+                    return MathUtils.wrap0To1(angle);
                 case FROM_0_TO_360:
                     return MathUtils.normalizeAngle360(angle);
                 case FROM_NEGATIVE_180_TO_180:
                     return MathUtils.normalizeAngle180(angle);
-                default:
+                case INFINITE:
                     return angle;
             }
+
+            return angle;
         } else {
-            return super.getAbsolutePosition();
+            return encSupply.get();
         }
     }
 
@@ -77,6 +77,5 @@ public class AbsoluteDutyCycleEncoder extends DutyCycleEncoder {
      * Gets the absolute position of the encoder, accounting for the inversion, offset, conversion, and continuous range.
      * @return Position (probably in degrees of continuous range is set)
      */
-    @Override
-    public double getAbsolutePosition() { return getAbsolutePosition(true); }
+    public double getPosition() { return getPosition(true); }
 }

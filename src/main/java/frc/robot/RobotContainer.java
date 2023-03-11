@@ -46,7 +46,7 @@ public class RobotContainer {
         ));
 
         arm.setDefaultCommand(new TeleopArmCommand(arm, claw, Controller1::getY, Controller1::getThrottle));
-        claw.setDefaultCommand(new GrabCommand(claw, 0.0));
+        claw.setDefaultCommand(new GrabCommand(claw, .0));
 
         // Arm to Preset
         Controller1.button11.whileTrue(new PresetArmCommand(arm, 119.09, 0.90));
@@ -54,10 +54,11 @@ public class RobotContainer {
 
         // Claw
         Controller1.trigger.whileTrue(new GrabCommand(claw, 180.0));
+        Controller1.button2.whileTrue(new PresetArmCommand(arm, 34.0, 1.0));
 
         // Testing Commands
         if (Constants.kTEST_DEPLOY) {
-            Controller1.button5.onTrue(new ConfigCommand(claw::resetEncoders, "", claw));
+            //Controller1.button5.onTrue(new ConfigCommand(claw::resetEncoders, "", claw));
         }
 
         // Auto Move Arm

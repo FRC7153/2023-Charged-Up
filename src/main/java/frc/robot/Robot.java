@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.OI.Controller1;
@@ -62,16 +63,28 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     container.arm.setAngle(0.0);
+    ext = 0.0;
   }
 
   // Test Periodic
+  private double ext = 0.0;
+  private double debounce = 0.0;
   @Override
   public void testPeriodic() {
-    container.arm.winchMotor.set(-Controller1.getThrottle());
+    
+    container.arm.winchMotor.set(Controller1.getThrottle());
+
+    container.arm.winchEnc.setPosition(0.0);
+    
+
+    /*if (Controller1.controller.getRawButton(4) && Timer.getFPGATimestamp() - debounce >= 1.0) {
+      ext += (20.0 * 2.0);
+      debounce = Timer.getFPGATimestamp();
+    }
+
+    container.arm.setExtension(ext);*/
 
     container.arm.periodic();
     container.shuffleboard.periodic();
-
-    container.arm.winchEnc.setPosition(0.0);
   }
 }

@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
-import com.frc7153.controllers.AbsoluteDutyCycleEncoder;
-import com.frc7153.controllers.AbsoluteDutyCycleEncoder.Range;
+import com.frc7153.math.Encoder;
+import com.frc7153.math.Encoder.Range;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
@@ -21,40 +22,26 @@ public class Arm extends SubsystemBase {
     public CANSparkMax winchMotor = new CANSparkMax(15, MotorType.kBrushless);
 
     // PID
-    //private SparkMaxPIDController anglePID = angleMotor.getPIDController();
-    //private PIDController anglePID = new PIDController(0.0084, 1e-6, 0.0);
-    private PIDController anglePID = new PIDController(0.09, 0.01, 0.0); // previous
-    //private ProfiledPIDController anglePID = new ProfiledPIDController(0.09, 0.01, 0.0, new Constraints(0.1, 0.1));
+    private PIDController anglePID = ArmConstants.kARM_PID.toWPIPidController();
     private SparkMaxPIDController winchPID = winchMotor.getPIDController();
 
     private double angleSP = 0.0;
     private double extSP = 0.0;
 
     // Encoders
-    private AbsoluteDutyCycleEncoder angleAbsEncoder = new AbsoluteDutyCycleEncoder(8);
+    private Encoder angleAbsEncoder = new Encoder((new DutyCycleEncoder(8))::getAbsolutePosition);
     public RelativeEncoder winchEnc = winchMotor.getEncoder();
 
     // Init
     public Arm() {
         // Config Arm
         angleMotor.setInverted(true);
+        angleMotor.setSmartCurrentLimit(60);
 
         angleAbsEncoder.setConversionFactor(360.0);
         angleAbsEncoder.setInverted(false);
         angleAbsEncoder.setZeroOffset(0.0);
         angleAbsEncoder.setRange(Range.FROM_NEGATIVE_180_TO_180);
-
-        //ArmConstants.kARM_PID.apply(anglePID);
-
-        //angleMotor.setIdleMode(IdleMode.kBrake);
-
-        // Verify values have been set
-        /*System.out.println(String.format(
-            "Angle PID coefficients -> %s, %s, %s",
-            anglePID.getP(ArmConstants.kARM_PID.kSLOT),
-            anglePID.getI(ArmConstants.kARM_PID.kSLOT),
-            anglePID.getD(ArmConstants.kARM_PID.kSLOT)
-        ));*/
 
         // Config Winch
         winchMotor.setInverted(true);
@@ -69,11 +56,16 @@ public class Arm extends SubsystemBase {
             // Set angle voltage
             angleMotor.setVoltage(
                 //MathUtils.symmetricClamp(anglePID.calculate(angleAbsEncoder.getAbsolutePosition()), 0.5)
-                anglePID.calculate(angleAbsEncoder.getAbsolutePosition())
+                anglePID.calculate(angleAbsEncoder.getPosition())
             );
 
+            // Verify winch motor is safe
+            if (winchEnc.getPosition() < 0.0) {
+
+            }
+
             // Safety Check Position
-            Translation2d pose = kinematics(winchEnc.getPosition() + ArmConstants.kMIN_EXTENSION, angleAbsEncoder.getAbsolutePosition());
+            Translation2d pose = kinematics(winchEnc.getPosition() + ArmConstants.kMIN_EXTENSION, angleAbsEncoder.getPosition());
         }
     }
 
@@ -103,7 +95,7 @@ public class Arm extends SubsystemBase {
         //if (!sanityCheckPosition(kinematics(ext, angleSP))) { return false; }
 
         extSP = ext;
-        winchPID.setReference(extSP * 150.0, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
+        winchPID.setReference(ArmConstants.extToWinchRots(ext), ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
         return true;
     }
 
@@ -179,6 +171,6 @@ public class Arm extends SubsystemBase {
 
     // Getters
     public double getAngleSetpoint() { return angleSP; }
-    public double getAngleActual() { return angleAbsEncoder.getAbsolutePosition(); }
+    public double getAngleActual() { return angleAbsEncoder.getPosition(); }
     public double getAngleVoltage() { return angleMotor.getAppliedOutput(); }
 }

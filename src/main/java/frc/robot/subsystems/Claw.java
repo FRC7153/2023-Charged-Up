@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import com.frc7153.math.Encoder;
+import com.frc7153.math.MathUtils;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
@@ -7,6 +10,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClawConstants;
@@ -21,8 +25,9 @@ public class Claw extends SubsystemBase {
     private SparkMaxPIDController rHandPid = rHand.getPIDController();
 
     // Encoders
-    private RelativeEncoder lHandEnc = lHand.getEncoder();
-    private RelativeEncoder rHandEnc = rHand.getEncoder();
+    private AbsoluteEncoder lHandEnc = lHand.getAbsoluteEncoder(Type.kDutyCycle);
+    private AbsoluteEncoder rHandEnc = rHand.getAbsoluteEncoder(Type.kDutyCycle);
+
 
     // Encoders
     //private SparkMaxAbsoluteEncoder lHandEncoder = lHand.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
@@ -31,11 +36,7 @@ public class Claw extends SubsystemBase {
     // Constructor
     public Claw() {
         // Config encoders
-        //lHandEncoder.setZeroOffset(ClawConstants.kLHAND_OFFSET);
-        //rHandEncoder.setZeroOffset(ClawConstants.kRHAND_OFFSET);
-
-        //lHandEncoder.setPositionConversionFactor(ClawConstants.kANGLE_RATIO);
-        //rHandEncoder.setPositionConversionFactor(ClawConstants.kANGLE_RATIO);
+        lHandEnc.setInverted(true);
 
         // Config PID
         lHandPid.setFeedbackDevice(lHandEnc);
@@ -58,15 +59,9 @@ public class Claw extends SubsystemBase {
         rHand.setIdleMode(coast ? IdleMode.kCoast : IdleMode.kBrake);
     }
 
-    // Checks if value is possible, and applies it if so
-    private boolean applyIfPossible(SparkMaxPIDController pid, double value) {
-        
-        if (value <= ClawConstants.kMAX_ANGLE && value >= ClawConstants.kMIN_ANGLE) {
-            pid.setReference(value / 360.0 * ClawConstants.kANGLE_RATIO, ControlType.kPosition, ClawConstants.kHAND_PID.kSLOT);
-            return true;
-        } else {
-            return false;
-        }
+    // Checks if value is possible
+    private boolean isPossible(double value) {
+        return (value <= ClawConstants.kMAX_ANGLE && value >= ClawConstants.kMIN_ANGLE);
     }
 
     /**
@@ -79,7 +74,15 @@ public class Claw extends SubsystemBase {
      */
     public boolean setPosition(double lAngle, double rAngle) {
         setCoastMode(false);
-        return (applyIfPossible(lHandPid, lAngle) & applyIfPossible(rHandPid, rAngle));
+
+        if (isPossible(lAngle)) {
+            lHandPid.setReference(MathUtils.wrap0To1((lAngle/360.0) - 0.25), ControlType.kPosition, ClawConstants.kHAND_PID.kSLOT);
+        }
+        if (isPossible(rAngle)) {
+            rHandPid.setReference(MathUtils.wrap0To1((rAngle/360.0) - 0.11), ControlType.kPosition, ClawConstants.kHAND_PID.kSLOT);
+        }
+
+        return (isPossible(lAngle) && isPossible(rAngle));
     }
 
     /**
@@ -92,7 +95,4 @@ public class Claw extends SubsystemBase {
     // Angle getters
     public double getLHandPos() { return lHandEnc.getPosition(); }
     public double getRHandPos() { return rHandEnc.getPosition(); }
-
-    // Reset Encoders
-    public void resetEncoders() { lHandEnc.setPosition(0.0); rHandEnc.setPosition(0.0); }
 }

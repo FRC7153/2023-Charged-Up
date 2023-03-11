@@ -1,8 +1,8 @@
 package frc.robot;
 
+import com.frc7153.inputs.Joystick;
 import com.frc7153.inputs.XboxController;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -35,6 +35,7 @@ public class OI {
         // Buttons
         public static final JoystickButton trigger = new JoystickButton(controller, Joystick.ButtonType.kTrigger.value);
 
+        public static final JoystickButton button2 = new JoystickButton(controller, 2);
         public static final JoystickButton button5 = new JoystickButton(controller, 5);
         public static final JoystickButton button7 = new JoystickButton(controller, 7);
         public static final JoystickButton button8 = new JoystickButton(controller, 8);
