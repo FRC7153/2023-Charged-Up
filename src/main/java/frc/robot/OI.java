@@ -3,6 +3,7 @@ package frc.robot;
 import com.frc7153.inputs.Joystick;
 import com.frc7153.inputs.XboxController;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -12,7 +13,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class OI {
     /** Primary Xbox Drive Controller */
     public static final class Controller0 {
-        public static final XboxController controller = new XboxController(0);
+        private static final XboxController controller = new XboxController(0);
+
+        // Config
+        public static final double getLastOffsetUpdate() { return controller.getLastOffsetUpdate(); }
+        public static final CommandBase calibrate = controller.new CalibrateOffsetCommand();
 
         // Getters
         public static final double getLeftX() { return controller.getLeftX(); }
@@ -26,7 +31,11 @@ public class OI {
 
     /** Secondary Joystick Arm Controller */
     public static final class Controller1 {
-        public static final Joystick controller = new Joystick(1);
+        private static final Joystick controller = new Joystick(1);
+
+        // Config
+        public static final double getLastOffsetUpdate() { return controller.getLastOffsetUpdate(); }
+        public static final CommandBase calibrate = controller.new CalibrateOffsetCommand();
 
         // Getters
         public static final double getY() { return controller.getY(); }

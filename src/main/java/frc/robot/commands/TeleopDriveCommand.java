@@ -7,19 +7,19 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.SwerveDriveBase;
+import frc.robot.subsystems.DriveBase;
 
 /**
  * Command to drive swerve drive base in teleop
  */
 public class TeleopDriveCommand extends CommandBase {
-  private SwerveDriveBase base;
+  private DriveBase base;
 
   private Supplier<Double> xSupply;
   private Supplier<Double> ySupply;
   private Supplier<Double> rSupply;
 
-  public TeleopDriveCommand(SwerveDriveBase swerveSubsystem, Supplier<Double> xSupplier, Supplier<Double> ySupplier, Supplier<Double> rotSupplier) {
+  public TeleopDriveCommand(DriveBase swerveSubsystem, Supplier<Double> xSupplier, Supplier<Double> ySupplier, Supplier<Double> rotSupplier) {
     base = swerveSubsystem;
     xSupply = xSupplier;
     ySupply = ySupplier;

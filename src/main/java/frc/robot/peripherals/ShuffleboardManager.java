@@ -2,11 +2,10 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.peripherals;
 import java.util.Map;
 
 import com.frc7153.commands.ConfigCommand;
-import com.frc7153.inputs.XboxController;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -17,15 +16,16 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShuffleboardConstants;
-import frc.robot.peripherals.ArmPI;
-import frc.robot.peripherals.IMU;
+import frc.robot.OI.Controller0;
+import frc.robot.OI.Controller1;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 
 /**
  * Handles all values and commands put on Shuffleboard
  */
 public class ShuffleboardManager extends SubsystemBase {
     // Objects
-    private XboxController controller0;
     private ArmPI armPi;
     private IMU imu;
     private Arm arm;
@@ -33,6 +33,7 @@ public class ShuffleboardManager extends SubsystemBase {
 
     // Controller Update Counter
     private GenericEntry controller0Update;
+    private GenericEntry controller1Update;
 
     // Raspberry Pi Diagnostics
     private GenericEntry piVoltageStable;
@@ -57,9 +58,8 @@ public class ShuffleboardManager extends SubsystemBase {
     private GenericEntry armPose;
 
     // Constructor (Init)
-    public ShuffleboardManager(XboxController controller0, ArmPI armPi, IMU imu, Arm arm, Claw claw) {
+    public ShuffleboardManager(ArmPI armPi, IMU imu, Arm arm, Claw claw) {
         // Store objects
-        this.controller0 = controller0;
         this.armPi = armPi;
         this.imu = imu;
         this.arm = arm;
@@ -71,7 +71,8 @@ public class ShuffleboardManager extends SubsystemBase {
             .withSize(2, 4)
             .withProperties(Map.of("LABEL POSITION", "HIDDEN"));
 
-        controllerRecalibrate.add(controller0.new CalibrateOffsetCommand());
+        controllerRecalibrate.add(Controller0.calibrate);
+        controllerRecalibrate.add(Controller1.calibrate);
 
         ShuffleboardLayout controllerUpdates = controllerTab.getLayout("Updates", BuiltInLayouts.kList)
             .withSize(2, 4)
@@ -79,6 +80,7 @@ public class ShuffleboardManager extends SubsystemBase {
             .withProperties(Map.of("LABEL POSITION", "TOP"));
         
         controller0Update = controllerUpdates.add("Controller 0", "No updates...").getEntry();
+        controller1Update = controllerUpdates.add("Controller 1", "No updates...").getEntry();
 
         // RaspberryPi Values
         ShuffleboardTab piTab = Shuffleboard.getTab("Pi");
@@ -178,7 +180,8 @@ public class ShuffleboardManager extends SubsystemBase {
     @Override
     public void periodic() {
         // Controllers
-        controller0Update.setString(String.format("%s seconds", controller0.getLastOffsetUpdate()));
+        controller0Update.setString(String.format("%s seconds", Controller0.getLastOffsetUpdate()));
+        controller1Update.setString(String.format("%s seconds", Controller1.getLastOffsetUpdate()));
 
         // Pi
         piCPUTemp.setDouble(armPi.getTemp());
@@ -202,7 +205,7 @@ public class ShuffleboardManager extends SubsystemBase {
         armSP.setDouble(arm.getAngleSetpoint());
         armAngle.setDouble(arm.getAngleActual());
         armVolt.setDouble(arm.getAngleVoltage());
-        armWinchPos.setDouble(arm.winchEnc.getPosition());
+        armWinchPos.setDouble(arm.getWinchEncPos());
 
         armLHand.setDouble(claw.getLHandPos());
         armRHand.setDouble(claw.getRHandPos());

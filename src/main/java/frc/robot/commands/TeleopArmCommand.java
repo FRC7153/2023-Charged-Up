@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Claw;
 
 /**
  * Command to home the claw, moving it to 0 extensions straight up and down
@@ -14,13 +13,11 @@ import frc.robot.subsystems.Claw;
 public class TeleopArmCommand extends CommandBase {
     // Subsystems
     private Arm arm;
-    private Claw claw;
     private Supplier<Double> angleSupplier;
     private Supplier<Double> extensionSupplier;
 
     // Constructor
-    public TeleopArmCommand(Arm armSubsys, Claw clawSubsys, Supplier<Double> angleSupp, Supplier<Double> extSupplier) {
-        claw = clawSubsys;
+    public TeleopArmCommand(Arm armSubsys, Supplier<Double> angleSupp, Supplier<Double> extSupplier) {
         arm = armSubsys;
         angleSupplier = angleSupp;
         extensionSupplier = extSupplier;
@@ -28,20 +25,10 @@ public class TeleopArmCommand extends CommandBase {
         addRequirements(arm);
     }
 
-    // Setup
-    @Override
-    public void initialize() {
-        //arm.setTarget(0, ArmConstants.kJOINT_TO_FLOOR_DIST + 2.0);
-        //claw.setSymmetricPosition(0.0);
-        //arm.setAngle(0.0);
-    }
-
     @Override
     public void execute() {
-        arm.setAngle(-angleSupplier.get()*125.0);
-        //arm.setExtension((-extensionSupplier.get() + 1.0) / 2.0);
-        arm.setExtension(((extensionSupplier.get() + 1.0) / 2.0 * 36.0) + 28.0);
-        //System.out.println(((extensionSupplier.get() + 1.0) / 2.0) * 10.0);
+        arm.setAngle(-angleSupplier.get() * ArmConstants.kMAX_ANGLE);
+        arm.setExtension(((extensionSupplier.get() + 1.0) / 2.0 * ArmConstants.kWINCH_MAX_POSITION) + ArmConstants.kJOINT_TO_EXT_PT);
     }
 
     // Give priority to ALL other commands

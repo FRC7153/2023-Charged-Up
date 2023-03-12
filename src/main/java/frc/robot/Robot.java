@@ -5,86 +5,78 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.OI.Controller1;
 
 public class Robot extends TimedRobot {
-  private RobotContainer container;
-  private Command autoCommand;
+    // Robot Container
+    private RobotContainer container = new RobotContainer(); // TODO verify this
 
-  // Robot Init
-  @Override
-  public void robotInit() {
-    container = new RobotContainer();
-  }
+    // Auto Commands
+    private Command autoCommand;
 
-  // Robot Periodic
-  @Override
-  public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
-    //System.out.println(container.driveBase.getPose().toString());
-  }
+    // Stop auto command and toggle brakes
+    private void switchMode(boolean brakes) {
+        if (autoCommand != null) { autoCommand.cancel(); }
 
-  // Auto Init
-  @Override
-  public void autonomousInit() {}
-
-  // Auto Periodic
-  @Override
-  public void autonomousPeriodic() {
-    autoCommand = container.getAutonomousCommand();
-    if (autoCommand != null) {
-      autoCommand.schedule();
-    }
-  }
-
-  // Teleop Init
-  @Override
-  public void teleopInit() {}
-
-  // Teleop Periodic
-  @Override
-  public void teleopPeriodic() {
-    if (autoCommand != null) {
-      autoCommand.cancel();
-    }
-  }
-
-  // Disabled Init
-  @Override
-  public void disabledInit() {
-    // Set arms to coast to be reset
-    container.claw.setCoastMode(true);
-  }
-
-  // Test Init
-  @Override
-  public void testInit() {
-    container.arm.setAngle(0.0);
-    ext = 0.0;
-  }
-
-  // Test Periodic
-  private double ext = 0.0;
-  private double debounce = 0.0;
-  @Override
-  public void testPeriodic() {
-    
-    container.arm.winchMotor.set(Controller1.getThrottle());
-
-    container.arm.winchEnc.setPosition(0.0);
-    
-
-    /*if (Controller1.controller.getRawButton(4) && Timer.getFPGATimestamp() - debounce >= 1.0) {
-      ext += (20.0 * 2.0);
-      debounce = Timer.getFPGATimestamp();
+        container.toggleBrakes(brakes);
     }
 
-    container.arm.setExtension(ext);*/
+    //// ROBOT ////
+    @Override
+    public void robotInit() {}
 
-    container.arm.periodic(true);
-    container.shuffleboard.periodic();
-  }
+    // Robot Periodic
+    @Override
+    public void robotPeriodic() {
+        CommandScheduler.getInstance().run();
+    }
+
+    //// AUTO ////
+    @Override
+    public void autonomousInit() {
+        // Turn on brakes
+        switchMode(true);
+
+        // Get (and run) command
+        autoCommand = container.getAutonomousCommand();
+
+        if (autoCommand != null) { autoCommand.schedule(); }
+    }
+
+    // Auto Periodic
+    @Override
+    public void autonomousPeriodic() {}
+
+    //// TELEOP ////
+    @Override
+    public void teleopInit() {
+        // Stop commands
+        switchMode(true);
+    }
+
+    // Teleop Periodic
+    @Override
+    public void teleopPeriodic() {}
+
+    //// DISABLED ////
+    @Override
+    public void disabledInit() {
+        switchMode(false);
+    }
+
+    //// TEST ////
+    @Override
+    public void testInit() {
+        switchMode(true);
+
+        // Get and run test command
+        autoCommand = container.getTestingCommand();
+
+        if (autoCommand != null) { autoCommand.schedule(); }
+    }
+
+    // Test Periodic
+    @Override
+    public void testPeriodic() {}
 }

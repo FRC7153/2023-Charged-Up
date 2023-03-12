@@ -47,13 +47,14 @@ public final class Constants {
         public static final double kJOINT_TO_FLOOR_DIST = 26.0;
         public static final double kJOINT_TO_BUMPER_DIST = 20.0;
 
+        public static final double kHAND_LENGTH = 12.0; // TODO these (and 3 below)
+
+        public static final double kWINCH_MAX_POSITION = 36.0; // Max extension of the winch, from the extension point to the edge, physically and legally
+        public static final double kJOINT_TO_EXT_PT = 28.0;
+        public static final double kMAX_ANGLE = 125.0;
+
         public static final double kANGLE_RATIO = 96.0;
         public static final double kWINCH_RATIO = 20.0;
-
-        public static final double kMIN_EXTENSION = 16.0 + 16.0;
-        public static final double kMAX_EXTENSION = 100.0;
-
-        public static final double kMAX_ARM_ANGLE = 125.0; // symmetrical
         
         public static final double kMAX_REACH = 4.0 * 12.0;
         public static final double kMAX_HEIGHT = 6.0 * 12.0;

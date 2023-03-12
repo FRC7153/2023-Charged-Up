@@ -40,21 +40,19 @@ public class SwerveBase extends SubsystemBase {
     }
     
     /**
-     * Creates a new SwerveBase, with four SwerveWheels.
+     * Creates a new SwerveBase, with four SwerveWheels. Odometry is not started by default
      * @param frontLeft
      * @param frontRight
      * @param rearLeft
      * @param rearRight
      */
-    public SwerveBase(SwerveWheel frontLeft, SwerveWheel frontRight, SwerveWheel rearLeft, SwerveWheel rearRight, double gyroAngle) {
+    public SwerveBase(SwerveWheel frontLeft, SwerveWheel frontRight, SwerveWheel rearLeft, SwerveWheel rearRight) {
         fl = frontLeft;
         fr = frontRight;
         rl = rearLeft;
         rr = rearRight;
 
         kinematics = new SwerveDriveKinematics(fl.getPosition(), fr.getPosition(), rl.getPosition(), rr.getPosition());
-
-        startOdometry(gyroAngle, 0.0, 0.0, 0.0);
     }
 
     /**
@@ -251,9 +249,9 @@ public class SwerveBase extends SubsystemBase {
      * Gets the position, according to odometry (wheel states)
      * @return The position
      */
-    public Pose2d getOdometricPosition() {
+    public Pose2d getOdometryPose() {
         if (odometryPosition == null) {
-            DriverStation.reportWarning("Odometric position is null!", false);
+            DriverStation.reportWarning("Odometry position is null!", false);
             return new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
         }
         return odometryPosition;
@@ -264,6 +262,11 @@ public class SwerveBase extends SubsystemBase {
      * @param gyroAngle
      */
     public void updateOdometry(double gyroAngle) {
+        if (odometry == null) {
+            DriverStation.reportWarning("Could not update odometry, it has not been started", false);
+            return;
+        }
+
         odometryPosition = odometry.update(
             Rotation2d.fromDegrees(gyroAngle), 
             getSwerveModulePositions()

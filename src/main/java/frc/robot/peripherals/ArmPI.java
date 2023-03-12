@@ -111,7 +111,8 @@ public class ArmPI {
 
                     cache_age = Timer.getFPGATimestamp();
 
-                    //System.out.println(cache_dist); // TODO wrong
+                    // TODO wrong
+                    //System.out.println(cache_dist);
                 }
 
                 Timer.delay(0.05);

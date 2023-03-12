@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.frc7153.logging.FileDump;
 import com.frc7153.math.Encoder;
 import com.frc7153.math.Encoder.Range;
 import com.revrobotics.CANSparkMax;
@@ -20,7 +19,7 @@ import frc.robot.Constants.ArmConstants;
 public class Arm extends SubsystemBase {
     // Motors
     private CANSparkMax angleMotor = new CANSparkMax(16, MotorType.kBrushless);
-    public CANSparkMax winchMotor = new CANSparkMax(15, MotorType.kBrushless);
+    private CANSparkMax winchMotor = new CANSparkMax(15, MotorType.kBrushless);
 
     // PID
     private PIDController anglePID = ArmConstants.kARM_PID.toWPIPidController();
@@ -30,17 +29,15 @@ public class Arm extends SubsystemBase {
     private double extSP = 0.0;
     private Translation2d pose = new Translation2d(0.0, 0.0);
 
-    private FileDump debug = new FileDump("MovementConstraint");
-
     // Encoders
     private Encoder angleAbsEncoder = new Encoder((new DutyCycleEncoder(8))::getAbsolutePosition);
-    public RelativeEncoder winchEnc = winchMotor.getEncoder();
+    private RelativeEncoder winchEnc = winchMotor.getEncoder();
 
     // Init
     public Arm() {
         // Config Arm
         angleMotor.setInverted(true);
-        angleMotor.setSmartCurrentLimit(60);
+        angleMotor.setSmartCurrentLimit(70);
 
         angleAbsEncoder.setConversionFactor(360.0);
         angleAbsEncoder.setInverted(false);
@@ -60,14 +57,15 @@ public class Arm extends SubsystemBase {
         if (!DriverStation.isDisabled()) {
             // Verify winch motor is safe
             if (winchEnc.getPosition() < 0.0) {
-                DriverStation.reportError("Winch is below zero!", false);
+                DriverStation.reportWarning("Winch is below zero!", false);
             }
 
-            // Constrain and set position
             if (testing) {
+                // Set angle (only testing)
                 anglePID.setSetpoint(angleSP);
             } else {
-                Translation2d pose = kinematics(extSP, angleSP);
+                // Constrain and set position
+                Translation2d pose = kinematics(extSP + ArmConstants.kHAND_LENGTH, angleSP);
                 double x = pose.getX();
                 double y = pose.getY();
 
@@ -75,15 +73,17 @@ public class Arm extends SubsystemBase {
                 double MAX_Y = ArmConstants.kMAX_HEIGHT - ArmConstants.kCLEARANCE;
                 double MIN_Y = ArmConstants.kCLEARANCE;
 
-                if (x > MAX_X ) 
+                if (x > MAX_X ) {
                     x = MAX_X;
-                else if (x < -MAX_X) 
+                } else if (x < -MAX_X) {
                     x = -MAX_X;
+                }
 
-                if (y > MAX_Y)
+                if (y > MAX_Y) {
                     y = MAX_Y;
-                else if (y < MIN_Y)
-                    y = MIN_Y; 
+                } else if (y < MIN_Y) {
+                    y = MIN_Y;
+                }
 
                 Translation2d newPos = inverseKinematics(x, y);
 
@@ -135,20 +135,6 @@ public class Arm extends SubsystemBase {
     }
 
     /**
-     * Verify a position is legal
-     * @param pos The x and y coordinates of the arm, relative the the center of the floor
-     * @return boolean
-     */
-    // public boolean sanityCheckPosition(Translation2d pos) {
-    //     return (
-    //         pos.getX() >= -ArmConstants.kMAX_REACH - ArmConstants.kJOINT_TO_BUMPER_DIST + ArmConstants.kCLEARANCE &&
-    //         pos.getX() <= ArmConstants.kMAX_REACH + ArmConstants.kJOINT_TO_BUMPER_DIST  - ArmConstants.kCLEARANCE &&
-    //         pos.getY() >= ArmConstants.kCLEARANCE &&
-    //         pos.getY() <= ArmConstants.kMAX_HEIGHT - ArmConstants.kCLEARANCE
-    //     );
-    // }
-
-    /**
      * Sets the target position
      * <ul>
      * <li>x = 0 is straight up and down</li>
@@ -164,9 +150,16 @@ public class Arm extends SubsystemBase {
         extSP = newPos.getY();
     }
 
+    // Set Raw Speed as percentage (for testing mode, no sanity checks done)
+    public void setRawSpeed(double speed) { winchMotor.set(speed); }
+
+    // Reset relative encoder position (testing mode)
+    public void resetWinchEncoder() { winchEnc.setPosition(0.0); }
+
     // Getters
     public double getAngleSetpoint() { return angleSP; }
     public double getAngleActual() { return angleAbsEncoder.getPosition(); }
     public double getAngleVoltage() { return angleMotor.getAppliedOutput(); }
+    public double getWinchEncPos() { return winchEnc.getPosition(); }
     public Translation2d getPose() { return pose; }
 }
