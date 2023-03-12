@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -65,9 +66,9 @@ public class Arm extends SubsystemBase {
                 anglePID.setSetpoint(angleSP);
             } else {
                 // Constrain and set position
-                Translation2d pose = kinematics(extSP + ArmConstants.kHAND_LENGTH, angleSP);
-                double x = pose.getX();
-                double y = pose.getY();
+                Translation2d commandedPose = kinematics(extSP, angleSP);
+                double x = commandedPose.getX();
+                double y = commandedPose.getY();
 
                 double MAX_X = ArmConstants.kMAX_REACH + ArmConstants.kJOINT_TO_BUMPER_DIST - ArmConstants.kCLEARANCE;
                 double MAX_Y = ArmConstants.kMAX_HEIGHT - ArmConstants.kCLEARANCE;
@@ -85,10 +86,11 @@ public class Arm extends SubsystemBase {
                     y = MIN_Y;
                 }
 
+                pose = new Translation2d(x, y);
                 Translation2d newPos = inverseKinematics(x, y);
 
-                anglePID.setSetpoint(newPos.getX());
-                winchPID.setReference(ArmConstants.extToWinchRots(newPos.getY()), ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
+                anglePID.setSetpoint(newPos.getY());
+                winchPID.setReference(ArmConstants.extToWinchRots(newPos.getX() - ArmConstants.kHAND_LENGTH), ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
 
                 //System.out.println(String.format("ext: %s, angle: %s -> %s, %s -> driven ext: %s, driven angle: %s", extSP, angleSP, x,y, newPos.getX(), newPos.getY()));
             }
@@ -110,7 +112,7 @@ public class Arm extends SubsystemBase {
      * Set the extension
      * @param ext Total extension, joint to grab point
      */
-    public void setExtension(double ext) { extSP = ext; }
+    public void setExtension(double ext) { setBrake(true); extSP = ext; }
 
     /**
      * Gets the position of the arm (forward kinematics)
@@ -119,6 +121,8 @@ public class Arm extends SubsystemBase {
      * @return Arm position
      */
     private Translation2d kinematics(double ext, double angle) {
+        ext += ArmConstants.kHAND_LENGTH;
+
         return new Translation2d(
             Math.sin(Units.degreesToRadians(angle)) * ext,
             (Math.cos(Units.degreesToRadians(angle)) * ext) + ArmConstants.kJOINT_TO_FLOOR_DIST
@@ -126,7 +130,7 @@ public class Arm extends SubsystemBase {
     }
 
     // Inverse kinematics
-    // X is angle, y is extension
+    // X is extension, y is angle
     private Translation2d inverseKinematics(double x, double y) {
         return new Translation2d(
             Math.sqrt(Math.pow(x, 2) + Math.pow(y - ArmConstants.kJOINT_TO_FLOOR_DIST, 2)),
@@ -154,7 +158,12 @@ public class Arm extends SubsystemBase {
     public void setRawSpeed(double speed) { winchMotor.set(speed); }
 
     // Reset relative encoder position (testing mode)
-    public void resetWinchEncoder() { winchEnc.setPosition(0.0); }
+    public void setWinchEncPosition(double rots) { winchEnc.setPosition(rots); }
+
+    // Set brake for extension
+    public void setBrake(boolean brake) {
+        winchMotor.setIdleMode(brake ? IdleMode.kBrake : IdleMode.kCoast);
+    }
 
     // Getters
     public double getAngleSetpoint() { return angleSP; }

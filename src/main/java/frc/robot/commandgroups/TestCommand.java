@@ -2,6 +2,7 @@ package frc.robot.commandgroups;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.peripherals.ShuffleboardManager;
 import frc.robot.subsystems.Arm;
@@ -36,7 +37,7 @@ public class TestCommand extends CommandBase {
     @Override
     public void execute() {
         arm.setRawSpeed(extSupp.get());
-        arm.resetWinchEncoder();
+        arm.setWinchEncPosition(0.0);
 
         arm.periodic(true);
         shuffleboard.periodic();

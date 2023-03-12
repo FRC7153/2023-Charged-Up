@@ -11,6 +11,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClawConstants;
+import frc.robot.Constants.GrabPos;
 
 public class Claw extends SubsystemBase {
     // Motors
@@ -72,6 +73,9 @@ public class Claw extends SubsystemBase {
         lHandPid.setReference(MathUtils.wrap0To1(lAngle), ControlType.kPosition, ClawConstants.kHAND_PID.kSLOT);
         rHandPid.setReference(MathUtils.wrap0To1(rAngle), ControlType.kPosition, ClawConstants.kHAND_PID.kSLOT);
     }
+
+    // Go to state
+    public void setPosition(GrabPos pos) { setPosition(pos.lPos, pos.rPos); }
 
     // Angle getters
     public double getLHandPos() { return lHandEnc.getPosition(); }

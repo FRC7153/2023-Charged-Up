@@ -1,11 +1,11 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
 import frc.robot.commandgroups.TestCommand;
-import frc.robot.commands.GrabCommand;
+import frc.robot.commands.GrabToggleCommand;
 import frc.robot.commands.TeleopArmCommand;
 import frc.robot.commands.PresetArmCommand;
 import frc.robot.commands.TeleopDriveCommand;
@@ -33,7 +33,7 @@ public class RobotContainer {
         configureBindings();
 
         // Start Shuffleboard
-        shuffleboard = new ShuffleboardManager(armPi, driveBase.imu, arm, claw);
+        shuffleboard = new ShuffleboardManager(this, armPi, driveBase.imu, arm, claw);
     }
 
     // Configure Command Bindings
@@ -47,30 +47,35 @@ public class RobotContainer {
         ));
 
         // Teleop Arm Command (position setpoint)
-        arm.setDefaultCommand(new TeleopArmCommand(arm, Controller1::getY, Controller1::getThrottle));
+        arm.setDefaultCommand(new TeleopArmCommand(arm, Controller1::getY, Controller1::getThrottle, 60.0));
 
         // Default Claw Command (open position)
-        claw.setDefaultCommand(new GrabCommand(claw, 0.47, 0.81));
+        claw.setDefaultCommand(new GrabToggleCommand(claw, Controller0::getRightTrigger));
 
-        // TODO Arm to Preset Location Commands
-        Controller1.button11.whileTrue(new PresetArmCommand(arm, 119.09, 0.90));
-        Controller1.button12.whileTrue(new PresetArmCommand(arm, -114.6, 0.0));
-
-        // Claw Grab Command
-        Controller1.trigger.whileTrue(new GrabCommand(claw, 0.26, 0.98));
+        // Arm Preset Positions
+        Controller1.button7.whileTrue(new PresetArmCommand(arm, new Translation2d(64.0, 57.69))); // Cone high
+        Controller1.button8.whileTrue(new PresetArmCommand(arm, new Translation2d(64.0, 47.39))); // Cube high
+        Controller1.button9.whileTrue(new PresetArmCommand(arm, new Translation2d(45.41, 41.97))); // Cone mid
+        Controller1.button10.whileTrue(new PresetArmCommand(arm, new Translation2d(43.67, 32.31))); // Cube mid
+        Controller1.button11.whileTrue(new PresetArmCommand(arm, new Translation2d(35.98, 4.34))); // Ground
+        Controller1.button12.whileTrue(new PresetArmCommand(arm, new Translation2d(35.98, 4.34))); // Ground
 
         // Stow Position (arm 34 degrees, claw stowed)
-        Controller1.button2.whileTrue(new ParallelCommandGroup(
+        /*Controller1.button2.whileTrue(new ParallelCommandGroup(
             new PresetArmCommand(arm, 34.0, 0.0),
-            new GrabCommand(claw, 0.89, 0.39)
-        ));
+            new GrabCommand(claw, GrabPos.STOW)
+        ));*/
     }
 
     // Toggle Brakes (in drive and claw)
     public void toggleBrakes(boolean brake) {
         driveBase.setCoast(!brake);
         claw.setCoastMode(!brake);
+        arm.setBrake(brake);
     }
+
+    // Run Shuffleboard (even when disabled)
+    public void shuffleboardUpdate() { shuffleboard.periodic(); }
 
     // Get Auto Command
     public Command getAutonomousCommand() {

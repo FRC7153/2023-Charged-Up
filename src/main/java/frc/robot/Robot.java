@@ -30,6 +30,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
+        container.shuffleboardUpdate();
     }
 
     //// AUTO ////
@@ -62,7 +63,7 @@ public class Robot extends TimedRobot {
     //// DISABLED ////
     @Override
     public void disabledInit() {
-        switchMode(false);
+        switchMode(true);
     }
 
     //// TEST ////
@@ -73,10 +74,10 @@ public class Robot extends TimedRobot {
         // Get and run test command
         autoCommand = container.getTestingCommand();
 
-        if (autoCommand != null) { autoCommand.schedule(); }
+        if (autoCommand != null) { autoCommand.initialize(); }
     }
 
     // Test Periodic
     @Override
-    public void testPeriodic() {}
+    public void testPeriodic() { if (autoCommand != null) { autoCommand.execute();} }
 }

@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
@@ -24,7 +24,7 @@ import frc.robot.subsystems.Claw;
 /**
  * Handles all values and commands put on Shuffleboard
  */
-public class ShuffleboardManager extends SubsystemBase {
+public class ShuffleboardManager {
     // Objects
     private ArmPI armPi;
     private IMU imu;
@@ -58,12 +58,32 @@ public class ShuffleboardManager extends SubsystemBase {
     private GenericEntry armPose;
 
     // Constructor (Init)
-    public ShuffleboardManager(ArmPI armPi, IMU imu, Arm arm, Claw claw) {
+    public ShuffleboardManager(RobotContainer container, ArmPI armPi, IMU imu, Arm arm, Claw claw) {
         // Store objects
         this.armPi = armPi;
         this.imu = imu;
         this.arm = arm;
         this.claw = claw;
+
+        // Drive Tab (Main)
+        ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
+
+        ShuffleboardLayout brakeLayout = driveTab.getLayout("Full Brakes", BuiltInLayouts.kList)
+            .withSize(1, 2);
+        
+        brakeLayout.add("Enable", new ConfigCommand(() -> {container.toggleBrakes(true);}, "Enable"));
+        brakeLayout.add("Disable", new ConfigCommand(() -> {container.toggleBrakes(false);}, "Disable"));
+
+        if (ShuffleboardConstants.kCAMERA_STREAMS) {
+            driveTab.addCamera("Front LL", "Front LL", "http://limelight-front.local:5800/")
+                .withSize(3, 3)
+                .withPosition(1, 0)
+                .withProperties(Map.of("SHOW CONTROLS", "OFF"));
+            driveTab.addCamera("Back LL", "Back LL", "http://limelight-back.local:5800/")
+                .withSize(3, 3)
+                .withPosition(4, 0)
+                .withProperties(Map.of("SHOW CONTROLS", "OFF"));
+        }
 
         // Controller Tab Init
         ShuffleboardTab controllerTab = Shuffleboard.getTab("Controllers");
@@ -177,7 +197,6 @@ public class ShuffleboardManager extends SubsystemBase {
     }
 
     // Update Values
-    @Override
     public void periodic() {
         // Controllers
         controller0Update.setString(String.format("%s seconds", Controller0.getLastOffsetUpdate()));

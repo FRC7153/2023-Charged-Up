@@ -2,6 +2,9 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import com.frc7153.math.MathUtils;
+
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
@@ -13,21 +16,43 @@ import frc.robot.subsystems.Arm;
 public class TeleopArmCommand extends CommandBase {
     // Subsystems
     private Arm arm;
+
+    // Suppliers
     private Supplier<Double> angleSupplier;
     private Supplier<Double> extensionSupplier;
 
+    // Velocity Integration
+    private Double lastAngleIntegration;
+    private Double currentAngle;
+    private double maxAngleVelocity;
+
     // Constructor
-    public TeleopArmCommand(Arm armSubsys, Supplier<Double> angleSupp, Supplier<Double> extSupplier) {
+    public TeleopArmCommand(Arm armSubsys, Supplier<Double> angleSupp, Supplier<Double> extSupplier, double maxAngleVelocity) {
         arm = armSubsys;
+
         angleSupplier = angleSupp;
         extensionSupplier = extSupplier;
+
+        this.maxAngleVelocity = maxAngleVelocity;
     
         addRequirements(arm);
     }
 
+    // Init
+    @Override
+    public void initialize() {
+        lastAngleIntegration = Timer.getFPGATimestamp();
+        currentAngle = 0.0;
+    }
+
     @Override
     public void execute() {
-        arm.setAngle(-angleSupplier.get() * ArmConstants.kMAX_ANGLE);
+        currentAngle += (-angleSupplier.get() * maxAngleVelocity * (Timer.getFPGATimestamp() - lastAngleIntegration));
+        currentAngle = MathUtils.symmetricClamp(currentAngle, ArmConstants.kMAX_ANGLE);
+        lastAngleIntegration = Timer.getFPGATimestamp();
+
+        //arm.setAngle(-angleSupplier.get() * ArmConstants.kMAX_ANGLE);
+        arm.setAngle(currentAngle);
         arm.setExtension(((extensionSupplier.get() + 1.0) / 2.0 * ArmConstants.kWINCH_MAX_POSITION) + ArmConstants.kJOINT_TO_EXT_PT);
     }
 

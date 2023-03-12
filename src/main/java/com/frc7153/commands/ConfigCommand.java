@@ -21,6 +21,16 @@ public class ConfigCommand extends InstantCommand {
         title = name;
     }
 
+    /**
+     * Creates a new ConfigCommand
+     * @param func The function to run
+     * @param name A name for this command
+     */
+    public ConfigCommand(Runnable func, String name) {
+        super(func);
+        title = name;
+    }
+
     // Config
     @Override
     public String getName() { return title; }

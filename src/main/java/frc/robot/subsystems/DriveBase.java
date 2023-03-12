@@ -4,6 +4,7 @@ import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.wheeltypes.SwerveWheel_FN;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.peripherals.IMU;
@@ -21,6 +22,9 @@ public class DriveBase extends SubsystemBase {
     private SwerveBase base = new SwerveBase(fl, fr, rl, rr);
 
     public IMU imu = new IMU();
+
+    // Reset odometry on boot
+    public DriveBase() { setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0))); }
 
     // Get Odometry Position
     public Pose2d getPose() { return base.getOdometryPose(); }
@@ -41,5 +45,6 @@ public class DriveBase extends SubsystemBase {
     // Drive
     public void stop() { base.stop(true); }
     public void driveFieldOriented(double x, double y, double rot) { base.driveFieldOriented(y, x, rot, imu.getYaw()); }
+    public void driveRobotOriented(double x, double y, double rot) { base.drive(y, x, rot); }
     public void setCoast(boolean coast) { base.toggleCoastMode(coast, true); }
 }

@@ -21,6 +21,7 @@ public final class Constants {
     public static final class ShuffleboardConstants {
         public static final boolean kPI_GRAPHS = false;
         public static final boolean kARM_GRAPHS = true;
+        public static final boolean kCAMERA_STREAMS = true;
     }
 
     /* SWERVE DRIVE CONSTANTS */
@@ -47,9 +48,9 @@ public final class Constants {
         public static final double kJOINT_TO_FLOOR_DIST = 26.0;
         public static final double kJOINT_TO_BUMPER_DIST = 20.0;
 
-        public static final double kHAND_LENGTH = 12.0; // TODO these (and 3 below)
+        public static final double kHAND_LENGTH = 14.0;
 
-        public static final double kWINCH_MAX_POSITION = 36.0; // Max extension of the winch, from the extension point to the edge, physically and legally
+        public static final double kWINCH_MAX_POSITION = 5.0 * 12.0; // Max extension of the winch, from the extension point to the edge, physically and legally
         public static final double kJOINT_TO_EXT_PT = 28.0;
         public static final double kMAX_ANGLE = 125.0;
 
@@ -57,9 +58,9 @@ public final class Constants {
         public static final double kWINCH_RATIO = 20.0;
         
         public static final double kMAX_REACH = 4.0 * 12.0;
-        public static final double kMAX_HEIGHT = 6.0 * 12.0;
+        public static final double kMAX_HEIGHT = 6.0 * 12.0 + 6.0;
 
-        public static final double kCLEARANCE = 1.0;
+        public static final double kCLEARANCE = 4.0;
 
         /**
          * Uses polynomial regression to calculate the number of rotations of the winch motor to achieve specific lengths
@@ -89,7 +90,13 @@ public final class Constants {
         public static final double kL_HAND_OFFSET = 0.9;
         public static final double kR_HAND_OFFSET = 0.2;
 
-        public static final int kCURRENT_LIMIT = 5;
+        public static final int kCURRENT_LIMIT = 10;
+    }
+
+    /* CLAW GRAB STATES */
+    public static enum GrabPos { GRAB(0.26, 0.98), RELEASE(0.47, 0.81), STOW(0.89, 0.39);
+        public final double lPos, rPos;
+        GrabPos(double l, double r) { lPos = l; rPos = r; }
     }
 
     /* FLIPPER CONSTANTS */

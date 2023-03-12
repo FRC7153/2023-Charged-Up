@@ -13,8 +13,10 @@ import frc.robot.subsystems.DriveBase;
  * Command to drive swerve drive base in teleop
  */
 public class TeleopDriveCommand extends CommandBase {
+  // Subsystems
   private DriveBase base;
 
+  // Suppliers
   private Supplier<Double> xSupply;
   private Supplier<Double> ySupply;
   private Supplier<Double> rSupply;
@@ -37,7 +39,7 @@ public class TeleopDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    base.driveFieldOriented(xSupply.get(), ySupply.get(), -rSupply.get());
+    base.driveRobotOriented(xSupply.get(), ySupply.get(), rSupply.get());
   }
 
   // Called once the command ends or is interrupted.

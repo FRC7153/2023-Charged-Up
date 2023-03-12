@@ -23,6 +23,7 @@ public class OI {
         public static final double getLeftX() { return controller.getLeftX(); }
         public static final double getLeftY() { return controller.getLeftY(); }
         public static final double getRightX() { return controller.getRightX(); }
+        public static final boolean getRightTrigger() { return controller.getRightTrigger(); }
 
         // Buttons
         public static final JoystickButton lBumper = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
