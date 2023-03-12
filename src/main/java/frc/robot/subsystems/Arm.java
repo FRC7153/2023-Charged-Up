@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.frc7153.logging.FileDump;
 import com.frc7153.math.Encoder;
 import com.frc7153.math.Encoder.Range;
 import com.revrobotics.CANSparkMax;
@@ -27,6 +28,9 @@ public class Arm extends SubsystemBase {
 
     private double angleSP = 0.0;
     private double extSP = 0.0;
+    private Translation2d pose = new Translation2d(0.0, 0.0);
+
+    private FileDump debug = new FileDump("MovementConstraint");
 
     // Encoders
     private Encoder angleAbsEncoder = new Encoder((new DutyCycleEncoder(8))::getAbsolutePosition);
@@ -50,54 +54,63 @@ public class Arm extends SubsystemBase {
 
     // Go to setpoint
     @Override
-    public void periodic() {
-        // TODO max min
-        if (!DriverStation.isDisabled()) {
-            // Set angle voltage
-            angleMotor.setVoltage(
-                //MathUtils.symmetricClamp(anglePID.calculate(angleAbsEncoder.getAbsolutePosition()), 0.5)
-                anglePID.calculate(angleAbsEncoder.getPosition())
-            );
+    public void periodic() { periodic(false); }
 
+    public void periodic(boolean testing) {
+        if (!DriverStation.isDisabled()) {
             // Verify winch motor is safe
             if (winchEnc.getPosition() < 0.0) {
-
+                DriverStation.reportError("Winch is below zero!", false);
             }
 
-            // Safety Check Position
-            Translation2d pose = kinematics(winchEnc.getPosition() + ArmConstants.kMIN_EXTENSION, angleAbsEncoder.getPosition());
+            // Constrain and set position
+            if (testing) {
+                anglePID.setSetpoint(angleSP);
+            } else {
+                Translation2d pose = kinematics(extSP, angleSP);
+                double x = pose.getX();
+                double y = pose.getY();
+
+                double MAX_X = ArmConstants.kMAX_REACH + ArmConstants.kJOINT_TO_BUMPER_DIST - ArmConstants.kCLEARANCE;
+                double MAX_Y = ArmConstants.kMAX_HEIGHT - ArmConstants.kCLEARANCE;
+                double MIN_Y = ArmConstants.kCLEARANCE;
+
+                if (x > MAX_X ) 
+                    x = MAX_X;
+                else if (x < -MAX_X) 
+                    x = -MAX_X;
+
+                if (y > MAX_Y)
+                    y = MAX_Y;
+                else if (y < MIN_Y)
+                    y = MIN_Y; 
+
+                Translation2d newPos = inverseKinematics(x, y);
+
+                anglePID.setSetpoint(newPos.getX());
+                winchPID.setReference(ArmConstants.extToWinchRots(newPos.getY()), ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
+
+                //System.out.println(String.format("ext: %s, angle: %s -> %s, %s -> driven ext: %s, driven angle: %s", extSP, angleSP, x,y, newPos.getX(), newPos.getY()));
+            }
+
+            // Set angle voltage
+            angleMotor.setVoltage(
+                anglePID.calculate(angleAbsEncoder.getPosition())
+            );
         }
     }
 
     /**
      * Set angle
      * @angle angle, in degrees
-     * @return whether this position can be legally obtained (not outside max extension)
      */
-    public boolean setAngle(double angle) {
-        //if (!sanityCheckPosition(kinematics(extSP, angle))) { return false; }
-
-        angleSP = angle;
-        //anglePID.setReference(angle / 360.0 * ArmConstants.kANGLE_RATIO, ControlType.kPosition, ArmConstants.kARM_PID.kSLOT);
-        anglePID.setSetpoint(angle);
-        //anglePID.setGoal(angle);
-        return true;
-    }
-
-    public void setWinchPos(double pos) { winchPID.setReference(pos, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT); }
+    public void setAngle(double angle) { angleSP = angle; }
     
     /**
      * Set the extension
      * @param ext Total extension, joint to grab point
-     * @return Whether this position is legal
      */
-    public boolean setExtension(double ext) {
-        //if (!sanityCheckPosition(kinematics(ext, angleSP))) { return false; }
-
-        extSP = ext;
-        winchPID.setReference(ArmConstants.extToWinchRots(ext), ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
-        return true;
-    }
+    public void setExtension(double ext) { extSP = ext; }
 
     /**
      * Gets the position of the arm (forward kinematics)
@@ -105,10 +118,19 @@ public class Arm extends SubsystemBase {
      * @param angle Angle of arm, in degrees from zero
      * @return Arm position
      */
-    public Translation2d kinematics(double ext, double angle) {
+    private Translation2d kinematics(double ext, double angle) {
         return new Translation2d(
-            Math.cos(Units.degreesToRadians(angle)) * ext,
-            (Math.sin(Units.degreesToRadians(angle)) * ext) + ArmConstants.kJOINT_TO_FLOOR_DIST
+            Math.sin(Units.degreesToRadians(angle)) * ext,
+            (Math.cos(Units.degreesToRadians(angle)) * ext) + ArmConstants.kJOINT_TO_FLOOR_DIST
+        );
+    }
+
+    // Inverse kinematics
+    // X is angle, y is extension
+    private Translation2d inverseKinematics(double x, double y) {
+        return new Translation2d(
+            Math.sqrt(Math.pow(x, 2) + Math.pow(y - ArmConstants.kJOINT_TO_FLOOR_DIST, 2)),
+            Units.radiansToDegrees(Math.atan2(x, y - ArmConstants.kJOINT_TO_FLOOR_DIST))
         );
     }
 
@@ -117,14 +139,14 @@ public class Arm extends SubsystemBase {
      * @param pos The x and y coordinates of the arm, relative the the center of the floor
      * @return boolean
      */
-    public boolean sanityCheckPosition(Translation2d pos) {
-        return (
-            pos.getX() >= -ArmConstants.kMAX_ARM_ANGLE - ArmConstants.kJOINT_TO_BUMPER_DIST &&
-            pos.getX() <= ArmConstants.kMAX_REACH + ArmConstants.kJOINT_TO_BUMPER_DIST &&
-            pos.getY() >= 0 &&
-            pos.getY() <= ArmConstants.kMAX_HEIGHT
-        );
-    }
+    // public boolean sanityCheckPosition(Translation2d pos) {
+    //     return (
+    //         pos.getX() >= -ArmConstants.kMAX_REACH - ArmConstants.kJOINT_TO_BUMPER_DIST + ArmConstants.kCLEARANCE &&
+    //         pos.getX() <= ArmConstants.kMAX_REACH + ArmConstants.kJOINT_TO_BUMPER_DIST  - ArmConstants.kCLEARANCE &&
+    //         pos.getY() >= ArmConstants.kCLEARANCE &&
+    //         pos.getY() <= ArmConstants.kMAX_HEIGHT - ArmConstants.kCLEARANCE
+    //     );
+    // }
 
     /**
      * Sets the target position
@@ -134,43 +156,17 @@ public class Arm extends SubsystemBase {
      * </ul>
      * @param x target (inches)
      * @param y target (inches)
-     * @return whether the specified position is possible (legally and physically)
      */
-    public boolean setTarget(double x, double y) {
-        // Sanity check
-        if (!sanityCheckPosition(new Translation2d(x, y))) {
-            DriverStation.reportWarning(String.format("Illegal target arm position (%s, %s)", x, y), false);
-            return false;
-        }
+    public void setTarget(double x, double y) {
+        Translation2d newPos = inverseKinematics(x, y);
 
-        // Get extension and angle (INVERSE kinematics)
-        double extension = Math.sqrt(Math.pow(x, 2) + Math.pow(y - ArmConstants.kJOINT_TO_FLOOR_DIST, 2));
-        double angle = Units.radiansToDegrees(Math.atan((y - ArmConstants.kJOINT_TO_FLOOR_DIST) / x));
-
-        extension -= ArmConstants.kMIN_EXTENSION;
-
-        // Sanity check 2
-        if (
-            extension < 0.0 || 
-            extension > ArmConstants.kMAX_EXTENSION ||
-            angle > ArmConstants.kMAX_ARM_ANGLE ||
-            angle < -ArmConstants.kMAX_ARM_ANGLE
-        ) {
-            DriverStation.reportWarning(String.format("Illegal arm kinematic position (%s, %s -> %s and %s deg)", x, y, extension, angle), false);
-            return false;
-        }
-
-        // Move to motor positions (non short-circuit evaluation)
-        if (!(setAngle(angle) & setExtension(extension))) {
-            DriverStation.reportWarning(String.format("Could not set arm and angle pose (%s, %s -> %s and %s deg), final sanity check failed but the arm may already be in motion!", x, y, extension, angle), false);
-            return false;
-        }
-
-        return true;
+        angleSP = newPos.getX();
+        extSP = newPos.getY();
     }
 
     // Getters
     public double getAngleSetpoint() { return angleSP; }
     public double getAngleActual() { return angleAbsEncoder.getPosition(); }
     public double getAngleVoltage() { return angleMotor.getAppliedOutput(); }
+    public Translation2d getPose() { return pose; }
 }

@@ -46,9 +46,11 @@ public class SwerveDriveBase extends SubsystemBase {
         // TODO this is wrong
         base.setMaxSpeed(2.0, 360.0);
         //imu.integrateAcceleration();
+        //setCoast(true); // TODO this is iffy
     }
     
     // Drive
     public void stop() { base.stop(true); }
     public void driveFieldOriented(double x, double y, double rot) { base.driveFieldOriented(y, x, rot, imu.getYaw()); }
+    public void setCoast(boolean coast) { base.toggleCoastMode(coast, true); }
 }

@@ -44,21 +44,21 @@ public final class Constants {
         public static final PIDConstant kARM_PID = new PIDConstant(0.09, 0.01, 0.0).withOutputRange(-12.0, 12.0);
         public static final PIDConstant kEXT_PID = new PIDConstant(0.01, 0.000001, 0).withError(0.05).withOutputRange(-8.0, 8.0);
 
-        public static final double kJOINT_TO_FLOOR_DIST = 10.0;
-        public static final double kJOINT_TO_BUMPER_DIST = 7.0;
+        public static final double kJOINT_TO_FLOOR_DIST = 26.0;
+        public static final double kJOINT_TO_BUMPER_DIST = 20.0;
 
         public static final double kANGLE_RATIO = 96.0;
         public static final double kWINCH_RATIO = 20.0;
 
-        public static final double kANGLE_0_ANGLE = 100.0;
-
         public static final double kMIN_EXTENSION = 16.0 + 16.0;
-        public static final double kMAX_EXTENSION = 50.0;
+        public static final double kMAX_EXTENSION = 100.0;
 
-        public static final double kMAX_ARM_ANGLE = 95.0; // symmetrical
+        public static final double kMAX_ARM_ANGLE = 125.0; // symmetrical
         
         public static final double kMAX_REACH = 4.0 * 12.0;
         public static final double kMAX_HEIGHT = 6.0 * 12.0;
+
+        public static final double kCLEARANCE = 1.0;
 
         /**
          * Uses polynomial regression to calculate the number of rotations of the winch motor to achieve specific lengths

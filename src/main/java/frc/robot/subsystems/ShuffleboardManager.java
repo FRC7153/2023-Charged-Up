@@ -1,5 +1,8 @@
-package frc.robot.subsystems;
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 
+package frc.robot.subsystems;
 import java.util.Map;
 
 import com.frc7153.commands.ConfigCommand;
@@ -39,6 +42,7 @@ public class ShuffleboardManager extends SubsystemBase {
     private GenericEntry piFPS;
     private GenericEntry piAge;
     private GenericEntry piCache;
+    private GenericEntry piTarget;
 
     // Gyro & Accelerometer
     private GenericEntry gyroCalibrated;
@@ -50,6 +54,7 @@ public class ShuffleboardManager extends SubsystemBase {
     private GenericEntry armWinchPos;
     private GenericEntry armLHand;
     private GenericEntry armRHand;
+    private GenericEntry armPose;
 
     // Constructor (Init)
     public ShuffleboardManager(XboxController controller0, ArmPI armPi, IMU imu, Arm arm, Claw claw) {
@@ -123,6 +128,9 @@ public class ShuffleboardManager extends SubsystemBase {
             .withPosition(7, 3)
             .withSize(2, 1)
             .getEntry();
+
+        piTarget = piTab.add("Target Info", "No target")
+            .getEntry();
         
         piTab.add("Camera Server", new ConfigCommand(armPi::startCameraServer, "Start CS")).withPosition(6, 4);
         piTab.add("Pause", new ConfigCommand(armPi::pauseProcessing, "Pause")).withPosition(7, 4);
@@ -161,6 +169,9 @@ public class ShuffleboardManager extends SubsystemBase {
         
         armRHand = armTab.add("Right Hand Claw", 0.0)
             .getEntry();
+        
+        armPose = armTab.add("Arm Position (inches)", "(?, ?)")
+            .getEntry();
     }
 
     // Update Values
@@ -178,6 +189,12 @@ public class ShuffleboardManager extends SubsystemBase {
         piVoltageStable.setBoolean(armPi.getVoltageStable());
         piCache.setString(armPi.getCache());
 
+        if (armPi.hasTarget()) {
+            piTarget.setString(String.format("Sees %s at %s, %s", armPi.getIsCone() ? "cone" : "cube", armPi.getXTargetAngle(), armPi.getYTargetAngle()));
+        } else {
+            piTarget.setString("No target");
+        }
+
         // Gyro
         gyroCalibrated.setBoolean(imu.isCalibrated());
 
@@ -189,5 +206,7 @@ public class ShuffleboardManager extends SubsystemBase {
 
         armLHand.setDouble(claw.getLHandPos());
         armRHand.setDouble(claw.getRHandPos());
+
+        armPose.setString(String.format("%s, %s (in)", arm.getPose().getX(), arm.getPose().getY()));
     }
 }

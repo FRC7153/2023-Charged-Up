@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
 
     container.arm.setExtension(ext);*/
 
-    container.arm.periodic();
+    container.arm.periodic(true);
     container.shuffleboard.periodic();
   }
 }

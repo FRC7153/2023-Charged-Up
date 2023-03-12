@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
+// TODO this is broken
 public class PresetArmCommand extends CommandBase {
     private Arm armSubsys;
     private double targetAngle;
@@ -26,7 +27,7 @@ public class PresetArmCommand extends CommandBase {
     @Override
     public void initialize() {
         armSubsys.setAngle(targetAngle);
-        armSubsys.setWinchPos(targetExt);
+        //armSubsys.setWinchPos(targetExt);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

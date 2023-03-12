@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Robot;
 
 /**
  * Dumps strings to a specified file so they can be viewed later.
@@ -43,6 +44,11 @@ public class FileDump {
      * @return Success
      */
     public boolean log(String msg) {
+        if (Robot.isSimulation()) {
+            System.out.println(String.format("LOG %s -> %s -> %s", name, DateUtils.getInlineDate(), msg));
+            return true;
+        }
+
         try {
             Files.write(logPath, String.format("%s -> %s\n", DateUtils.getInlineDate(), msg).getBytes(), StandardOpenOption.APPEND);
             return true;
