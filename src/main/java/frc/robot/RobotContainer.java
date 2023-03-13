@@ -5,6 +5,7 @@ import frc.robot.Constants.ArmPositions;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
 import frc.robot.commandgroups.TestCommand;
+import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GrabToggleCommand;
 import frc.robot.commands.TeleopArmCommand;
 import frc.robot.commands.PresetArmCommand;
@@ -33,7 +34,7 @@ public class RobotContainer {
         configureBindings();
 
         // Start Shuffleboard
-        shuffleboard = new ShuffleboardManager(this, armPi, driveBase.imu, arm, claw);
+        shuffleboard = new ShuffleboardManager(this, armPi, arm, claw, driveBase);
     }
 
     // Configure Command Bindings
@@ -59,6 +60,9 @@ public class RobotContainer {
         Controller1.button10.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_CUBE_MID));
         Controller1.button11.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_GROUND));
         Controller1.button12.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_GROUND));
+
+        // Auto Balance
+        Controller0.aButton.whileTrue(new BalanceCommand(driveBase));
 
         // Stow Position (arm 34 degrees, claw stowed)
         /*Controller1.button2.whileTrue(new ParallelCommandGroup(

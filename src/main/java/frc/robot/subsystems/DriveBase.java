@@ -20,11 +20,13 @@ public class DriveBase extends SubsystemBase {
     private SwerveWheel_FN rr = new SwerveWheel_FN(8, 4, 12, -SwerveConstants.kWHEEL_DISTANCE.getX(), SwerveConstants.kWHEEL_DISTANCE.getY(), SwerveConstants.kRR_OFFSET);
 
     private SwerveBase base = new SwerveBase(fl, fr, rl, rr);
-
     public IMU imu = new IMU();
 
     // Reset odometry on boot
-    public DriveBase() { setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0))); }
+    public DriveBase() {
+        setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)));
+        base.setMaxSpeed(2.0, 360.0);
+    }
 
     // Get Odometry Position
     public Pose2d getPose() { return base.getOdometryPose(); }
@@ -32,19 +34,19 @@ public class DriveBase extends SubsystemBase {
     // Reset Odometry Position
     public void setPose(Pose2d origin) {
         base.startOdometry(imu.getYaw(), origin.getX(), origin.getY(), origin.getRotation().getDegrees());
-        imu.resetPose(origin);
+        //imu.resetPose(origin);
     }
 
     // Update odometry
     @Override
     public void periodic() {
         base.updateOdometry(imu.getYaw());
-        base.setMaxSpeed(2.0, 360.0);
     }
     
     // Drive
     public void stop() { base.stop(true); }
-    public void driveFieldOriented(double x, double y, double rot) { base.driveFieldOriented(y, x, rot, imu.getYaw()); }
-    public void driveRobotOriented(double x, double y, double rot) { base.drive(y, x, rot); }
+    public void driveFieldOriented(double x, double y, double rot) { setCoast(false); base.driveFieldOriented(y, x, rot, imu.getYaw()); }
+    public void driveRobotOriented(double x, double y, double rot) { setCoast(false); base.drive(y, x, rot); }
+    public void driveTankAbsolute(double lSpeed, double rSpeed) { setCoast(false); base.tankDriveAbsolute(lSpeed, rSpeed);}
     public void setCoast(boolean coast) { base.toggleCoastMode(coast, true); }
 }

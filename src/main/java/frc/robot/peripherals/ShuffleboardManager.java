@@ -20,6 +20,7 @@ import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.DriveBase;
 
 /**
  * Handles all values and commands put on Shuffleboard
@@ -27,9 +28,12 @@ import frc.robot.subsystems.Claw;
 public class ShuffleboardManager {
     // Objects
     private ArmPI armPi;
-    private IMU imu;
     private Arm arm;
     private Claw claw;
+    private DriveBase drive;
+
+    // Drive Tab
+    private GenericEntry driveGyroConnected;
 
     // Controller Update Counter
     private GenericEntry controller0Update;
@@ -46,7 +50,9 @@ public class ShuffleboardManager {
     private GenericEntry piTarget;
 
     // Gyro & Accelerometer
-    private GenericEntry gyroCalibrated;
+    private GenericEntry gyroRoll;
+    private GenericEntry gyroPitch;
+    private GenericEntry gyroYaw;
 
     // Arm
     private GenericEntry armAngle;
@@ -58,12 +64,12 @@ public class ShuffleboardManager {
     private GenericEntry armPose;
 
     // Constructor (Init)
-    public ShuffleboardManager(RobotContainer container, ArmPI armPi, IMU imu, Arm arm, Claw claw) {
+    public ShuffleboardManager(RobotContainer container, ArmPI armPi, Arm arm, Claw claw, DriveBase drive) {
         // Store objects
         this.armPi = armPi;
-        this.imu = imu;
         this.arm = arm;
         this.claw = claw;
+        this.drive = drive;
 
         // Drive Tab (Main)
         ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
@@ -84,6 +90,10 @@ public class ShuffleboardManager {
                 .withPosition(4, 0)
                 .withProperties(Map.of("SHOW CONTROLS", "OFF"));
         }
+
+        driveGyroConnected = driveTab.add("Gyro Connected", false)
+            .withPosition(7, 0)
+            .getEntry();
 
         // Controller Tab Init
         ShuffleboardTab controllerTab = Shuffleboard.getTab("Controllers");
@@ -162,10 +172,10 @@ public class ShuffleboardManager {
         
         // Accelerometer & Gyro
         ShuffleboardTab gyro = Shuffleboard.getTab("Gyro");
-
-        gyroCalibrated = gyro.add("Calibrated", false).getEntry();
         
-        gyro.add("Calibrate", imu.imu.new CalibrateIMU()).withPosition(1, 0);
+        gyroRoll = gyro.add("Roll", 0.0).withPosition(1, 0).getEntry();
+        gyroPitch = gyro.add("Pitch", 0.0).withPosition(1, 0).getEntry();
+        gyroYaw = gyro.add("Yaw", 0.0).withPosition(1, 0).getEntry();
 
         // Arm
         ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
@@ -198,6 +208,9 @@ public class ShuffleboardManager {
 
     // Update Values
     public void periodic() {
+        // Drive
+        driveGyroConnected.setBoolean(drive.imu.isConnected());
+
         // Controllers
         controller0Update.setString(String.format("%s seconds", Controller0.getLastOffsetUpdate()));
         controller1Update.setString(String.format("%s seconds", Controller1.getLastOffsetUpdate()));
@@ -218,7 +231,9 @@ public class ShuffleboardManager {
         }
 
         // Gyro
-        gyroCalibrated.setBoolean(imu.isCalibrated());
+        gyroRoll.setDouble(drive.imu.getRoll());
+        gyroPitch.setDouble(drive.imu.getPitch());
+        gyroYaw.setDouble(drive.imu.getYaw());
 
         // Arm
         armSP.setDouble(arm.getAngleSetpoint());

@@ -111,6 +111,13 @@ public final class Constants {
         GrabPositions(double l, double r) { lPos = l; rPos = r; }
     }
 
+    /* AUTO CONSTANTS */
+    public static final class AutoConstants {
+        public static final PIDConstant kBALANCE_PID = new PIDConstant(0.0001, 0.0, 0.0).withError(1.0);
+
+        public static final double kMAX_BALANCE_SPEED = 0.5;
+    }
+
     /* FLIPPER CONSTANTS */
     public static final class FlipperConstants {
         public static final double k0_ANGLE = 0.4;

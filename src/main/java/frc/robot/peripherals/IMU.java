@@ -1,40 +1,19 @@
 package frc.robot.peripherals;
 
-import com.frc7153.controllers.CalibratedADIS16470;
-import com.frc7153.logging.FileDump;
-import com.frc7153.math.DeadReckoning;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
 
 /**
  * For reading rotation and acceleration of ADIS16470.
  */
 public class IMU {
     // IMU
-    public CalibratedADIS16470 imu = new CalibratedADIS16470(2, 0);
+    public ADIS16470_IMU imu = new ADIS16470_IMU();
 
-    // Odometry
-    private DeadReckoning navigator = new DeadReckoning(10);
-    private GenericEntry output1 = Shuffleboard.getTab("odometry").add("output1", "").getEntry();
-    private GenericEntry output2  = Shuffleboard.getTab("odometry").add("val", 0.0).getEntry();
-    private GenericEntry output3 = Shuffleboard.getTab("odometry").add("val2", 0.0).getEntry();
-
-    private FileDump debug = new FileDump("IMU-debug");
-
+    /*
     // Set Position
     public void resetPose(Pose2d origin) {
         imu.reset();
         navigator.resetPose(origin);
-    }
-
-    // Round to 1 decimal point
-    private static double round(double input) {
-        return input;
-        //DecimalFormat format = new DecimalFormat("####.#");
-        //format.setRoundingMode(RoundingMode.DOWN);
-        //return Double.parseDouble(format.format(input));
     }
 
     // Get Position
@@ -52,9 +31,12 @@ public class IMU {
         //output1.setString(navigator.toString());
         //output1.setString(String.format("accel: %s %s %s, ", ));
     }
+    */
 
     // Get Values
-    public boolean isCalibrated() { return imu.isCalibrated(); }
+    public boolean isConnected() { return imu.isConnected(); }
 
-    public double getYaw() { return imu.getYaw(); }
+    public double getYaw() { return imu.getAngle(); }
+    public double getRoll() { return imu.getXComplementaryAngle(); }
+    public double getPitch() { return imu.getYComplementaryAngle(); }
 }
