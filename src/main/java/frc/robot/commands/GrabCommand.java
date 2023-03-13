@@ -7,7 +7,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.GrabPos;
+import frc.robot.Constants.GrabPositions;
 import frc.robot.subsystems.Claw;
 
 
@@ -26,7 +26,7 @@ public class GrabCommand extends CommandBase {
         addRequirements(claw);
     }
 
-    public GrabCommand(Claw clawSubsys, GrabPos pos) { this(clawSubsys, pos.lPos, pos.rPos); }
+    public GrabCommand(Claw clawSubsys, GrabPositions pos) { this(clawSubsys, pos.lPos, pos.rPos); }
 
     // Called when the command is initially scheduled.
     @Override

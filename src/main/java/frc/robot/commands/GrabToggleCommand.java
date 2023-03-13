@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.GrabPos;
+import frc.robot.Constants.GrabPositions;
 import frc.robot.subsystems.Claw;
 
 public class GrabToggleCommand extends CommandBase {
@@ -29,7 +29,7 @@ public class GrabToggleCommand extends CommandBase {
         grabbing = true;
         debounce = 0.0;
 
-        claw.setPosition(GrabPos.GRAB);
+        claw.setPosition(GrabPositions.GRAB);
     }
 
     // Execute
@@ -40,9 +40,9 @@ public class GrabToggleCommand extends CommandBase {
             grabbing = !grabbing;
 
             if (grabbing) { // Grab
-                claw.setPosition(GrabPos.GRAB);
+                claw.setPosition(GrabPositions.GRAB);
             } else { // Release
-                claw.setPosition(GrabPos.RELEASE);
+                claw.setPosition(GrabPositions.RELEASE);
             }
         }
     }
@@ -51,6 +51,6 @@ public class GrabToggleCommand extends CommandBase {
     @Override
     public void end(boolean terminated) {
         // Release
-        claw.setPosition(GrabPos.RELEASE);
+        claw.setPosition(GrabPositions.RELEASE);
     }
 }

@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.GrabPos;
+import frc.robot.Constants.GrabPositions;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 
@@ -36,7 +36,7 @@ public class UnlockClawCommand extends CommandBase {
     @Override
     public void execute() {
         if (arm.getWinchEncPos() < 0.2) {
-            claw.setPosition(GrabPos.RELEASE);
+            claw.setPosition(GrabPositions.RELEASE);
             releaseTime = Timer.getFPGATimestamp();
         }
     }

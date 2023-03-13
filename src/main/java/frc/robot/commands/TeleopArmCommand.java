@@ -23,7 +23,6 @@ public class TeleopArmCommand extends CommandBase {
 
     // Velocity Integration
     private Double lastAngleIntegration;
-    private Double currentAngle;
     private double maxAngleVelocity;
 
     // Constructor
@@ -42,17 +41,18 @@ public class TeleopArmCommand extends CommandBase {
     @Override
     public void initialize() {
         lastAngleIntegration = Timer.getFPGATimestamp();
-        currentAngle = 0.0;
+
+        arm.setAngle(0.0);
     }
 
     @Override
     public void execute() {
-        currentAngle += (-angleSupplier.get() * maxAngleVelocity * (Timer.getFPGATimestamp() - lastAngleIntegration));
-        currentAngle = MathUtils.symmetricClamp(currentAngle, ArmConstants.kMAX_ANGLE);
+        double newAngle = arm.getState().angle + (-angleSupplier.get() * maxAngleVelocity * (Timer.getFPGATimestamp() - lastAngleIntegration));
+        newAngle = MathUtils.symmetricClamp(newAngle, ArmConstants.kMAX_ANGLE);
         lastAngleIntegration = Timer.getFPGATimestamp();
 
         //arm.setAngle(-angleSupplier.get() * ArmConstants.kMAX_ANGLE);
-        arm.setAngle(currentAngle);
+        arm.setAngle(newAngle);
         arm.setExtension(((extensionSupplier.get() + 1.0) / 2.0 * ArmConstants.kWINCH_MAX_POSITION) + ArmConstants.kJOINT_TO_EXT_PT);
     }
 

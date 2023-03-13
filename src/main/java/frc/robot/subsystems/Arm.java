@@ -18,6 +18,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
+    // Arm State
+    public static class ArmState {
+        public double angle;
+        public double extension;
+
+        public ArmState(double angle, double extension) { this.angle = angle; this.extension = extension; }
+    }
+
     // Motors
     private CANSparkMax angleMotor = new CANSparkMax(16, MotorType.kBrushless);
     private CANSparkMax winchMotor = new CANSparkMax(15, MotorType.kBrushless);
@@ -29,6 +37,7 @@ public class Arm extends SubsystemBase {
     private double angleSP = 0.0;
     private double extSP = 0.0;
     private Translation2d pose = new Translation2d(0.0, 0.0);
+    private ArmState currentState = new ArmState(0.0, 0.0);
 
     // Encoders
     private Encoder angleAbsEncoder = new Encoder((new DutyCycleEncoder(8))::getAbsolutePosition);
@@ -87,10 +96,10 @@ public class Arm extends SubsystemBase {
                 }
 
                 pose = new Translation2d(x, y);
-                Translation2d newPos = inverseKinematics(x, y);
+                currentState = inverseKinematics(x, y);
 
-                anglePID.setSetpoint(newPos.getY());
-                winchPID.setReference(ArmConstants.extToWinchRots(newPos.getX() - ArmConstants.kHAND_LENGTH), ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
+                anglePID.setSetpoint(currentState.angle);
+                winchPID.setReference(Math.max(ArmConstants.extToWinchRots(currentState.extension - ArmConstants.kHAND_LENGTH), 0.0), ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
 
                 //System.out.println(String.format("ext: %s, angle: %s -> %s, %s -> driven ext: %s, driven angle: %s", extSP, angleSP, x,y, newPos.getX(), newPos.getY()));
             }
@@ -131,10 +140,10 @@ public class Arm extends SubsystemBase {
 
     // Inverse kinematics
     // X is extension, y is angle
-    private Translation2d inverseKinematics(double x, double y) {
-        return new Translation2d(
-            Math.sqrt(Math.pow(x, 2) + Math.pow(y - ArmConstants.kJOINT_TO_FLOOR_DIST, 2)),
-            Units.radiansToDegrees(Math.atan2(x, y - ArmConstants.kJOINT_TO_FLOOR_DIST))
+    private ArmState inverseKinematics(double x, double y) {
+        return new ArmState(
+            Units.radiansToDegrees(Math.atan2(x, y - ArmConstants.kJOINT_TO_FLOOR_DIST)),
+            Math.sqrt(Math.pow(x, 2) + Math.pow(y - ArmConstants.kJOINT_TO_FLOOR_DIST, 2))
         );
     }
 
@@ -148,10 +157,10 @@ public class Arm extends SubsystemBase {
      * @param y target (inches)
      */
     public void setTarget(double x, double y) {
-        Translation2d newPos = inverseKinematics(x, y);
+        ArmState newPos = inverseKinematics(x, y);
 
-        angleSP = newPos.getX();
-        extSP = newPos.getY();
+        angleSP = newPos.angle;
+        extSP = newPos.extension;
     }
 
     // Set Raw Speed as percentage (for testing mode, no sanity checks done)
@@ -171,4 +180,5 @@ public class Arm extends SubsystemBase {
     public double getAngleVoltage() { return angleMotor.getAppliedOutput(); }
     public double getWinchEncPos() { return winchEnc.getPosition(); }
     public Translation2d getPose() { return pose; }
+    public ArmState getState() { return currentState; }
 }

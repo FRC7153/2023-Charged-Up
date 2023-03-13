@@ -81,6 +81,18 @@ public final class Constants {
         }
     }
 
+    /* ARM PRE-CONFIGURED POSITIONS */
+    public static final class ArmPositions {
+        // Ground
+        public static final Translation2d kFRONT_GROUND = new Translation2d(35.98, 4.34);
+
+        // Front Placement
+        public static final Translation2d kFRONT_CUBE_MID = new Translation2d(43.67, 32.31);
+        public static final Translation2d kFRONT_CUBE_HIGH = new Translation2d(64.0, 47.39);
+        public static final Translation2d kFRONT_CONE_MID = new Translation2d(45.41, 41.97);
+        public static final Translation2d kFRONT_CONE_HIGH = new Translation2d(64.0, 57.69);
+    }
+
     /* CLAW CONSTANTS */
     public static final class ClawConstants {
         public static final double kANGLE_RATIO = 25.0 * (36.0 / 16.0); 
@@ -93,10 +105,10 @@ public final class Constants {
         public static final int kCURRENT_LIMIT = 10;
     }
 
-    /* CLAW GRAB STATES */
-    public static enum GrabPos { GRAB(0.26, 0.98), RELEASE(0.47, 0.81), STOW(0.89, 0.39);
+    /* CLAW GRAB POSITIONS */
+    public static enum GrabPositions { GRAB(0.26, 0.98), RELEASE(0.47, 0.81), STOW(0.89, 0.39);
         public final double lPos, rPos;
-        GrabPos(double l, double r) { lPos = l; rPos = r; }
+        GrabPositions(double l, double r) { lPos = l; rPos = r; }
     }
 
     /* FLIPPER CONSTANTS */

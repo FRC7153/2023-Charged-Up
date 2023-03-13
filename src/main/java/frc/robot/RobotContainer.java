@@ -1,7 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmPositions;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
 import frc.robot.commandgroups.TestCommand;
@@ -53,12 +53,12 @@ public class RobotContainer {
         claw.setDefaultCommand(new GrabToggleCommand(claw, Controller0::getRightTrigger));
 
         // Arm Preset Positions
-        Controller1.button7.whileTrue(new PresetArmCommand(arm, new Translation2d(64.0, 57.69))); // Cone high
-        Controller1.button8.whileTrue(new PresetArmCommand(arm, new Translation2d(64.0, 47.39))); // Cube high
-        Controller1.button9.whileTrue(new PresetArmCommand(arm, new Translation2d(45.41, 41.97))); // Cone mid
-        Controller1.button10.whileTrue(new PresetArmCommand(arm, new Translation2d(43.67, 32.31))); // Cube mid
-        Controller1.button11.whileTrue(new PresetArmCommand(arm, new Translation2d(35.98, 4.34))); // Ground
-        Controller1.button12.whileTrue(new PresetArmCommand(arm, new Translation2d(35.98, 4.34))); // Ground
+        Controller1.button7.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_CONE_HIGH));
+        Controller1.button8.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_CUBE_HIGH));
+        Controller1.button9.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_CONE_MID));
+        Controller1.button10.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_CUBE_MID));
+        Controller1.button11.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_GROUND));
+        Controller1.button12.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_GROUND));
 
         // Stow Position (arm 34 degrees, claw stowed)
         /*Controller1.button2.whileTrue(new ParallelCommandGroup(

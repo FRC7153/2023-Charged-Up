@@ -2,7 +2,6 @@ package frc.robot.commandgroups;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.peripherals.ShuffleboardManager;
 import frc.robot.subsystems.Arm;
