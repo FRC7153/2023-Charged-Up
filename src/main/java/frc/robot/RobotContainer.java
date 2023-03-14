@@ -15,6 +15,7 @@ import frc.robot.peripherals.ShuffleboardManager;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.AutoCenter;
 
 public class RobotContainer {
     // Peripherals
@@ -24,6 +25,7 @@ public class RobotContainer {
     private final DriveBase driveBase = new DriveBase();
     private final Arm arm = new Arm();
     private final Claw claw = new Claw();
+    private final Find find = new Find();
 
     // Shuffleboard + Commands
     private final ShuffleboardManager shuffleboard;
@@ -41,6 +43,25 @@ public class RobotContainer {
     // Configure Command Bindings
     private void configureBindings() {
         // Teleop Drive Command
+        
+        
+        /*
+        if (findMe.get()) {
+      .driveCartesian(0.0, 0.0, center.getTurn());
+    } else {
+      m_robotDrive.driveCartesian(
+        speedAdjust.applyMaxSpeed(DriveJoy.getY()),
+        speedAdjust.applyMaxSpeed(-DriveJoy.getX()), 
+        speedAdjust.applyMaxSpeed(
+          // deadband:
+          //(-spinJoy.getZ() <= 0.05 && -spinJoy.getZ() >= -0.05) ? 0.0 : -spinJoy.getZ()
+          -spinJoy.getZ()
+        )
+      );
+    }
+
+        */
+        
         driveBase.setDefaultCommand(new TeleopDriveCommand(
             driveBase,
             Controller0::getLeftX,
