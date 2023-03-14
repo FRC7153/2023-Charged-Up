@@ -45,29 +45,34 @@ public class RobotContainer {
         // Teleop Drive Command
         
         
-        /*
-        if (findMe.get()) {
-      .driveCartesian(0.0, 0.0, center.getTurn());
-    } else {
-      m_robotDrive.driveCartesian(
-        speedAdjust.applyMaxSpeed(DriveJoy.getY()),
-        speedAdjust.applyMaxSpeed(-DriveJoy.getX()), 
-        speedAdjust.applyMaxSpeed(
-          // deadband:
-          //(-spinJoy.getZ() <= 0.05 && -spinJoy.getZ() >= -0.05) ? 0.0 : -spinJoy.getZ()
-          -spinJoy.getZ()
-        )
-      );
-    }
-
-        */
-        
+           
         driveBase.setDefaultCommand(new TeleopDriveCommand(
             driveBase,
             Controller0::getLeftX,
             Controller0::getLeftY,
             Controller0::getRightX
         ));
+
+        /*
+//use the default drive command unless the button is pressed
+if (findMe.get()) {
+      .driveBase(
+        Controller0::getLeftX, 
+        Controller0::getLeftY,
+        center.getTurn());
+    } else {
+      .driveBase(
+        Controller0::getLeftX,
+        Controller0::getLeftY,
+        Controller::getRightX
+        )
+        }
+      );
+    }
+
+
+
+        */
 
         // Teleop Arm Command (position setpoint)
         arm.setDefaultCommand(new TeleopArmCommand(arm, Controller1::getY, Controller1::getThrottle, 60.0));
