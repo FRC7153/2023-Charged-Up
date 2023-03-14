@@ -34,6 +34,7 @@ public class ShuffleboardManager {
 
     // Drive Tab
     private GenericEntry driveGyroConnected;
+    private GenericEntry driveHandUnlocked;
 
     // Controller Update Counter
     private GenericEntry controller0Update;
@@ -93,6 +94,10 @@ public class ShuffleboardManager {
 
         driveGyroConnected = driveTab.add("Gyro Connected", false)
             .withPosition(7, 0)
+            .getEntry();
+
+        driveHandUnlocked = driveTab.add("Hand Unlocked", false)
+            .withPosition(7, 1)
             .getEntry();
 
         // Controller Tab Init
@@ -174,8 +179,8 @@ public class ShuffleboardManager {
         ShuffleboardTab gyro = Shuffleboard.getTab("Gyro");
         
         gyroRoll = gyro.add("Roll", 0.0).withPosition(1, 0).getEntry();
-        gyroPitch = gyro.add("Pitch", 0.0).withPosition(1, 0).getEntry();
-        gyroYaw = gyro.add("Yaw", 0.0).withPosition(1, 0).getEntry();
+        gyroPitch = gyro.add("Pitch", 0.0).withPosition(2, 0).getEntry();
+        gyroYaw = gyro.add("Yaw", 0.0).withPosition(3, 0).getEntry();
 
         // Arm
         ShuffleboardTab armTab = Shuffleboard.getTab("Arm");
@@ -210,6 +215,7 @@ public class ShuffleboardManager {
     public void periodic() {
         // Drive
         driveGyroConnected.setBoolean(drive.imu.isConnected());
+        driveHandUnlocked.setBoolean(arm.hasBeenReleased);
 
         // Controllers
         controller0Update.setString(String.format("%s seconds", Controller0.getLastOffsetUpdate()));

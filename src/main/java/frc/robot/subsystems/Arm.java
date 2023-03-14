@@ -34,14 +34,17 @@ public class Arm extends SubsystemBase {
     private PIDController anglePID = ArmConstants.kARM_PID.toWPIPidController();
     private SparkMaxPIDController winchPID = winchMotor.getPIDController();
 
-    private double angleSP = 0.0;
-    private double extSP = 0.0;
+    private Double angleSP = Double.NaN;
+    private Double extSP = Double.NaN;
     private Translation2d pose = new Translation2d(0.0, 0.0);
     private ArmState currentState = new ArmState(0.0, 0.0);
 
     // Encoders
     private Encoder angleAbsEncoder = new Encoder((new DutyCycleEncoder(8))::getAbsolutePosition);
     private RelativeEncoder winchEnc = winchMotor.getEncoder();
+
+    // State
+    public boolean hasBeenReleased = false;
 
     // Init
     public Arm() {
@@ -64,7 +67,7 @@ public class Arm extends SubsystemBase {
     public void periodic() { periodic(false); }
 
     public void periodic(boolean testing) {
-        if (!DriverStation.isDisabled()) {
+        if (!DriverStation.isDisabled() && !angleSP.isNaN() && !extSP.isNaN()) {
             // Verify winch motor is safe
             if (winchEnc.getPosition() < 0.0) {
                 DriverStation.reportWarning("Winch is below zero!", false);
@@ -166,6 +169,9 @@ public class Arm extends SubsystemBase {
     // Set Raw Speed as percentage (for testing mode, no sanity checks done)
     public void setRawSpeed(double speed) { winchMotor.set(speed); }
 
+    // Set voltage of winch
+    public void setWinchVolts(double volts) { winchMotor.setVoltage(volts); }
+
     // Reset relative encoder position (testing mode)
     public void setWinchEncPosition(double rots) { winchEnc.setPosition(rots); }
 
@@ -179,6 +185,7 @@ public class Arm extends SubsystemBase {
     public double getAngleActual() { return angleAbsEncoder.getPosition(); }
     public double getAngleVoltage() { return angleMotor.getAppliedOutput(); }
     public double getWinchEncPos() { return winchEnc.getPosition(); }
+    public double getWinchEncVelocity() { return winchEnc.getVelocity(); }
     public Translation2d getPose() { return pose; }
     public ArmState getState() { return currentState; }
 }

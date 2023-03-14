@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.wheeltypes.SwerveWheel_FN;
 
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,6 +22,7 @@ public class DriveBase extends SubsystemBase {
 
     private SwerveBase base = new SwerveBase(fl, fr, rl, rr);
     public IMU imu = new IMU();
+    //public HolonomicDriveController holonomicDrive = new HolonomicDriveController(null, null, null);
 
     // Reset odometry on boot
     public DriveBase() {
@@ -45,8 +47,8 @@ public class DriveBase extends SubsystemBase {
     
     // Drive
     public void stop() { base.stop(true); }
-    public void driveFieldOriented(double x, double y, double rot) { setCoast(false); base.driveFieldOriented(y, x, rot, imu.getYaw()); }
-    public void driveRobotOriented(double x, double y, double rot) { setCoast(false); base.drive(y, x, rot); }
-    public void driveTankAbsolute(double lSpeed, double rSpeed) { setCoast(false); base.tankDriveAbsolute(lSpeed, rSpeed);}
+    public void driveFieldOriented(double x, double y, double rot) { base.driveFieldOriented(y, x, rot, imu.getYaw()); }
+    public void driveRobotOriented(double x, double y, double rot) { base.drive(y, x, rot); }
+    public void driveTankAbsolute(double lSpeed, double rSpeed) { base.tankDriveAbsolute(lSpeed, rSpeed);}
     public void setCoast(boolean coast) { base.toggleCoastMode(coast, true); }
 }

@@ -5,10 +5,12 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.GrabPositions;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 
 public class GrabToggleCommand extends CommandBase {
     // Subsystems + Supplier
+    private Arm arm;
     private Claw claw;
     private Supplier<Boolean> triggerSupp;
 
@@ -17,7 +19,8 @@ public class GrabToggleCommand extends CommandBase {
     private double debounce;
 
     // Init
-    public GrabToggleCommand(Claw clawSubsys, Supplier<Boolean> triggerSupplier) {
+    public GrabToggleCommand(Arm armSubsys, Claw clawSubsys, Supplier<Boolean> triggerSupplier) {
+        arm = armSubsys;
         claw = clawSubsys;
         triggerSupp = triggerSupplier;
 
@@ -35,6 +38,8 @@ public class GrabToggleCommand extends CommandBase {
     // Execute
     @Override
     public void execute() {
+        if (!arm.hasBeenReleased) { return; }
+
         if (triggerSupp.get() && Timer.getFPGATimestamp() - debounce >= 0.8) {
             debounce = Timer.getFPGATimestamp();
             grabbing = !grabbing;

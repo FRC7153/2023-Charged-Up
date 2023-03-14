@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
     // Robot Container
-    private RobotContainer container = new RobotContainer(); // TODO verify this
+    private RobotContainer container = new RobotContainer();
 
     // Auto Commands
     private Command autoCommand;
@@ -39,6 +39,11 @@ public class Robot extends TimedRobot {
         // Turn on brakes
         switchMode(true);
 
+        // Unlock
+        if (container.checkHandsLocked()) {
+            CommandScheduler.getInstance().schedule(container.unlockClawCommand);
+        }
+
         // Get (and run) command
         autoCommand = container.getAutonomousCommand();
 
@@ -54,6 +59,11 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         // Stop commands
         switchMode(true);
+
+        // Unlock
+        if (container.checkHandsLocked()) {
+            CommandScheduler.getInstance().schedule(container.unlockClawCommand); // Unlock
+        }
     }
 
     // Teleop Periodic
@@ -63,7 +73,8 @@ public class Robot extends TimedRobot {
     //// DISABLED ////
     @Override
     public void disabledInit() {
-        switchMode(true);
+        // Brakes only if the hands are still locked
+        switchMode(!container.checkHandsLocked());
     }
 
     //// TEST ////

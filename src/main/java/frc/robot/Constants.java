@@ -87,9 +87,9 @@ public final class Constants {
         public static final Translation2d kFRONT_GROUND = new Translation2d(35.98, 4.34);
 
         // Front Placement
-        public static final Translation2d kFRONT_CUBE_MID = new Translation2d(43.67, 32.31);
-        public static final Translation2d kFRONT_CUBE_HIGH = new Translation2d(64.0, 47.39);
-        public static final Translation2d kFRONT_CONE_MID = new Translation2d(45.41, 41.97);
+        public static final Translation2d kFRONT_CUBE_MID = new Translation2d(41.67, 32.31);
+        public static final Translation2d kFRONT_CUBE_HIGH = new Translation2d(67.0, 47.39);
+        public static final Translation2d kFRONT_CONE_MID = new Translation2d(42.41, 41.97);
         public static final Translation2d kFRONT_CONE_HIGH = new Translation2d(64.0, 57.69);
     }
 
@@ -102,7 +102,7 @@ public final class Constants {
         public static final double kL_HAND_OFFSET = 0.9;
         public static final double kR_HAND_OFFSET = 0.2;
 
-        public static final int kCURRENT_LIMIT = 10;
+        public static final int kCURRENT_LIMIT = 9;
     }
 
     /* CLAW GRAB POSITIONS */

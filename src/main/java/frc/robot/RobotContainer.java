@@ -5,11 +5,11 @@ import frc.robot.Constants.ArmPositions;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
 import frc.robot.commandgroups.TestCommand;
-import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GrabToggleCommand;
 import frc.robot.commands.TeleopArmCommand;
 import frc.robot.commands.PresetArmCommand;
 import frc.robot.commands.TeleopDriveCommand;
+import frc.robot.commands.UnlockClawCommand;
 import frc.robot.peripherals.ArmPI;
 import frc.robot.peripherals.ShuffleboardManager;
 import frc.robot.subsystems.Arm;
@@ -25,8 +25,9 @@ public class RobotContainer {
     private final Arm arm = new Arm();
     private final Claw claw = new Claw();
 
-    // Shuffleboard
+    // Shuffleboard + Commands
     private final ShuffleboardManager shuffleboard;
+    public final Command unlockClawCommand = new UnlockClawCommand(claw, arm);
 
     // Constructor
     public RobotContainer() {
@@ -51,7 +52,7 @@ public class RobotContainer {
         arm.setDefaultCommand(new TeleopArmCommand(arm, Controller1::getY, Controller1::getThrottle, 60.0));
 
         // Default Claw Command (open position)
-        claw.setDefaultCommand(new GrabToggleCommand(claw, Controller0::getRightTrigger));
+        claw.setDefaultCommand(new GrabToggleCommand(arm, claw, Controller0::getRightTrigger));
 
         // Arm Preset Positions
         Controller1.button7.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_CONE_HIGH));
@@ -62,7 +63,8 @@ public class RobotContainer {
         Controller1.button12.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_GROUND));
 
         // Auto Balance
-        Controller0.aButton.whileTrue(new BalanceCommand(driveBase));
+        //Controller0.aButton.whileTrue(new BalanceCommand(driveBase));
+        Controller0.aButton.whileTrue(unlockClawCommand);
 
         // Stow Position (arm 34 degrees, claw stowed)
         /*Controller1.button2.whileTrue(new ParallelCommandGroup(
@@ -88,6 +90,9 @@ public class RobotContainer {
 
     // Get Testing Command
     public Command getTestingCommand() {
-        return new TestCommand(arm, shuffleboard, Controller1::getThrottle);
+        return new TestCommand(arm, claw, shuffleboard, Controller1::getThrottle);
     }
+
+    // Check if arms are locked
+    public boolean checkHandsLocked() { return !arm.hasBeenReleased; }
 }

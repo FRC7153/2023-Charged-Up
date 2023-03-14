@@ -3,8 +3,10 @@ package frc.robot.commandgroups;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.GrabPositions;
 import frc.robot.peripherals.ShuffleboardManager;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 
 /**
  * Command that runs in testing mode to home arm extension.
@@ -14,14 +16,16 @@ import frc.robot.subsystems.Arm;
 public class TestCommand extends CommandBase {
     // Subsystems
     private Arm arm;
+    private Claw claw;
     private ShuffleboardManager shuffleboard;
 
     // Suppliers
     private Supplier<Double> extSupp;
 
     // Constructor
-    public TestCommand(Arm armSubsys, ShuffleboardManager shuffleboardManager, Supplier<Double> extSupplier) {
+    public TestCommand(Arm armSubsys, Claw clawSubsys, ShuffleboardManager shuffleboardManager, Supplier<Double> extSupplier) {
         arm = armSubsys;
+        claw = clawSubsys;
         shuffleboard = shuffleboardManager;
         extSupp = extSupplier;
     }
@@ -30,6 +34,7 @@ public class TestCommand extends CommandBase {
     @Override
     public void initialize() {
         arm.setAngle(0.0);
+        claw.setPosition(GrabPositions.RELEASE);
     }
 
     // Periodic

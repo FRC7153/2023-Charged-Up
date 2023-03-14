@@ -25,25 +25,28 @@ public class UnlockClawCommand extends CommandBase {
     // Init
     @Override
     public void initialize() {
-        releaseTime = Double.NaN;
+        releaseTime = Timer.getFPGATimestamp();
+        arm.hasBeenReleased = false;
+
         claw.setCoastMode(true);
 
-        arm.setWinchEncPosition(1.0);
+        arm.setAngle(0.0);
+
+        arm.setWinchEncPosition(6.5); // 2.54
         arm.setExtension(0.0);
     }
 
     // Periodic
     @Override
     public void execute() {
-        if (arm.getWinchEncPos() < 0.2) {
+        if (!releaseTime.isNaN() && Timer.getFPGATimestamp() - releaseTime >= 0.8) {
             claw.setPosition(GrabPositions.RELEASE);
-            releaseTime = Timer.getFPGATimestamp();
+            arm.hasBeenReleased = true;
         }
     }
 
-    // End
     @Override
     public boolean isFinished() {
-        return (!releaseTime.isNaN() && Timer.getFPGATimestamp() - releaseTime >= 0.1);
+        return arm.hasBeenReleased;
     }
 }
