@@ -2,10 +2,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmPositions;
+import frc.robot.Constants.GameState;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
 import frc.robot.commandgroups.TestCommand;
-import frc.robot.commands.GrabToggleCommand;
+import frc.robot.commands.TeleopClawCommand;
 import frc.robot.commands.TeleopArmCommand;
 import frc.robot.commands.PresetArmCommand;
 import frc.robot.commands.TeleopDriveCommand;
@@ -17,6 +18,9 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveBase;
 
 public class RobotContainer {
+    // State
+    public GameState state = GameState.DISABLED;
+
     // Peripherals
     private final ArmPI armPi = new ArmPI();
 
@@ -24,6 +28,9 @@ public class RobotContainer {
     private final DriveBase driveBase = new DriveBase();
     private final Arm arm = new Arm();
     private final Claw claw = new Claw();
+
+    // Autonomous
+    private Autonomous auto = new Autonomous(driveBase, arm, claw);
 
     // Shuffleboard + Commands
     private final ShuffleboardManager shuffleboard;
@@ -45,14 +52,21 @@ public class RobotContainer {
             driveBase,
             Controller0::getLeftX,
             Controller0::getLeftY,
-            Controller0::getRightX
+            Controller0::getRightX,
+            this::getGameState
         ));
 
         // Teleop Arm Command (position setpoint)
-        arm.setDefaultCommand(new TeleopArmCommand(arm, Controller1::getY, Controller1::getThrottle, 60.0));
+        arm.setDefaultCommand(new TeleopArmCommand(
+            arm, 
+            Controller1::getY, 
+            Controller1::getThrottle, 
+            this::getGameState,
+            60.0
+        ));
 
         // Default Claw Command (open position)
-        claw.setDefaultCommand(new GrabToggleCommand(arm, claw, Controller0::getRightTrigger));
+        claw.setDefaultCommand(new TeleopClawCommand(arm, claw, Controller0::getRightTrigger, this::getGameState));
 
         // Arm Preset Positions
         Controller1.button7.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_CONE_HIGH));
@@ -85,7 +99,7 @@ public class RobotContainer {
 
     // Get Auto Command
     public Command getAutonomousCommand() {
-        return null;
+        return auto.getTestSpinAuto();
     }
 
     // Get Testing Command
@@ -95,4 +109,7 @@ public class RobotContainer {
 
     // Check if arms are locked
     public boolean checkHandsLocked() { return !arm.hasBeenReleased; }
+
+    // Game state supplier
+    public GameState getGameState() { return state; }
 }

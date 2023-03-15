@@ -2,7 +2,10 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Controllers/Controllers/Joystick$CalibrateOffsetCommand": "Command",
       "/Shuffleboard/Controllers/Controllers/XboxController$CalibrateOffsetCommand": "Command",
+      "/Shuffleboard/Drive/Full Brakes/Disable": "Command",
+      "/Shuffleboard/Drive/Full Brakes/Enable": "Command",
       "/Shuffleboard/Gyro/Calibrate": "Command",
       "/Shuffleboard/Pi/Camera Server": "Command",
       "/Shuffleboard/Pi/Pause": "Command",
@@ -17,7 +20,10 @@
         {
           "height": 338
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }

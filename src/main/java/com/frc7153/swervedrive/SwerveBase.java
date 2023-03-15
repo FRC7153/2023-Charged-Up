@@ -29,6 +29,9 @@ public class SwerveBase extends SubsystemBase {
     private double maxDriveSpeed = 4.0;
     private double maxSpinSpeed = 360.0;
 
+    // Get Kinematics Object
+    public SwerveDriveKinematics getKinematics() { return kinematics; }
+
     // Get Module Position
     private SwerveModulePosition[] getSwerveModulePositions() {
         return new SwerveModulePosition[] {
@@ -97,7 +100,7 @@ public class SwerveBase extends SubsystemBase {
      * @param x
      * @param r
      */
-    private void scaleAndDistribute(SwerveModuleState[] states) {
+    public void distributeStates(SwerveModuleState[] states) {
         //SwerveDriveKinematics.desaturateWheelSpeeds(states, maxDriveSpeed);
 
         fl.set(states[0]);
@@ -116,7 +119,7 @@ public class SwerveBase extends SubsystemBase {
         ChassisSpeeds speed = new ChassisSpeeds(y, x, -Units.degreesToRadians(r));
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speed, new Translation2d(0, 0));
 
-        scaleAndDistribute(states);
+        distributeStates(states);
     }
 
     /**
@@ -142,7 +145,7 @@ public class SwerveBase extends SubsystemBase {
         );
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speed);
 
-        scaleAndDistribute(states);
+        distributeStates(states);
     }
 
     /**
@@ -164,7 +167,7 @@ public class SwerveBase extends SubsystemBase {
         ChassisSpeeds speed = new ChassisSpeeds(0.0, 0.0, -Units.degreesToRadians(rotation));
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speed, new Translation2d(centerX, centerY));
 
-        scaleAndDistribute(states);
+        distributeStates(states);
     }
 
     /**
@@ -189,7 +192,7 @@ public class SwerveBase extends SubsystemBase {
     public void setChassisSpeeds(ChassisSpeeds speeds) {
         SwerveModuleState[] state = kinematics.toSwerveModuleStates(speeds);
         
-        scaleAndDistribute(state);
+        distributeStates(state);
     }
 
     /**

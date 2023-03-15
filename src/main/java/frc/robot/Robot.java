@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.GameState;
 
 public class Robot extends TimedRobot {
     // Robot Container
@@ -36,6 +37,8 @@ public class Robot extends TimedRobot {
     //// AUTO ////
     @Override
     public void autonomousInit() {
+        container.state = GameState.AUTO;
+
         // Turn on brakes
         switchMode(true);
 
@@ -47,7 +50,13 @@ public class Robot extends TimedRobot {
         // Get (and run) command
         autoCommand = container.getAutonomousCommand();
 
-        if (autoCommand != null) { autoCommand.schedule(); }
+        if (autoCommand == null) {
+            // If no auto command, just unlock hands
+            CommandScheduler.getInstance().schedule(container.unlockClawCommand);
+        } else {
+            // Assumed that autos will unlock hands first
+            autoCommand.schedule();
+        }
     }
 
     // Auto Periodic
@@ -64,6 +73,8 @@ public class Robot extends TimedRobot {
         if (container.checkHandsLocked()) {
             CommandScheduler.getInstance().schedule(container.unlockClawCommand); // Unlock
         }
+
+        container.state = GameState.TELEOP;
     }
 
     // Teleop Periodic
@@ -73,14 +84,17 @@ public class Robot extends TimedRobot {
     //// DISABLED ////
     @Override
     public void disabledInit() {
-        // Brakes only if the hands are still locked
-        switchMode(!container.checkHandsLocked());
+        // Brakes only if the hands are not locked or its in test mode
+        // At comps, these will ALWAYS lock, so make sure to retract arm before turning on
+        switchMode(!(container.checkHandsLocked() && Constants.kTEST_DEPLOY));
+        container.state = GameState.DISABLED;
     }
 
     //// TEST ////
     @Override
     public void testInit() {
         switchMode(true);
+        container.state = GameState.DISABLED;
 
         // Get and run test command
         autoCommand = container.getTestingCommand();

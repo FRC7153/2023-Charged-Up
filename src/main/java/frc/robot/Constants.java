@@ -15,7 +15,11 @@ import edu.wpi.first.math.util.Units;
  * </ul>
  */
 public final class Constants {
+    // Testing program
     public static final boolean kTEST_DEPLOY = true;
+
+    // Game state enum
+    public static enum GameState {AUTO, TELEOP, DISABLED}; // Test mode uses DISABLED
 
     /* SHUFFLEBOARD CONFIG */
     public static final class ShuffleboardConstants {

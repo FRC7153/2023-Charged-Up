@@ -7,6 +7,7 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.GameState;
 import frc.robot.subsystems.DriveBase;
 
 /**
@@ -20,12 +21,14 @@ public class TeleopDriveCommand extends CommandBase {
   private Supplier<Double> xSupply;
   private Supplier<Double> ySupply;
   private Supplier<Double> rSupply;
+  private Supplier<GameState> stateSupply;
 
-  public TeleopDriveCommand(DriveBase swerveSubsystem, Supplier<Double> xSupplier, Supplier<Double> ySupplier, Supplier<Double> rotSupplier) {
+  public TeleopDriveCommand(DriveBase swerveSubsystem, Supplier<Double> xSupplier, Supplier<Double> ySupplier, Supplier<Double> rotSupplier, Supplier<GameState> stateSupplier) {
     base = swerveSubsystem;
     xSupply = xSupplier;
     ySupply = ySupplier;
     rSupply = rotSupplier;
+    stateSupply = stateSupplier;
 
     addRequirements(base);
   }
@@ -33,6 +36,7 @@ public class TeleopDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (!stateSupply.get().equals(GameState.TELEOP)) { cancel(); return; }
     base.stop();
   }
 
