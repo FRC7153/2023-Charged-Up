@@ -39,7 +39,7 @@ public class DriveBase extends SubsystemBase {
         setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)));
 
         // Config max speeds (only used for percentages, not autos)
-        base.setMaxSpeed(4.75, 540.0); // 4.0, 360
+        base.setMaxSpeed(4.75, 540.0); // 1.5, 360.0
     }
 
     // Get Odometry Position
