@@ -14,27 +14,39 @@ import frc.robot.subsystems.Arm;
 public class PresetArmCommand extends CommandBase {
     private Arm armSubsys;
     private IMU imu;
-    private Translation2d pos;
-    private boolean checkInvert;
+
+    // Config
+    private Translation2d pos = null;
+    private Translation2d invertedPos = null; // if the inverted position is not just (-x, y)
 
     /** Creates a new PresetArmCommand. */
-    public PresetArmCommand(Arm armSubsystem, IMU imu, Translation2d pos, boolean checkInvert) {
-        armSubsys = armSubsystem;
-        this.imu = imu;
-
+    public PresetArmCommand(Arm armSubsystem, Translation2d pos) {
+        armSubsys = armSUbsystem;
         this.pos = pos;
-        this.checkInvert = checkInvert;
-
         addRequirements(armSubsys);
     }
+    
+    public PresetArmCommand(Arm armSubsystem, IMU imu, Translation2d pos) {
+        this(armSubsystem, pos);
 
-    public PresetArmCommand(Arm armSubsystem, Translation2d pos) { this(armSubsystem, null, pos, false); }
+        this.imu = imu;
+    }
+
+    public PresetArmCommand(Arm armSubsystem, IMU imu, Translation2d pos, Translation2d invertedPos) {
+        this(armSubsystem, pos, imu);
+
+        this.invertedPos = invertedPos;
+    }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        if (checkInvert && MathUtils.normalizeAngle180(imu.getYaw()) < 90.0 && MathUtils.normalizeAngle180(imu.getYaw()) > -90.0) {
-            armSubsys.setTarget(-pos.getX(), pos.getY());
+        if (imu != null && MathUtils.normalizeAngle180(imu.getYaw()) < 90.0 && MathUtils.normalizeAngle180(imu.getYaw()) > -90.0) {
+            if (invertedPos != null) {
+                armSubsys.setTarget(invertedPos.getX(), invertedPos.getY());
+            } else {
+                armSubsys.setTarget(-pos.getX(), pos.getY());
+            }
         } else {
             armSubsys.setTarget(pos.getX(), pos.getY());
         }
