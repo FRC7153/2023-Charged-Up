@@ -41,7 +41,7 @@ Charged Up, 2023 Season
 19. Arm Vision Processor (RaspberryPi 4b)
 20. Flipper Neo (NEO 550/CAN Spark Max)
 
-## PWM
+## DIO
 
 8. arm angle
 9. flipepr angel
