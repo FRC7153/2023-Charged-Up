@@ -35,6 +35,7 @@ public class ShuffleboardManager {
     // Drive Tab
     private GenericEntry driveGyroConnected;
     private GenericEntry driveHandUnlocked;
+    private GenericEntry drivePos;
 
     // Controller Update Counter
     private GenericEntry controller0Update;
@@ -63,6 +64,12 @@ public class ShuffleboardManager {
     private GenericEntry armLHand;
     private GenericEntry armRHand;
     private GenericEntry armPose;
+    private GenericEntry armApplied;
+
+    // Temp
+    private GenericEntry tempAngle;
+    private GenericEntry tempExt;
+    private GenericEntry tempHand;
 
     // Constructor (Init)
     public ShuffleboardManager(RobotContainer container, ArmPI armPi, Arm arm, Claw claw, DriveBase drive) {
@@ -98,6 +105,14 @@ public class ShuffleboardManager {
 
         driveHandUnlocked = driveTab.add("Hand Unlocked", false)
             .withPosition(7, 1)
+            .getEntry();
+
+        driveTab.add("Calibrate Gyro", new ConfigCommand(() -> { drive.imu.calibrate(); }, "Calibrate Command"))
+            .withPosition(7, 2);
+
+        drivePos = driveTab.add("Odometry Position", "?")
+            .withPosition(0, 3)
+            .withSize(4, 1)
             .getEntry();
 
         // Controller Tab Init
@@ -209,13 +224,29 @@ public class ShuffleboardManager {
         
         armPose = armTab.add("Arm Position (inches)", "(?, ?)")
             .getEntry();
+
+        armApplied = armTab.add("Arm (l, r) Applied Output", "?, ?")
+            .getEntry();
+        
+        // Temperature
+        ShuffleboardTab tempTab = Shuffleboard.getTab("Temps");
+
+        tempAngle = tempTab.add("Angle (f)", 0.0)
+            .getEntry();
+
+        tempExt = tempTab.add("Extension (f)", 0.0)
+            .getEntry();
+
+        tempHand = tempTab.add("L, R Hand (f)", "?, ?")
+            .getEntry();
     }
 
     // Update Values
     public void periodic() {
         // Drive
-        driveGyroConnected.setBoolean(drive.imu.isConnected());
+        driveGyroConnected.setBoolean(drive.imu.isCalibrated());
         driveHandUnlocked.setBoolean(arm.hasBeenReleased);
+        drivePos.setString(drive.getPose().toString());
 
         // Controllers
         controller0Update.setString(String.format("%s seconds", Controller0.getLastOffsetUpdate()));
@@ -251,5 +282,14 @@ public class ShuffleboardManager {
         armRHand.setDouble(claw.getRHandPos());
 
         armPose.setString(String.format("%s, %s (in)", arm.getPose().getX(), arm.getPose().getY()));
+        armApplied.setString(String.format("%s, %s",
+            claw.getLeftOutput(),
+            claw.getRightOutput()
+        ));
+
+        // Temps
+        tempAngle.setDouble(arm.getAngleTemp());
+        tempExt.setDouble(arm.getExtTemp());
+        tempHand.setString(String.format("%s, %s", claw.getLTemp(), claw.getRTemp()));
     }
 }

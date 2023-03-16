@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.frc7153.math.Encoder;
+import com.frc7153.math.MathUtils;
 import com.frc7153.math.Encoder.Range;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -9,7 +10,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -31,7 +32,8 @@ public class Arm extends SubsystemBase {
     private CANSparkMax winchMotor = new CANSparkMax(15, MotorType.kBrushless);
 
     // PID
-    private PIDController anglePID = ArmConstants.kARM_PID.toWPIPidController();
+    //private PIDController anglePID = ArmConstants.kARM_PID.toWPIPidController();
+    private ProfiledPIDController anglePID = ArmConstants.kARM_PID.toWPIProfiledPidController(ArmConstants.kMAX_ANGLE_VELOCITY, ArmConstants.kMAX_ANGLE_ACCELERATION);
     private SparkMaxPIDController winchPID = winchMotor.getPIDController();
 
     private Double angleSP = Double.NaN;
@@ -70,12 +72,13 @@ public class Arm extends SubsystemBase {
         if (!DriverStation.isDisabled() && !angleSP.isNaN() && !extSP.isNaN()) {
             // Verify winch motor is safe
             if (winchEnc.getPosition() < 0.0) {
-                DriverStation.reportWarning("Winch is below zero!", false);
+                DriverStation.reportWarning(String.format("Winch is below zero! -> %s rotations", winchEnc.getPosition()), false);
             }
 
             if (testing) {
                 // Set angle (only testing)
-                anglePID.setSetpoint(angleSP);
+                //anglePID.setSetpoint(angleSP);
+                anglePID.setGoal(angleSP);
             } else {
                 // Constrain and set position
                 Translation2d commandedPose = kinematics(extSP, angleSP);
@@ -101,7 +104,8 @@ public class Arm extends SubsystemBase {
                 pose = new Translation2d(x, y);
                 currentState = inverseKinematics(x, y);
 
-                anglePID.setSetpoint(currentState.angle);
+                //anglePID.setSetpoint(currentState.angle);
+                anglePID.setGoal(currentState.angle);
                 winchPID.setReference(Math.max(ArmConstants.extToWinchRots(currentState.extension - ArmConstants.kHAND_LENGTH), 0.0), ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
 
                 //System.out.println(String.format("ext: %s, angle: %s -> %s, %s -> driven ext: %s, driven angle: %s", extSP, angleSP, x,y, newPos.getX(), newPos.getY()));
@@ -188,4 +192,7 @@ public class Arm extends SubsystemBase {
     public double getWinchEncVelocity() { return winchEnc.getVelocity(); }
     public Translation2d getPose() { return pose; }
     public ArmState getState() { return currentState; }
+
+    public double getAngleTemp() { return MathUtils.celsiusToFahrenheit(angleMotor.getMotorTemperature()); }
+    public double getExtTemp() { return MathUtils.celsiusToFahrenheit(winchMotor.getMotorTemperature()); }
 }

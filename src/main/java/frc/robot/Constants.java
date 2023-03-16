@@ -16,7 +16,7 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
     // Testing program
-    public static final boolean kTEST_DEPLOY = true;
+    public static final boolean kTEST_DEPLOY = false;
 
     // Game state enum
     public static enum GameState {AUTO, TELEOP, DISABLED}; // Test mode uses DISABLED
@@ -49,6 +49,9 @@ public final class Constants {
         public static final PIDConstant kARM_PID = new PIDConstant(0.09, 0.01, 0.0).withOutputRange(-12.0, 12.0);
         public static final PIDConstant kEXT_PID = new PIDConstant(0.01, 0.000001, 0).withError(0.05).withOutputRange(-8.0, 8.0);
 
+        public static final double kMAX_ANGLE_VELOCITY = 100.0;
+        public static final double kMAX_ANGLE_ACCELERATION = 200.0;
+
         public static final double kJOINT_TO_FLOOR_DIST = 26.0;
         public static final double kJOINT_TO_BUMPER_DIST = 20.0;
 
@@ -65,6 +68,8 @@ public final class Constants {
         public static final double kMAX_HEIGHT = 6.0 * 12.0 + 6.0;
 
         public static final double kCLEARANCE = 4.0;
+
+        public static final boolean kUSE_POSITION_NOT_VELOCITY = true;
 
         /**
          * Uses polynomial regression to calculate the number of rotations of the winch motor to achieve specific lengths
@@ -89,12 +94,16 @@ public final class Constants {
     public static final class ArmPositions {
         // Ground
         public static final Translation2d kFRONT_GROUND = new Translation2d(35.98, 4.34);
+        public static final Translation2d kREAR_GROUND = new Translation2d(-35.98, 4.34);
 
         // Front Placement
         public static final Translation2d kFRONT_CUBE_MID = new Translation2d(41.67, 32.31);
         public static final Translation2d kFRONT_CUBE_HIGH = new Translation2d(67.0, 47.39);
         public static final Translation2d kFRONT_CONE_MID = new Translation2d(42.41, 41.97);
-        public static final Translation2d kFRONT_CONE_HIGH = new Translation2d(64.0, 57.69);
+        public static final Translation2d kFRONT_CONE_HIGH = new Translation2d(64.0, 60.0);
+
+        // Loading Station
+        public static final Translation2d kREAR_LOADING_STATION = new Translation2d(-34.272, 44.277);
     }
 
     /* CLAW CONSTANTS */
@@ -106,11 +115,11 @@ public final class Constants {
         public static final double kL_HAND_OFFSET = 0.9;
         public static final double kR_HAND_OFFSET = 0.2;
 
-        public static final int kCURRENT_LIMIT = 9;
+        public static final int kCURRENT_LIMIT = 20;
     }
 
     /* CLAW GRAB POSITIONS */
-    public static enum GrabPositions { GRAB(0.26, 0.98), RELEASE(0.47, 0.81), STOW(0.89, 0.39);
+    public static enum GrabPositions { GRAB(0.26, 0.98), RELEASE(0.431, 0.844), WIDE_RELEASE(0.47, 0.81), STOW(0.89, 0.39);
         public final double lPos, rPos;
         GrabPositions(double l, double r) { lPos = l; rPos = r; }
     }

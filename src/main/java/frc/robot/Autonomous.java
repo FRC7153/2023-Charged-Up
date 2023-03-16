@@ -42,6 +42,6 @@ public class Autonomous {
     // GETTERS //
     public Command getTestSpinAuto() {
         // Note that this will NOT unlock hands
-        return drive.getTrajectoryCommand("ForwardSpinTest", autoEventMap, true, 2.0, 1.5);
+        return drive.getTrajectoryCommand("StraightCurveSpinMove", autoEventMap, true, 2.0, 1.5);
     }
 }

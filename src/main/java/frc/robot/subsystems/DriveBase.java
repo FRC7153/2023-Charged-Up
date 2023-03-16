@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.wheeltypes.SwerveWheel_FN;
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
@@ -40,11 +39,20 @@ public class DriveBase extends SubsystemBase {
         setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)));
 
         // Config max speeds (only used for percentages, not autos)
-        base.setMaxSpeed(2.0, 360.0);
+        base.setMaxSpeed(4.75, 540.0); // 4.0, 360
     }
 
     // Get Odometry Position
-    public Pose2d getPose() { return base.getOdometryPose(); }
+    public Pose2d getPose() {
+        Pose2d baseOdometry = new Pose2d(
+            base.getOdometryPose().getX(),
+            base.getOdometryPose().getY(),
+            base.getOdometryPose().getRotation()
+        );
+        DriverStation.reportWarning(baseOdometry.toString(), false);
+        DriverStation.reportWarning(DriverStation.getAlliance().name(), false);
+        return baseOdometry;
+    }
 
     // Reset Odometry Position
     public void setPose(Pose2d origin) {
@@ -80,11 +88,11 @@ public class DriveBase extends SubsystemBase {
             trajectory,
             this::getPose,
             this.base.getKinematics(),
-            new PIDController(0.0, 0.0, 0.0),
-            new PIDController(0.0, 0.0, 0.0),
-            new PIDController(0.0, 0.0, 0.0),
+            new PIDController(0.9, 0.0, 0.0),
+            new PIDController(0.9, 0.0, 0.0),
+            new PIDController(0.9, 0.0, 0.0),
             base::distributeStates,
-            true,
+            false,
             this
         );
 

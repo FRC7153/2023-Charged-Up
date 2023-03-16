@@ -42,4 +42,13 @@ public class MathUtils {
         if (clamp < 0) { clamp = -clamp;}
         return Math.min(Math.max(value, -clamp), clamp);
     }
+
+    /**
+     * Convert Celsius to Fahrenheit
+     * @param celsius
+     * @Return Fahrenheit
+     */
+    public static double celsiusToFahrenheit(double celsius) {
+        return celsius * (9.0/5.0) + 32.0;
+    }
 }

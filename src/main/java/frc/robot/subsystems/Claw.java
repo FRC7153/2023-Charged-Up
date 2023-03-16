@@ -80,4 +80,10 @@ public class Claw extends SubsystemBase {
     // Angle getters
     public double getLHandPos() { return lHandEnc.getPosition(); }
     public double getRHandPos() { return rHandEnc.getPosition(); }
+
+    public double getLeftOutput() { return lHand.getAppliedOutput(); }
+    public double getRightOutput() { return rHand.getAppliedOutput(); }
+
+    public double getLTemp() { return MathUtils.celsiusToFahrenheit(lHand.getMotorTemperature()); }
+    public double getRTemp() { return MathUtils.celsiusToFahrenheit(rHand.getMotorTemperature()); }
 }

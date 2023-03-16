@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 
 /**
  * PID values that can be applied to a number of controllers. This is made so that PID constants
@@ -100,5 +102,13 @@ public class PIDConstant {
         PIDController pid = new PIDController(0.0, 0.0, 0.0);
         apply(pid);
         return pid;
+    }
+
+    /**
+     * Creates a new WPI Profiled PID controller and returns it.
+     * @return 
+     */
+    public ProfiledPIDController toWPIProfiledPidController(double maxVelocity, double maxAccel) {
+        return new ProfiledPIDController(kP, kI, kD, new Constraints(maxVelocity, maxAccel));
     }
 }

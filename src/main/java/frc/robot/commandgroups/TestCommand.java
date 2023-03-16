@@ -34,7 +34,7 @@ public class TestCommand extends CommandBase {
     @Override
     public void initialize() {
         arm.setAngle(0.0);
-        claw.setPosition(GrabPositions.RELEASE);
+        //claw.setPosition(GrabPositions.RELEASE);
     }
 
     // Periodic

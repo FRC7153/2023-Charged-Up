@@ -1,6 +1,12 @@
 package frc.robot.peripherals;
 
+import com.frc7153.math.MathUtils;
+
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.ADIS16470_IMU.CalibrationTime;
+import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 
 /**
  * For reading rotation and acceleration of ADIS16470.
@@ -8,6 +14,21 @@ import edu.wpi.first.wpilibj.ADIS16470_IMU;
 public class IMU {
     // IMU
     public ADIS16470_IMU imu = new ADIS16470_IMU();
+    private Double lastCalibration = Double.NaN;
+
+    // Set Yaw on init
+    public IMU() {
+        imu.setYawAxis(IMUAxis.kY);
+    }
+
+    // Calibrate
+    public void calibrate() {
+        imu.configCalTime(CalibrationTime._1s);
+        imu.calibrate();
+        imu.reset();
+        lastCalibration = Timer.getFPGATimestamp();
+        DriverStation.reportWarning("Calibrating Gyro!", false);
+    }
 
     /*
     // Set Position
@@ -35,8 +56,9 @@ public class IMU {
 
     // Get Values
     public boolean isConnected() { return imu.isConnected(); }
+    public boolean isCalibrated() { return imu.isConnected() && !lastCalibration.isNaN() && Timer.getFPGATimestamp() - lastCalibration >= 1.0; }
 
-    public double getYaw() { return imu.getAngle(); }
+    public double getYaw() { return MathUtils.normalizeAngle360(imu.getAngle()); }
     public double getRoll() { return imu.getXComplementaryAngle(); }
     public double getPitch() { return imu.getYComplementaryAngle(); }
 }

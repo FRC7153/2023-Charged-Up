@@ -52,12 +52,15 @@ public class TeleopArmCommand extends CommandBase {
 
     @Override
     public void execute() {
-        currentAngle += (-angleSupplier.get() * maxAngleVelocity * (Timer.getFPGATimestamp() - lastAngleIntegration));
-        currentAngle = MathUtils.symmetricClamp(currentAngle, ArmConstants.kMAX_ANGLE);
-        lastAngleIntegration = Timer.getFPGATimestamp();
+        if (ArmConstants.kUSE_POSITION_NOT_VELOCITY) {
+            arm.setAngle(-angleSupplier.get() * ArmConstants.kMAX_ANGLE);
+        } else {
+            currentAngle += (-angleSupplier.get() * maxAngleVelocity * (Timer.getFPGATimestamp() - lastAngleIntegration));
+            currentAngle = MathUtils.symmetricClamp(currentAngle, ArmConstants.kMAX_ANGLE);
+            lastAngleIntegration = Timer.getFPGATimestamp();
+            arm.setAngle(currentAngle);
+        }
 
-        //arm.setAngle(-angleSupplier.get() * ArmConstants.kMAX_ANGLE);
-        arm.setAngle(currentAngle);
         arm.setExtension(((extensionSupplier.get() + 1.0) / 2.0 * ArmConstants.kWINCH_MAX_POSITION) + ArmConstants.kJOINT_TO_EXT_PT);
     }
 
