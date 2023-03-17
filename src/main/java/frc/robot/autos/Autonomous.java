@@ -60,7 +60,7 @@ public class Autonomous {
                 return getSimpleDriveAuto();
             case GYRO_BALANCE:
                 // Use gyro to balance
-                //return getGyroBalanceAuto();
+                return getGyroBalanceAuto();
             case NOP:
             default:
                 // No-op

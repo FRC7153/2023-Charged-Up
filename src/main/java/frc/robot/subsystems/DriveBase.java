@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.HashMap;
 
-import com.frc7153.logging.FileDump;
 import com.frc7153.math.MathUtils;
 import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.wheeltypes.SwerveWheel_FN;
@@ -37,9 +36,6 @@ public class DriveBase extends SubsystemBase {
     private SwerveBase base = new SwerveBase(fl, fr, rl, rr);
     public IMU imu = new IMU();
 
-    // Odometry Debug
-    private FileDump odometryDump = new FileDump("WNEU_ODOMETRY");
-
     // Constructor (init)
     public DriveBase() {
         // Start odometry by default
@@ -47,8 +43,6 @@ public class DriveBase extends SubsystemBase {
 
         // Config max speeds (only used for percentages, not autos)
         base.setMaxSpeed(4.75, 540.0); // 1.5, 360.0
-
-        odometryDump.log("-- INIT --");
     }
 
     // Get Odometry Position
@@ -75,7 +69,6 @@ public class DriveBase extends SubsystemBase {
     // Reset Odometry Position
     public void setPose(Pose2d origin) {
         base.startOdometry(imu.getYaw(), origin.getX(), origin.getY(), origin.getRotation().getDegrees());
-        odometryDump.log(String.format("-- ODOMETRY RESET (%s, %s, %s) --", origin.getX(), origin.getY(), origin.getRotation().getDegrees()));
         //imu.resetPose(origin);
     }
 
@@ -83,11 +76,6 @@ public class DriveBase extends SubsystemBase {
     @Override
     public void periodic() {
         base.updateOdometry(imu.getYaw());
-
-        // Log
-        //Pose2d odometry = getPose(true);
-        //Pose2d rawOdometry = getPose(false);
-        //odometryDump.log(String.format("raw: %s; alliance: %s;", odometry.toString(), rawOdometry.toString()));
     }
 
     // Set Wheel Speeds (with alliance orientation, inverted if red)

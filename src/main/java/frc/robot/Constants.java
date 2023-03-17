@@ -110,7 +110,8 @@ public final class Constants {
         public static final Translation2d kREAR_CONE_HIGH = new Translation2d(-60.954, 74.0);
 
         // Loading Station
-        public static final Translation2d kREAR_LOADING_STATION = new Translation2d(-36.919, 46.026); // This X should be inverted
+        public static final Translation2d kFRONT_LOADING_STATION = new Translation2d(39.410, 47.377);
+        public static final Translation2d kREAR_LOADING_STATION = new Translation2d(-29.841, 55.555);
     }
 
     /* CLAW CONSTANTS */

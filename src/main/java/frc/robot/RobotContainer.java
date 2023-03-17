@@ -85,10 +85,10 @@ public class RobotContainer {
         Controller1.button11.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_GROUND));
         Controller1.button12.whileTrue(new PresetArmCommand(arm, ArmPositions.kREAR_GROUND));
 
-        Controller1.trigger.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kREAR_LOADING_STATION));
+        Controller1.trigger.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kREAR_LOADING_STATION, ArmPositions.kFRONT_LOADING_STATION)); // Opposite of the above commands
 
         // Auto Balance
-        Controller0.aButton.whileTrue(new BalanceCommand(driveBase));
+        //Controller0.aButton.whileTrue(new BalanceCommand(driveBase));
 
         // Stow Position (arm 34 degrees, claw stowed)
         /*Controller1.button2.whileTrue(new ParallelCommandGroup(
