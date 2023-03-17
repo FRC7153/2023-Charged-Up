@@ -1,4 +1,4 @@
-package frc.robot.commandgroups;
+package frc.robot.autos;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -22,7 +22,7 @@ public class SimpleAutoForward extends CommandBase {
     public void initialize() {
         //drive.setCoast(false);
 
-        drive.driveFieldOriented(0.0, -0.8, 0.0);
+        drive.driveFieldOriented(0.0, -0.6, 0.0);
         arm.setAngle(0.0);
         arm.setExtension(0.0);
 
@@ -32,11 +32,11 @@ public class SimpleAutoForward extends CommandBase {
 
     @Override
     public void execute() {
-        if (Timer.getFPGATimestamp() - startTime >= 1.25) {
+        if (Timer.getFPGATimestamp() - startTime >= 3.75) {
             DriverStation.reportWarning("AUTO STOPPED (time)", false);
             drive.stop();
         } else {
-            drive.driveRobotOriented(0.0, -0.8, 0.0);
+            drive.driveRobotOriented(0.0, -0.6, 0.0);
         }
     }
 

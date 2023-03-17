@@ -7,6 +7,8 @@ import java.util.Map;
 
 import com.frc7153.commands.ConfigCommand;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -14,10 +16,12 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
+import frc.robot.autos.Autonomous;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveBase;
@@ -36,6 +40,7 @@ public class ShuffleboardManager {
     private GenericEntry driveGyroConnected;
     private GenericEntry driveHandUnlocked;
     private GenericEntry drivePos;
+    private Field2d driveField;
 
     // Controller Update Counter
     private GenericEntry controller0Update;
@@ -72,7 +77,7 @@ public class ShuffleboardManager {
     private GenericEntry tempHand;
 
     // Constructor (Init)
-    public ShuffleboardManager(RobotContainer container, ArmPI armPi, Arm arm, Claw claw, DriveBase drive) {
+    public ShuffleboardManager(RobotContainer container, Autonomous auto, ArmPI armPi, Arm arm, Claw claw, DriveBase drive) {
         // Store objects
         this.armPi = armPi;
         this.arm = arm;
@@ -100,20 +105,30 @@ public class ShuffleboardManager {
         }
 
         driveGyroConnected = driveTab.add("Gyro Connected", false)
-            .withPosition(7, 0)
+            .withPosition(4, 3)
             .getEntry();
 
         driveHandUnlocked = driveTab.add("Hand Unlocked", false)
-            .withPosition(7, 1)
+            .withPosition(5, 3)
             .getEntry();
 
         driveTab.add("Calibrate Gyro", new ConfigCommand(() -> { drive.imu.calibrate(); }, "Calibrate Command"))
-            .withPosition(7, 2);
+            .withPosition(5, 3);
 
         drivePos = driveTab.add("Odometry Position", "?")
             .withPosition(0, 3)
             .withSize(4, 1)
             .getEntry();
+        
+        driveTab.add("Auto", auto.getChooser())
+            .withPosition(7, 3);
+        
+        if (ShuffleboardConstants.kFIELD_PLOT) {
+            driveField = new Field2d();
+            driveTab.add("Odometry Pose (not alliance dependant)", driveField)
+                .withPosition(7, 0)
+                .withSize(4, 3);
+        }
 
         // Controller Tab Init
         ShuffleboardTab controllerTab = Shuffleboard.getTab("Controllers");
@@ -247,6 +262,11 @@ public class ShuffleboardManager {
         driveGyroConnected.setBoolean(drive.imu.isCalibrated());
         driveHandUnlocked.setBoolean(arm.hasBeenReleased);
         drivePos.setString(drive.getPose(true).toString());
+
+        if (ShuffleboardConstants.kFIELD_PLOT) {
+            Pose2d robotPose = drive.getPose(true);
+            driveField.setRobotPose(robotPose.getX(), robotPose.getY(), robotPose.getRotation());
+        }
 
         // Controllers
         controller0Update.setString(String.format("%s seconds", Controller0.getLastOffsetUpdate()));

@@ -1,9 +1,20 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "ADIS16470[0]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/Controllers/Controllers/Joystick$CalibrateOffsetCommand": "Command",
       "/Shuffleboard/Controllers/Controllers/XboxController$CalibrateOffsetCommand": "Command",
+      "/Shuffleboard/Drive/Auto": "String Chooser",
+      "/Shuffleboard/Drive/Calibrate Gyro": "Command",
       "/Shuffleboard/Drive/Full Brakes/Disable": "Command",
       "/Shuffleboard/Drive/Full Brakes/Enable": "Command",
       "/Shuffleboard/Gyro/Calibrate": "Command",

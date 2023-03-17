@@ -128,7 +128,7 @@ public class Arm extends SubsystemBase {
      * Set the extension
      * @param ext Total extension, joint to grab point
      */
-    public void setExtension(double ext) { setBrake(true); extSP = ext; }
+    public void setExtension(double ext) { extSP = ext; }
 
     /**
      * Gets the position of the arm (forward kinematics)

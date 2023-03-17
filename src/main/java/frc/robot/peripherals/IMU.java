@@ -2,19 +2,26 @@ package frc.robot.peripherals;
 
 import com.frc7153.math.MathUtils;
 
+import edu.wpi.first.hal.SimDevice;
+import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.CalibrationTime;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
+import frc.robot.Robot;
 
 /**
  * For reading rotation and acceleration of ADIS16470.
  */
 public class IMU {
     // IMU
-    public ADIS16470_IMU imu = new ADIS16470_IMU();
-    private Double lastCalibration = Double.NaN;
+    private ADIS16470_IMU imu = new ADIS16470_IMU();
+    private double lastCalibration = Timer.getFPGATimestamp();
+
+    // Sim
+    private SimDevice imuSim = SimDevice.create("ADIS16470 IMU", imu.getPort());
+    private SimDouble simPitch = imuSim.createDouble("Pitch Degrees", SimDevice.Direction.kInput, 0.0);
 
     // Set Yaw on init
     public IMU() {
@@ -56,9 +63,9 @@ public class IMU {
 
     // Get Values
     public boolean isConnected() { return imu.isConnected(); }
-    public boolean isCalibrated() { return imu.isConnected() && !lastCalibration.isNaN() && Timer.getFPGATimestamp() - lastCalibration >= 1.0; }
+    public boolean isCalibrated() { return imu.isConnected() && Timer.getFPGATimestamp() - lastCalibration >= 1.0; }
 
     public double getYaw() { return MathUtils.normalizeAngle360(imu.getAngle()); }
-    public double getRoll() { return imu.getYComplementaryAngle(); }
-    public double getPitch() { return imu.getXComplementaryAngle(); }
+    public double getRoll() { return MathUtils.normalizeAngle360(imu.getYComplementaryAngle()); }
+    public double getPitch() { if (Robot.isSimulation()) { return simPitch.get(); } return MathUtils.normalizeAngle360(imu.getXComplementaryAngle()); }
 }
