@@ -24,6 +24,8 @@ public class TeleopDriveCommand extends CommandBase {
   private Supplier<Boolean> turboSupply;
   private Supplier<GameState> stateSupply;
 
+  private boolean speed = false;
+
   public TeleopDriveCommand(DriveBase swerveSubsystem, Supplier<Double> xSupplier, Supplier<Double> ySupplier, Supplier<Double> rotSupplier, Supplier<Boolean> turboSupplier, Supplier<GameState> stateSupplier) {
     base = swerveSubsystem;
     xSupply = xSupplier;
@@ -40,6 +42,9 @@ public class TeleopDriveCommand extends CommandBase {
   public void initialize() {
     if (!stateSupply.get().equals(GameState.TELEOP)) { cancel(); return; }
     base.stop();
+
+    speed = false;
+    base.setMaxSpeed(5.0, 540.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -47,7 +52,7 @@ public class TeleopDriveCommand extends CommandBase {
   public void execute() {
     // Turbo (fast) mode
     if (turboSupply.get()) {
-      base.setMaxSpeed(5.25, 540.0);
+      base.setMaxSpeed(5.5, 540.0);
     } else {
       base.setMaxSpeed(4.75, 540.0);
     }

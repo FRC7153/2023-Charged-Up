@@ -26,7 +26,7 @@ public final class Constants {
         public static final boolean kPI_GRAPHS = false;
         public static final boolean kARM_GRAPHS = false;
         public static final boolean kCAMERA_STREAMS = true;
-        public static final boolean kFIELD_PLOT = true;
+        public static final boolean kFIELD_PLOT = false;
     }
 
     /* SWERVE DRIVE CONSTANTS */
@@ -95,7 +95,7 @@ public final class Constants {
     public static final class ArmPositions {
         // Ground
         public static final Translation2d kFRONT_GROUND = new Translation2d(35.98, 4.34);
-        public static final Translation2d kREAR_GROUND = new Translation2d(-35.98, 4.34);
+        public static final Translation2d kREAR_GROUND = new Translation2d(-44.840, 12.048);
 
         // Front Placement
         public static final Translation2d kFRONT_CUBE_MID = new Translation2d(41.67, 32.31);
@@ -103,8 +103,14 @@ public final class Constants {
         public static final Translation2d kFRONT_CONE_MID = new Translation2d(42.41, 41.97);
         public static final Translation2d kFRONT_CONE_HIGH = new Translation2d(64.0, 60.0);
 
+        // Rear Placement
+        public static final Translation2d kREAR_CUBE_MID = new Translation2d(-48.491, 47.645);
+        public static final Translation2d kREAR_CUBE_HIGH = new Translation2d(-64.0, 62.129);
+        public static final Translation2d kREAR_CONE_MID = new Translation2d(-49.348, 53.327);
+        public static final Translation2d kREAR_CONE_HIGH = new Translation2d(-60.954, 74.0);
+
         // Loading Station
-        public static final Translation2d kREAR_LOADING_STATION = new Translation2d(-34.272, 44.277);
+        public static final Translation2d kREAR_LOADING_STATION = new Translation2d(-36.919, 46.026); // This X should be inverted
     }
 
     /* CLAW CONSTANTS */

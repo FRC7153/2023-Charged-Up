@@ -32,7 +32,7 @@ public class SimpleAutoForward extends CommandBase {
 
     @Override
     public void execute() {
-        if (Timer.getFPGATimestamp() - startTime >= 3.75) {
+        if (Timer.getFPGATimestamp() - startTime >= 2.5) {
             DriverStation.reportWarning("AUTO STOPPED (time)", false);
             drive.stop();
         } else {

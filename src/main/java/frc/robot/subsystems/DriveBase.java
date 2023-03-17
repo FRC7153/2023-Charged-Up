@@ -85,9 +85,9 @@ public class DriveBase extends SubsystemBase {
         base.updateOdometry(imu.getYaw());
 
         // Log
-        Pose2d odometry = getPose(true);
-        Pose2d rawOdometry = getPose(false);
-        odometryDump.log(String.format("raw: %s; alliance: %s;", odometry.toString(), rawOdometry.toString()));
+        //Pose2d odometry = getPose(true);
+        //Pose2d rawOdometry = getPose(false);
+        //odometryDump.log(String.format("raw: %s; alliance: %s;", odometry.toString(), rawOdometry.toString()));
     }
 
     // Set Wheel Speeds (with alliance orientation, inverted if red)

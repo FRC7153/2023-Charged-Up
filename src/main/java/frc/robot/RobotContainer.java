@@ -78,10 +78,10 @@ public class RobotContainer {
         //Controller1.trigger.whileTrue(new GrabCommand(claw, GrabPositions.WIDE_RELEASE));
 
         // Arm Preset Positions
-        Controller1.button7.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kFRONT_CONE_HIGH));
-        Controller1.button8.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kFRONT_CUBE_HIGH));
-        Controller1.button9.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kFRONT_CONE_MID));
-        Controller1.button10.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kFRONT_CUBE_MID));
+        Controller1.button7.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kFRONT_CONE_HIGH, ArmPositions.kREAR_CONE_HIGH));
+        Controller1.button8.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kFRONT_CUBE_HIGH, ArmPositions.kREAR_CUBE_HIGH));
+        Controller1.button9.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kFRONT_CONE_MID, ArmPositions.kREAR_CONE_MID));
+        Controller1.button10.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kFRONT_CUBE_MID, ArmPositions.kREAR_CUBE_MID));
         Controller1.button11.whileTrue(new PresetArmCommand(arm, ArmPositions.kFRONT_GROUND));
         Controller1.button12.whileTrue(new PresetArmCommand(arm, ArmPositions.kREAR_GROUND));
 
