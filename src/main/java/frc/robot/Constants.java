@@ -24,7 +24,7 @@ public final class Constants {
     /* SHUFFLEBOARD CONFIG */
     public static final class ShuffleboardConstants {
         public static final boolean kPI_GRAPHS = false;
-        public static final boolean kARM_GRAPHS = true;
+        public static final boolean kARM_GRAPHS = false;
         public static final boolean kCAMERA_STREAMS = true;
     }
 
@@ -126,7 +126,7 @@ public final class Constants {
 
     /* AUTO CONSTANTS */
     public static final class AutoConstants {
-        public static final PIDConstant kBALANCE_PID = new PIDConstant(0.0001, 0.0, 0.0).withError(1.0);
+        public static final PIDConstant kBALANCE_PID = new PIDConstant(0.8, 0.0, 0.0).withError(1.0);
 
         public static final double kMAX_BALANCE_SPEED = 0.5;
     }

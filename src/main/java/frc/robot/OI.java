@@ -23,12 +23,12 @@ public class OI {
         public static final double getLeftX() { return controller.getLeftX(); }
         public static final double getLeftY() { return controller.getLeftY(); }
         public static final double getRightX() { return controller.getRightX(); }
+        public static final boolean getLeftTrigger() { return controller.getLeftTrigger(); }
         public static final boolean getRightTrigger() { return controller.getRightTrigger(); }
 
         // Buttons
         public static final JoystickButton aButton = new JoystickButton(controller, XboxController.Button.kA.value);
         public static final JoystickButton lBumper = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
-        public static final Trigger lTrigger = new Trigger(() -> controller.getRightTrigger());
     }
 
     /** Secondary Joystick Arm Controller */

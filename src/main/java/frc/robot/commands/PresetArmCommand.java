@@ -21,7 +21,7 @@ public class PresetArmCommand extends CommandBase {
 
     /** Creates a new PresetArmCommand. */
     public PresetArmCommand(Arm armSubsystem, Translation2d pos) {
-        armSubsys = armSUbsystem;
+        armSubsys = armSubsystem;
         this.pos = pos;
         addRequirements(armSubsys);
     }
@@ -33,7 +33,7 @@ public class PresetArmCommand extends CommandBase {
     }
 
     public PresetArmCommand(Arm armSubsystem, IMU imu, Translation2d pos, Translation2d invertedPos) {
-        this(armSubsystem, pos, imu);
+        this(armSubsystem, imu, pos);
 
         this.invertedPos = invertedPos;
     }

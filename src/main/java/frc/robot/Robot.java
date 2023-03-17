@@ -46,11 +46,6 @@ public class Robot extends TimedRobot {
         // Turn on brakes
         switchMode(true);
 
-        // Unlock
-        if (container.checkHandsLocked()) {
-            CommandScheduler.getInstance().schedule(container.unlockClawCommand);
-        }
-
         // Get (and run) command
         autoCommand = container.getAutonomousCommand();
 
@@ -59,6 +54,7 @@ public class Robot extends TimedRobot {
             CommandScheduler.getInstance().schedule(container.unlockClawCommand);
         } else {
             // Assumed that autos will unlock hands first
+            //CommandScheduler.getInstance().schedule(autoCommand);
             autoCommand.schedule();
         }
     }

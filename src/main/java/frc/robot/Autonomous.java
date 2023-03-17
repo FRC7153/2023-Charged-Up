@@ -3,9 +3,11 @@ package frc.robot;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants.ArmPositions;
 import frc.robot.Constants.GrabPositions;
+import frc.robot.commandgroups.SimpleAutoForward;
 import frc.robot.commands.GrabCommand;
 import frc.robot.commands.PresetArmCommand;
 import frc.robot.subsystems.Arm;
@@ -43,5 +45,9 @@ public class Autonomous {
     public Command getTestSpinAuto() {
         // Note that this will NOT unlock hands
         return drive.getTrajectoryCommand("StraightCurveSpinMove", autoEventMap, true, 2.0, 1.5);
+    }
+
+    public CommandBase getSimpleDriveAuto() {
+        return new SimpleAutoForward(drive, arm);
     }
 }

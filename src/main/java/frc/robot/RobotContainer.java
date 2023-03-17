@@ -6,6 +6,7 @@ import frc.robot.Constants.GameState;
 import frc.robot.Constants.GrabPositions;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
+import frc.robot.commandgroups.SimpleAutoForward;
 import frc.robot.commandgroups.TestCommand;
 import frc.robot.commands.TeleopClawCommand;
 import frc.robot.commands.TeleopArmCommand;
@@ -59,6 +60,7 @@ public class RobotContainer {
             Controller0::getLeftX,
             Controller0::getLeftY,
             Controller0::getRightX,
+            Controller0::getLeftTrigger,
             this::getGameState
         ));
 
@@ -88,8 +90,7 @@ public class RobotContainer {
         Controller1.trigger.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kREAR_LOADING_STATION));
 
         // Auto Balance
-        Controller0.aButton.whileTrue(new BalanceCommand(driveBase));
-        //Controller0.aButton.whileTrue(unlockClawCommand);
+        Controller0.aButton.whileTrue(new BalanceCommand(driveBase, arm));
 
         // Stow Position (arm 34 degrees, claw stowed)
         /*Controller1.button2.whileTrue(new ParallelCommandGroup(
@@ -116,7 +117,7 @@ public class RobotContainer {
 
     // Get Auto Command
     public Command getAutonomousCommand() {
-        return auto.getTestSpinAuto();
+        return new SimpleAutoForward(driveBase, arm);
     }
 
     // Get Testing Command

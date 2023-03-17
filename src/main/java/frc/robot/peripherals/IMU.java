@@ -59,6 +59,6 @@ public class IMU {
     public boolean isCalibrated() { return imu.isConnected() && !lastCalibration.isNaN() && Timer.getFPGATimestamp() - lastCalibration >= 1.0; }
 
     public double getYaw() { return MathUtils.normalizeAngle360(imu.getAngle()); }
-    public double getRoll() { return imu.getXComplementaryAngle(); }
-    public double getPitch() { return imu.getYComplementaryAngle(); }
+    public double getRoll() { return imu.getYComplementaryAngle(); }
+    public double getPitch() { return imu.getXComplementaryAngle(); }
 }

@@ -225,12 +225,12 @@ public class SwerveBase extends SubsystemBase {
         if (reset) {
             fl.set(0.0, 0.0);
             fr.set(0.0, 0.0);
-            fr.set(0.0, 0.0);
+            rl.set(0.0, 0.0);
             rr.set(0.0, 0.0);
         } else {
             fl.setSpeed(0.0);
             fr.setSpeed(0.0);
-            fr.setSpeed(0.0);
+            rl.setSpeed(0.0);
             rr.setSpeed(0.0);
         }
     }

@@ -246,7 +246,7 @@ public class ShuffleboardManager {
         // Drive
         driveGyroConnected.setBoolean(drive.imu.isCalibrated());
         driveHandUnlocked.setBoolean(arm.hasBeenReleased);
-        drivePos.setString(drive.getPose().toString());
+        drivePos.setString(drive.getPose(true).toString());
 
         // Controllers
         controller0Update.setString(String.format("%s seconds", Controller0.getLastOffsetUpdate()));
