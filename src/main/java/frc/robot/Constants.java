@@ -37,7 +37,7 @@ public final class Constants {
         );
 
         public static final double kFL_OFFSET = 16.523+180.0;
-        public static final double kFR_OFFSET = 9.58+180.0;
+        public static final double kFR_OFFSET = 217.529;
         public static final double kRL_OFFSET = 177.803+180.0;
         public static final double kRR_OFFSET = 181.143-180.0;
     }

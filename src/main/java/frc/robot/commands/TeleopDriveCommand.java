@@ -54,7 +54,7 @@ public class TeleopDriveCommand extends CommandBase {
     if (turboSupply.get()) {
       base.setMaxSpeed(5.5, 540.0);
     } else {
-      base.setMaxSpeed(4.75, 540.0);
+      base.setMaxSpeed(5.0, 540.0);
     }
 
     base.driveFieldOriented(xSupply.get(), ySupply.get(), -rSupply.get());
