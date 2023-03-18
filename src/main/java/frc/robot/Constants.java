@@ -25,7 +25,7 @@ public final class Constants {
     public static final class ShuffleboardConstants {
         public static final boolean kPI_GRAPHS = false;
         public static final boolean kARM_GRAPHS = false;
-        public static final boolean kCAMERA_STREAMS = true;
+        public static final boolean kCAMERA_STREAMS = false;
         public static final boolean kFIELD_PLOT = false;
     }
 
@@ -145,5 +145,10 @@ public final class Constants {
         public static final double kGEAR_RATIO = 25.0;
 
         public static final double kMAX_ANGLE = 150.0; // Assumed that min is 0
+    }
+
+    /* PDH CONSTANTS */
+    public static final class PDHConstants {
+        public static final int[] kUSED_CHANNELS = {1, 2}; // TODO
     }
 }

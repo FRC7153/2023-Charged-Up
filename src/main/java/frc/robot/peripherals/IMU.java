@@ -2,8 +2,6 @@ package frc.robot.peripherals;
 
 import com.frc7153.math.MathUtils;
 
-import edu.wpi.first.hal.SimDevice;
-import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -18,13 +16,10 @@ public class IMU {
     private ADIS16470_IMU imu = new ADIS16470_IMU();
     private double lastCalibration = Timer.getFPGATimestamp();
 
-    // Sim
-    //private SimDevice imuSim = SimDevice.create("ADIS16470 IMU", imu.getPort());
-    //private SimDouble simPitch = imuSim.createDouble("Pitch Degrees", SimDevice.Direction.kInput, 0.0);
-
     // Set Yaw on init
     public IMU() {
         imu.setYawAxis(IMUAxis.kY);
+        calibrate();
     }
 
     // Calibrate

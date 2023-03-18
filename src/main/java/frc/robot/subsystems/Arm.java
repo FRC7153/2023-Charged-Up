@@ -1,8 +1,12 @@
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+
 import com.frc7153.math.Encoder;
 import com.frc7153.math.MathUtils;
 import com.frc7153.math.Encoder.Range;
+import com.frc7153.validation.DeviceChecker;
+import com.frc7153.validation.ValidatedSubsystem;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -15,10 +19,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
-public class Arm extends SubsystemBase {
+public class Arm extends ValidatedSubsystem {
     // Arm State
     public static class ArmState {
         public double angle;
@@ -42,7 +45,8 @@ public class Arm extends SubsystemBase {
     private ArmState currentState = new ArmState(0.0, 0.0);
 
     // Encoders
-    private Encoder angleAbsEncoder = new Encoder((new DutyCycleEncoder(8))::getAbsolutePosition);
+    private DutyCycleEncoder rawAngleAbsEncoder = new DutyCycleEncoder(8);
+    private Encoder angleAbsEncoder = new Encoder(rawAngleAbsEncoder::getAbsolutePosition);
     private RelativeEncoder winchEnc = winchMotor.getEncoder();
 
     // State
@@ -195,4 +199,18 @@ public class Arm extends SubsystemBase {
 
     public double getAngleTemp() { return MathUtils.celsiusToFahrenheit(angleMotor.getMotorTemperature()); }
     public double getExtTemp() { return MathUtils.celsiusToFahrenheit(winchMotor.getMotorTemperature()); }
+
+    // Validate
+    private HashMap<String, Boolean> validationMap = new HashMap<>(4);
+
+    @Override
+    public HashMap<String, Boolean> validate() {
+        validationMap.put("Angle NEO", DeviceChecker.validateMotor(angleMotor));
+        validationMap.put("Angle Abs Enc", rawAngleAbsEncoder.isConnected());
+
+        validationMap.put("Ext NEO", DeviceChecker.validateMotor(winchMotor));
+        validationMap.put("Ext Enc", DeviceChecker.validateEncoder(winchMotor));
+
+        return validationMap;
+    }
 }

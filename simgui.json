@@ -5,6 +5,11 @@
         "header": {
           "open": true
         }
+      },
+      "DutyCycleEncoder[8]": {
+        "header": {
+          "open": true
+        }
       }
     }
   },

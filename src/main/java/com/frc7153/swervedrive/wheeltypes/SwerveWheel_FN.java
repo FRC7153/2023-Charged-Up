@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderFaults;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -25,6 +26,7 @@ import edu.wpi.first.math.util.Units;
 import com.frc7153.math.MathUtils;
 import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.SwerveMathUtils;
+import com.frc7153.validation.DeviceChecker;
 
 /**
  * Swerve Wheel that uses a Falcon500 for the drive motor and Neo Brushless (with CAN Spark Max) for spin motor.
@@ -62,6 +64,7 @@ public class SwerveWheel_FN implements SwerveWheel {
     // Motors, Encoders, PID
     private TalonFX driveWheel;
     private CANSparkMax spinWheel;
+    private boolean didCANCoderLoad = false;
 
     private RelativeEncoder spinRelEncoder;
     private SparkMaxPIDController spinPID;
@@ -99,8 +102,14 @@ public class SwerveWheel_FN implements SwerveWheel {
         // Declare and Configure Encoders
         CANCoder spinAbsEncoder = new CANCoder(canCoder);
         spinRelEncoder = spinWheel.getEncoder();
-        
+
         spinAbsEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+
+        // Verify CANCoder is good
+        CANCoderFaults spinAbsEncFaults = new CANCoderFaults();
+        spinAbsEncoder.getFaults(spinAbsEncFaults);
+
+        didCANCoderLoad = spinAbsEncFaults.hasAnyFault();
 
         // Set Relative Encoder Offset
         spinRelEncoder.setPosition((spinAbsEncoder.getAbsolutePosition() - spinHomeLocation) * k_SPIN_RATIO / 360.0);
@@ -191,4 +200,10 @@ public class SwerveWheel_FN implements SwerveWheel {
         );
         set(state.angle.getDegrees(), state.speedMetersPerSecond);
     }
+
+    // Validate
+    public boolean validateNEO() { return DeviceChecker.validateMotor(spinWheel); }
+    public boolean validateFalcon() { return DeviceChecker.validateMotor(driveWheel); }
+    public boolean validateCANCoder() { return didCANCoderLoad; }
+    public boolean validateRelEncoder() { return DeviceChecker.validateEncoder(spinWheel); }
 }

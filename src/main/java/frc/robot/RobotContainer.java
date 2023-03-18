@@ -9,12 +9,12 @@ import frc.robot.autos.Autonomous;
 import frc.robot.autos.TestCommand;
 import frc.robot.commands.TeleopClawCommand;
 import frc.robot.commands.TeleopArmCommand;
-import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.PresetArmCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.commands.UnlockClawCommand;
 import frc.robot.peripherals.ArmPI;
 import frc.robot.peripherals.Limelight;
+import frc.robot.peripherals.PDH;
 import frc.robot.peripherals.ShuffleboardManager;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -28,6 +28,7 @@ public class RobotContainer {
     private final ArmPI armPi = new ArmPI();
     private final Limelight frontLL = new Limelight("front");
     private final Limelight rearLL = new Limelight("back");
+    private final PDH pdh = new PDH();
 
     // Subsystems
     private final DriveBase driveBase = new DriveBase();
@@ -47,7 +48,7 @@ public class RobotContainer {
         configureBindings();
 
         // Start Shuffleboard
-        shuffleboard = new ShuffleboardManager(this, auto, armPi, arm, claw, driveBase);
+        shuffleboard = new ShuffleboardManager(this, auto, pdh, armPi, arm, claw, driveBase);
     }
 
     // Configure Command Bindings
