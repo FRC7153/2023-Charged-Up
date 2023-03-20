@@ -15,11 +15,10 @@ public class IMU {
     // IMU
     private ADIS16470_IMU imu = new ADIS16470_IMU();
     private double lastCalibration = Timer.getFPGATimestamp();
-
+    
     // Set Yaw on init
     public IMU() {
         imu.setYawAxis(IMUAxis.kY);
-        calibrate();
     }
 
     // Calibrate

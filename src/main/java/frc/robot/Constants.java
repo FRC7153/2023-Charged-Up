@@ -25,7 +25,7 @@ public final class Constants {
     public static final class ShuffleboardConstants {
         public static final boolean kPI_GRAPHS = false;
         public static final boolean kARM_GRAPHS = false;
-        public static final boolean kCAMERA_STREAMS = false;
+        public static final boolean kCAMERA_STREAMS = true;
         public static final boolean kFIELD_PLOT = false;
     }
 
@@ -110,8 +110,8 @@ public final class Constants {
         public static final Translation2d kREAR_CONE_HIGH = new Translation2d(-60.954, 74.0);
 
         // Loading Station
-        public static final Translation2d kFRONT_LOADING_STATION = new Translation2d(39.410, 47.377);
-        public static final Translation2d kREAR_LOADING_STATION = new Translation2d(-29.841, 55.555);
+        public static final Translation2d kFRONT_LOADING_STATION = new Translation2d(39.410, 45.377);
+        public static final Translation2d kREAR_LOADING_STATION = new Translation2d(-29.841, 53.555);
     }
 
     /* CLAW CONSTANTS */
@@ -145,10 +145,5 @@ public final class Constants {
         public static final double kGEAR_RATIO = 25.0;
 
         public static final double kMAX_ANGLE = 150.0; // Assumed that min is 0
-    }
-
-    /* PDH CONSTANTS */
-    public static final class PDHConstants {
-        public static final int[] kUSED_CHANNELS = {1, 2}; // TODO
     }
 }

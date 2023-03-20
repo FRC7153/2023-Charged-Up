@@ -26,7 +26,7 @@ public class Autonomous {
     private Claw claw;
 
     // Chooser
-    private static enum AutoType {NOP, SIMPLE_TIME, GYRO_BALANCE};
+    private static enum AutoType {NOP, SIMPLE_TIME, SIMPLE_TIME_SHAKE, GYRO_BALANCE};
     private SendableChooser<AutoType> autoChooser = new SendableChooser<>();
 
     // Event Map
@@ -42,6 +42,7 @@ public class Autonomous {
         // Create Auto Chooser
         autoChooser.setDefaultOption("No-op (unlock hands)", AutoType.NOP);
         autoChooser.addOption("Time-based drive", AutoType.SIMPLE_TIME);
+        autoChooser.addOption("Time-based shake drive", AutoType.SIMPLE_TIME_SHAKE);
         autoChooser.addOption("Gyro-based balance", AutoType.GYRO_BALANCE);
 
         // Create event map //
@@ -58,6 +59,8 @@ public class Autonomous {
             case SIMPLE_TIME:
                 // Simple time-based drive forward
                 return getSimpleDriveAuto();
+            case SIMPLE_TIME_SHAKE:
+                return getSimpleShakeAuto();
             case GYRO_BALANCE:
                 // Use gyro to balance
                 return getGyroBalanceAuto();
@@ -80,6 +83,13 @@ public class Autonomous {
         return new SequentialCommandGroup(
             new UnlockClawCommand(claw, arm),
             new SimpleAutoForward(drive, arm)
+        );
+    }
+
+    public Command getSimpleShakeAuto() {
+        return new SequentialCommandGroup(
+            new UnlockClawCommand(claw, arm),
+            new SimpleAutoShake(drive, arm)
         );
     }
 

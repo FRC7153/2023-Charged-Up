@@ -34,7 +34,6 @@ public class ShuffleboardManager {
     private Arm arm;
     private Claw claw;
     private DriveBase drive;
-    private PDH pdh;
 
     // Drive Tab
     private GenericEntry driveGyroConnected;
@@ -77,13 +76,12 @@ public class ShuffleboardManager {
     private GenericEntry tempHand;
 
     // Constructor (Init)
-    public ShuffleboardManager(RobotContainer container, Autonomous auto, PDH pdh, ArmPI armPi, Arm arm, Claw claw, DriveBase drive) {
+    public ShuffleboardManager(RobotContainer container, Autonomous auto, ArmPI armPi, Arm arm, Claw claw, DriveBase drive) {
         // Store objects
         this.armPi = armPi;
         this.arm = arm;
         this.claw = claw;
         this.drive = drive;
-        this.pdh = pdh;
 
         // Drive Tab (Main)
         ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
@@ -130,18 +128,6 @@ public class ShuffleboardManager {
                 .withPosition(7, 0)
                 .withSize(4, 3);
         }
-
-        // VALIDATE tab
-        ShuffleboardTab validateTab = Shuffleboard.getTab("VALIDATE");
-        ShuffleboardLayout validateLayout = validateTab.getLayout("All electronics", BuiltInLayouts.kGrid)
-            .withPosition(0, 0)
-            .withSize(8,5)
-            .withProperties(Map.of("Label Position", "TOP"));
-
-        drive.assignShuffleboardValidationLayout(validateLayout);
-        claw.assignShuffleboardValidationLayout(validateLayout);
-        arm.assignShuffleboardValidationLayout(validateLayout);
-        pdh.assignShuffleboardValidationLayout(validateLayout);
 
         // Controller Tab Init
         ShuffleboardTab controllerTab = Shuffleboard.getTab("Controllers");
@@ -280,12 +266,6 @@ public class ShuffleboardManager {
             Pose2d robotPose = drive.getPose(true);
             driveField.setRobotPose(robotPose.getX(), robotPose.getY(), robotPose.getRotation());
         }
-
-        // VALIDATE tab
-        drive.publishValidations();
-        claw.publishValidations();
-        arm.publishValidations();
-        pdh.publishValidations();
 
         // Controllers
         controller0Update.setString(String.format("%s seconds", Controller0.getLastOffsetUpdate()));
