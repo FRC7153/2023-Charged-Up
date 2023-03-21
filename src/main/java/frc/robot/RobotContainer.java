@@ -5,6 +5,7 @@ import frc.robot.Constants.ArmPositions;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
 import frc.robot.commandgroups.TestCommand;
+import frc.robot.commands.AimCommand;
 import frc.robot.commands.GrabToggleCommand;
 import frc.robot.commands.TeleopArmCommand;
 import frc.robot.commands.PresetArmCommand;
@@ -12,6 +13,7 @@ import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.commands.UnlockClawCommand;
 import frc.robot.peripherals.ArmPI;
 import frc.robot.peripherals.ShuffleboardManager;
+import frc.robot.subsystems.Aim;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveBase;
@@ -25,7 +27,8 @@ public class RobotContainer {
     private final DriveBase driveBase = new DriveBase();
     private final Arm arm = new Arm();
     private final Claw claw = new Claw();
-    private final Find find = new Find();
+    private final Aim aim = new Aim();
+
 
     // Shuffleboard + Commands
     private final ShuffleboardManager shuffleboard;
@@ -53,26 +56,14 @@ public class RobotContainer {
             Controller0::getRightX
         ));
 
-        /*
-//use the default drive command unless the button is pressed
-if (findMe.get()) {
-      .driveBase(
-        Controller0::getLeftX, 
-        Controller0::getLeftY,
-        center.getTurn());
-    } else {
-      .driveBase(
-        Controller0::getLeftX,
-        Controller0::getLeftY,
-        Controller::getRightX
-        )
-        }
-      );
-    }
-
-
-
-        */
+        
+        //ll aim
+        Controller1.button2.whileTrue(new AimCommand(
+            driveBase,
+            Controller0::getLeftX, 
+            Controller0::getLeftY,
+            aim.getTurn()
+        ));
 
         // Teleop Arm Command (position setpoint)
         arm.setDefaultCommand(new TeleopArmCommand(arm, Controller1::getY, Controller1::getThrottle, 60.0));
