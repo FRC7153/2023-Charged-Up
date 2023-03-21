@@ -11,25 +11,25 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.math.controller.PIDController;
 
 public class AutoCenter {
-    private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-front");
+    private static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-front");
     private NetworkTableEntry ty = table.getEntry("ty"); 
-    private NetworkTableEntry tx = table.getEntry("tx");
-    private NetworkTableEntry tv = table.getEntry("tv");
-    private PIDController pid = new PIDController(0.015, 0.005, 0.0);
+    private static NetworkTableEntry tx = table.getEntry("tx");
+    private static NetworkTableEntry tv = table.getEntry("tv");
+    private static PIDController pid = new PIDController(0.015, 0.005, 0.0);
 
-    private Double xCache;
+    private static Double xCache;
     private Double yCache;
-    private Double xCacheTime = -1.0;
+    private static Double xCacheTime = -1.0;
     private Double yCacheTime = -1.0;
 
-    private Double maxSpeed = 0.4;
+    private static Double maxSpeed = 0.4;
     private Double err = 0.5;
 
-    public autoCenter() {
+    public AutoCenter() {
         pid.setSetpoint(0.0); // Adjust error here
     }
 
-    private double getX() {
+    public static double getX() {
         if (tv.getDouble(0.0) == 1.0) {
             xCache = tx.getDouble(15.0);
             xCacheTime = Timer.getFPGATimestamp();
@@ -53,20 +53,16 @@ public class AutoCenter {
         }
     }
 
-    private double clampSpeed(double speed) {
+    private static double clampSpeed(double speed) {
         return Math.min(Math.max(speed, -maxSpeed), maxSpeed);
     }
 
-    public double getTurn() {
+    public static double getTurn() {
         double x = getX();
         double pidOut = pid.calculate(x);
         return clampSpeed(pidOut);
     }
 
-    public double getSuggestedSpeed() {
-        double s = (-37.661*getY()) + 4916;
-        return s - 25;
-    }
 
     public boolean isInTarget() {
         if (tv.getDouble(0.0) == 0.0) { return false; }
@@ -74,14 +70,5 @@ public class AutoCenter {
         return false;
     }
 
-    public double distanceGauge() {
-        double targetOffsetAngle_Vertical = ty.getDouble(0.0);
-
-        Double yVal = ty.getDouble(0.0);
-        if (yVal != 0.0) {
-            SmartDashboard.putNumber("Limelight Y", yVal);
-        }        
-
-    }
 
 }
