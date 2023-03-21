@@ -4,13 +4,12 @@ import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmPositions;
 import frc.robot.Constants.GrabPositions;
 import frc.robot.commands.BalanceCommand;
-import frc.robot.commands.GrabCommand;
-import frc.robot.commands.PresetArmCommand;
 import frc.robot.commands.UnlockClawCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -26,7 +25,7 @@ public class Autonomous {
     private Claw claw;
 
     // Chooser
-    private static enum AutoType {NOP, SIMPLE_TIME, SIMPLE_TIME_SHAKE, GYRO_BALANCE};
+    private static enum AutoType {NOP, SIMPLE_TIME, SIMPLE_TIME_SHAKE, GYRO_BALANCE, TRAJ_TEST};
     private SendableChooser<AutoType> autoChooser = new SendableChooser<>();
 
     // Event Map
@@ -44,12 +43,13 @@ public class Autonomous {
         autoChooser.addOption("Time-based drive", AutoType.SIMPLE_TIME);
         autoChooser.addOption("Time-based shake drive", AutoType.SIMPLE_TIME_SHAKE);
         autoChooser.addOption("Gyro-based balance", AutoType.GYRO_BALANCE);
+        autoChooser.addOption("Forward Test Trajectory", AutoType.TRAJ_TEST);
 
         // Create event map //
         // Bring claw to front ground and open
-        autoEventMap.put("clawToFrontGround", new ParallelCommandGroup(
-            new PresetArmCommand(arm, ArmPositions.kFRONT_GROUND),
-            new GrabCommand(claw, GrabPositions.RELEASE)
+        autoEventMap.put("clawFrontGrabPos", new ParallelCommandGroup(
+            new InstantCommand(() -> { arm.setTarget(ArmPositions.kFRONT_GROUND); }, arm),
+            new InstantCommand(() -> { claw.setPosition(GrabPositions.RELEASE); }, claw)
         ));
     }
 
@@ -64,6 +64,8 @@ public class Autonomous {
             case GYRO_BALANCE:
                 // Use gyro to balance
                 return getGyroBalanceAuto();
+            case TRAJ_TEST:
+                return getTestTrajAuto();
             case NOP:
             default:
                 // No-op
@@ -74,9 +76,10 @@ public class Autonomous {
     public SendableChooser<AutoType> getChooser() { return autoChooser; }
 
     // GETTERS //
-    public Command getTestSpinAuto() {
-        // Note that this will NOT unlock hands
-        return drive.getTrajectoryCommand("StraightCurveSpinMove", autoEventMap, true, 2.0, 1.5);
+    public Command getTestTrajAuto() {
+        return new ParallelCommandGroup(
+            drive.getTrajectoryCommand("spot1/spot1ToPiece1", autoEventMap, true, 2.0, 1.5)
+        );
     }
 
     public Command getSimpleDriveAuto() {

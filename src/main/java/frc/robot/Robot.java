@@ -8,18 +8,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.GameState;
 
 public class Robot extends TimedRobot {
     // Robot Container
     private RobotContainer container = new RobotContainer();
 
-    // Auto Commands
-    private Command autoCommand;
+    // Running Command (command that is running for each mode)
+    private Command runningCommand;
 
     // Stop auto command and toggle brakes
     private void switchMode(boolean brakes) {
-        if (autoCommand != null) { autoCommand.cancel(); }
+        if (runningCommand != null) { runningCommand.cancel(); }
 
         container.toggleBrakes(brakes);
     }
@@ -41,21 +40,20 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         DriverStation.reportWarning("-- AUTO INIT --", false);
-        container.state = GameState.AUTO;
 
         // Turn on brakes
         switchMode(true);
 
         // Get (and run) command
-        autoCommand = container.getAutonomousCommand();
+        runningCommand = container.getAutonomousCommand();
 
-        if (autoCommand == null) {
+        if (runningCommand == null) {
             // If no auto command, just unlock hands
             CommandScheduler.getInstance().schedule(container.unlockClawCommand);
         } else {
             // Assumed that autos will unlock hands first
             //CommandScheduler.getInstance().schedule(autoCommand);
-            autoCommand.schedule();
+            runningCommand.schedule();
         }
     }
 
@@ -74,7 +72,11 @@ public class Robot extends TimedRobot {
             CommandScheduler.getInstance().schedule(container.unlockClawCommand); // Unlock
         }
 
-        container.state = GameState.TELEOP;
+        runningCommand = container.getTeleopCommand();
+
+        if (runningCommand != null) {
+            runningCommand.schedule();
+        }
     }
 
     // Teleop Periodic
@@ -87,22 +89,20 @@ public class Robot extends TimedRobot {
         // Brakes only if the hands are not locked or its in test mode
         // At comps, these will ALWAYS lock, so make sure to retract arm before turning on
         switchMode(!(container.checkHandsLocked() && Constants.kTEST_DEPLOY));
-        container.state = GameState.DISABLED;
     }
 
     //// TEST ////
     @Override
     public void testInit() {
         switchMode(false);
-        container.state = GameState.DISABLED;
 
         // Get and run test command
-        autoCommand = container.getTestingCommand();
+        runningCommand = container.getTestingCommand();
 
-        if (autoCommand != null) { autoCommand.initialize(); }
+        if (runningCommand != null) { runningCommand.initialize(); }
     }
 
     // Test Periodic
     @Override
-    public void testPeriodic() { if (autoCommand != null) { autoCommand.execute();} }
+    public void testPeriodic() { if (runningCommand != null) { runningCommand.execute();} }
 }

@@ -11,11 +11,15 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
@@ -118,6 +122,14 @@ public class Arm extends SubsystemBase {
         }
     }
 
+    // Make a command wait until its unlocked to run
+    public Command waitForUnlock(Command commandToWait) {
+        return new SequentialCommandGroup(
+            new WaitUntilCommand(() -> { return this.hasBeenReleased; }),
+            commandToWait
+        );
+    }
+
     /**
      * Set angle
      * @angle angle, in degrees
@@ -169,6 +181,8 @@ public class Arm extends SubsystemBase {
         angleSP = newPos.angle;
         extSP = newPos.extension;
     }
+
+    public void setTarget(Translation2d pos) { setTarget(pos.getX(), pos.getY()); }
 
     // Set Raw Speed as percentage (for testing mode, no sanity checks done)
     public void setRawSpeed(double speed) { winchMotor.set(speed); }

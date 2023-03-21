@@ -1,0 +1,56 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 2.0765284129127775,
+        "y": 4.993659736182248
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.0765284129127766,
+        "y": 4.993659736182248
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.120152470593039,
+        "y": 4.587083202786573
+      },
+      "prevControl": {
+        "x": 4.796917302325887,
+        "y": 4.689853993999119
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.6000710227272733,
+      "names": [
+        "clawFrontGrabPos"
+      ]
+    }
+  ]
+}

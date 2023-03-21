@@ -1,11 +1,14 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants.ArmPositions;
-import frc.robot.Constants.GameState;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
 import frc.robot.autos.Autonomous;
+import frc.robot.autos.ChassisSpeedTestCommand;
 import frc.robot.autos.TestCommand;
 import frc.robot.commands.TeleopClawCommand;
 import frc.robot.commands.TeleopArmCommand;
@@ -20,9 +23,6 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveBase;
 
 public class RobotContainer {
-    // State
-    public GameState state = GameState.DISABLED;
-
     // Peripherals
     private final ArmPI armPi = new ArmPI();
     private final Limelight frontLL = new Limelight("front");
@@ -49,30 +49,8 @@ public class RobotContainer {
         shuffleboard = new ShuffleboardManager(this, auto, armPi, arm, claw, driveBase);
     }
 
-    // Configure Command Bindings
+    // Configure Button Bindings (teleop drive are defined in getTeleopCommand())
     private void configureBindings() {
-        // Teleop Drive Command
-        driveBase.setDefaultCommand(new TeleopDriveCommand(
-            driveBase,
-            Controller0::getLeftX,
-            Controller0::getLeftY,
-            Controller0::getRightX,
-            Controller0::getLeftTrigger,
-            this::getGameState
-        ));
-
-        // Teleop Arm Command (position setpoint)
-        arm.setDefaultCommand(new TeleopArmCommand(
-            arm, 
-            Controller1::getY, 
-            Controller1::getThrottle, 
-            this::getGameState,
-            60.0
-        ));
-
-        // Default Claw Command (open position)
-        claw.setDefaultCommand(new TeleopClawCommand(arm, claw, Controller0::getRightTrigger, this::getGameState));
-
         // Force wide release
         //Controller1.trigger.whileTrue(new GrabCommand(claw, GrabPositions.WIDE_RELEASE));
 
@@ -88,12 +66,19 @@ public class RobotContainer {
 
         // Auto Balance
         //Controller0.aButton.whileTrue(new BalanceCommand(driveBase));
+        Controller0.aButton.whileTrue(new ChassisSpeedTestCommand(driveBase));
 
         // Stow Position (arm 34 degrees, claw stowed)
         /*Controller1.button2.whileTrue(new ParallelCommandGroup(
             new PresetArmCommand(arm, 34.0, 0.0),
             new GrabCommand(claw, GrabPos.STOW)
         ));*/
+    }
+
+    // Get Alliance
+    public static Alliance getAlliance() {
+        return Alliance.Red;
+        //return DriverStation.getAlliance();
     }
 
     // Toggle Brakes (in drive and claw)
@@ -112,6 +97,26 @@ public class RobotContainer {
     // Run Shuffleboard (even when disabled)
     public void shuffleboardUpdate() { shuffleboard.periodic(); }
 
+    // Get Teleop Command
+    public Command getTeleopCommand() {
+        return new ParallelCommandGroup(
+            new TeleopDriveCommand(
+                driveBase,
+                Controller0::getLeftX,
+                Controller0::getLeftY,
+                Controller0::getRightX,
+                Controller0::getLeftTrigger
+            ),
+            new TeleopArmCommand(
+                arm, 
+                Controller1::getY, 
+                Controller1::getThrottle,
+                60.0
+            ),
+            new TeleopClawCommand(arm, claw, Controller0::getRightTrigger)
+        );
+    }
+
     // Get Auto Command
     public Command getAutonomousCommand() {
         return auto.getSelectedAuto();
@@ -124,7 +129,4 @@ public class RobotContainer {
 
     // Check if arms are locked
     public boolean checkHandsLocked() { return !arm.hasBeenReleased; }
-
-    // Game state supplier
-    public GameState getGameState() { return state; }
 }

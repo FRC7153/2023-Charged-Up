@@ -7,7 +7,6 @@ import com.frc7153.math.MathUtils;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.GameState;
 import frc.robot.subsystems.Arm;
 
 /**
@@ -21,7 +20,6 @@ public class TeleopArmCommand extends CommandBase {
     // Suppliers
     private Supplier<Double> angleSupplier;
     private Supplier<Double> extensionSupplier;
-    private Supplier<GameState> stateSupply;
 
     // Velocity Integration
     private Double lastAngleIntegration;
@@ -29,12 +27,11 @@ public class TeleopArmCommand extends CommandBase {
     private double maxAngleVelocity;
 
     // Constructor
-    public TeleopArmCommand(Arm armSubsys, Supplier<Double> angleSupp, Supplier<Double> extSupplier, Supplier<GameState> stateSupplier, double maxAngleVelocity) {
+    public TeleopArmCommand(Arm armSubsys, Supplier<Double> angleSupp, Supplier<Double> extSupplier, double maxAngleVelocity) {
         arm = armSubsys;
 
         angleSupplier = angleSupp;
         extensionSupplier = extSupplier;
-        stateSupply = stateSupplier;
 
         this.maxAngleVelocity = maxAngleVelocity;
     
@@ -43,9 +40,7 @@ public class TeleopArmCommand extends CommandBase {
 
     // Init
     @Override
-    public void initialize() {
-        if (!stateSupply.get().equals(GameState.TELEOP)) { cancel(); return; }
-        
+    public void initialize() {        
         lastAngleIntegration = Timer.getFPGATimestamp();
         currentAngle = 0.0;
     }

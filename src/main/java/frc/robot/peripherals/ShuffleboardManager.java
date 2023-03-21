@@ -112,7 +112,7 @@ public class ShuffleboardManager {
             .getEntry();
 
         driveTab.add("Calibrate Gyro", new ConfigCommand(() -> { drive.imu.calibrate(); }, "Calibrate Command"))
-            .withPosition(5, 3);
+            .withPosition(7, 0);
 
         drivePos = driveTab.add("Odometry Position", "?")
             .withPosition(0, 3)

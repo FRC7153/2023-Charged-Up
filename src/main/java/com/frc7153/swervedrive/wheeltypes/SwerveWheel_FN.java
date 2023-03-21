@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 
 import com.frc7153.math.MathUtils;
 import com.frc7153.swervedrive.SwerveBase;
@@ -103,7 +104,13 @@ public class SwerveWheel_FN implements SwerveWheel {
         spinAbsEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
 
         // Set Relative Encoder Offset
-        spinRelEncoder.setPosition((spinAbsEncoder.getAbsolutePosition() - spinHomeLocation) * k_SPIN_RATIO / 360.0);
+        // TODO remove this encoder skip
+        if (spinHomeLocation == 0.0) {
+            spinRelEncoder.setPosition(0.0);
+            DriverStation.reportWarning("Did not home encoder", false);
+        } else {
+            spinRelEncoder.setPosition((spinAbsEncoder.getAbsolutePosition() - spinHomeLocation) * k_SPIN_RATIO / 360.0);
+        }
 
         // Spin PID
         spinPID = spinWheel.getPIDController();

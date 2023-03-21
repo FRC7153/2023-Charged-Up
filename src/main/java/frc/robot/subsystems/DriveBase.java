@@ -15,11 +15,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.ADXL345_I2C.AllAxes;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.peripherals.IMU;
 
@@ -55,20 +57,40 @@ public class DriveBase extends SubsystemBase {
         );
 
         // Orient to alliances (invert if red)
-        if (allianceOrient && DriverStation.getAlliance().equals(Alliance.Red)) {
+        if (RobotContainer.getAlliance().equals(Alliance.Blue)) {
             return new Pose2d(
-                base.getOdometryPose().getX(),
+                -base.getOdometryPose().getX(),
                 4.0 - base.getOdometryPose().getY() + 4.0,
                 base.getOdometryPose().getRotation()
             );
         } else {
-            return baseOdometry;
+            return new Pose2d(
+                -base.getOdometryPose().getX(),
+                base.getOdometryPose().getY(),
+                base.getOdometryPose().getRotation()
+            );
         }
     }
 
     // Reset Odometry Position
     public void setPose(Pose2d origin) {
-        base.startOdometry(imu.getYaw(), origin.getX(), origin.getY(), origin.getRotation().getDegrees());
+        DriverStation.reportWarning(origin.toString(), false);
+
+        if (RobotContainer.getAlliance().equals(Alliance.Blue)) {
+            base.startOdometry(
+                imu.getYaw(), 
+                -origin.getX(), 
+                4.0 - origin.getY() + 4.0, 
+                origin.getRotation().getDegrees()
+            );
+        } else {
+            base.startOdometry(
+                imu.getYaw(), 
+                -origin.getX(), 
+                origin.getY(), 
+                origin.getRotation().getDegrees()
+            );
+        }
         //imu.resetPose(origin);
     }
 
@@ -79,10 +101,16 @@ public class DriveBase extends SubsystemBase {
     }
 
     // Set Wheel Speeds (with alliance orientation, inverted if red)
-    private void setWheelStates(SwerveModuleState[] states) {
-        if (DriverStation.getAlliance().equals(Alliance.Red)) {
+    public void setWheelStates(SwerveModuleState[] states) {
+        if (RobotContainer.getAlliance().equals(Alliance.Blue)) {
+            for (SwerveModuleState s : states) {
+                //s.angle = Rotation2d.fromDegrees(-MathUtils.normalizeAngle180(s.angle.getDegrees()));
+                s.speedMetersPerSecond = -s.speedMetersPerSecond;
+            }
+        } else {
             for (SwerveModuleState s : states) {
                 s.angle = Rotation2d.fromDegrees(-MathUtils.normalizeAngle180(s.angle.getDegrees()));
+                s.speedMetersPerSecond = -s.speedMetersPerSecond;
             }
         }
 
@@ -111,9 +139,9 @@ public class DriveBase extends SubsystemBase {
             trajectory,
             () -> { return this.getPose(true); },
             this.base.getKinematics(),
-            new PIDController(0.9, 0.0, 0.0),
-            new PIDController(0.9, 0.0, 0.0),
-            new PIDController(0.9, 0.0, 0.0),
+            new PIDController(1.0, 0.0, 0.0),
+            new PIDController(1.0, 0.0, 0.0),
+            new PIDController(1.4, 0.0, 0.0),
             this::setWheelStates,
             false,
             this

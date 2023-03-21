@@ -7,7 +7,6 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.GameState;
 import frc.robot.subsystems.DriveBase;
 
 /**
@@ -22,15 +21,13 @@ public class TeleopDriveCommand extends CommandBase {
   private Supplier<Double> ySupply;
   private Supplier<Double> rSupply;
   private Supplier<Boolean> turboSupply;
-  private Supplier<GameState> stateSupply;
 
-  public TeleopDriveCommand(DriveBase swerveSubsystem, Supplier<Double> xSupplier, Supplier<Double> ySupplier, Supplier<Double> rotSupplier, Supplier<Boolean> turboSupplier, Supplier<GameState> stateSupplier) {
+  public TeleopDriveCommand(DriveBase swerveSubsystem, Supplier<Double> xSupplier, Supplier<Double> ySupplier, Supplier<Double> rotSupplier, Supplier<Boolean> turboSupplier) {
     base = swerveSubsystem;
     xSupply = xSupplier;
     ySupply = ySupplier;
     rSupply = rotSupplier;
     turboSupply = turboSupplier;
-    stateSupply = stateSupplier;
 
     addRequirements(base);
   }
@@ -38,7 +35,6 @@ public class TeleopDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (!stateSupply.get().equals(GameState.TELEOP)) { cancel(); return; }
     base.stop();
 
     base.setMaxSpeed(5.0, 540.0);
@@ -54,7 +50,7 @@ public class TeleopDriveCommand extends CommandBase {
       base.setMaxSpeed(5.0, 540.0);
     }
 
-    base.driveFieldOriented(xSupply.get(), ySupply.get(), -rSupply.get());
+    base.driveRobotOriented(xSupply.get(), ySupply.get(), -rSupply.get());
   }
 
   // Called once the command ends or is interrupted.

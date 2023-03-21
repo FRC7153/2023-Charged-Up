@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.GameState;
 import frc.robot.Constants.GrabPositions;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -14,26 +13,22 @@ public class TeleopClawCommand extends CommandBase {
     private Arm arm;
     private Claw claw;
     private Supplier<Boolean> triggerSupp;
-    private Supplier<GameState> stateSupply;
 
     // Button Press
     private boolean grabbing;
     private double debounce;
 
     // Init
-    public TeleopClawCommand(Arm armSubsys, Claw clawSubsys, Supplier<Boolean> triggerSupplier, Supplier<GameState> stateSupplier) {
+    public TeleopClawCommand(Arm armSubsys, Claw clawSubsys, Supplier<Boolean> triggerSupplier) {
         arm = armSubsys;
         claw = clawSubsys;
         triggerSupp = triggerSupplier;
-        stateSupply = stateSupplier;
 
         addRequirements(claw);
     }
 
     @Override
-    public void initialize() {
-        if (!stateSupply.get().equals(GameState.TELEOP)) { cancel(); return; }
-        
+    public void initialize() {        
         grabbing = true;
         debounce = 0.0;
 

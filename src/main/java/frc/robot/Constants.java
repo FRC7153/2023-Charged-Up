@@ -18,9 +18,6 @@ public final class Constants {
     // Testing program
     public static final boolean kTEST_DEPLOY = false;
 
-    // Game state enum
-    public static enum GameState {AUTO, TELEOP, DISABLED}; // Test mode uses DISABLED
-
     /* SHUFFLEBOARD CONFIG */
     public static final class ShuffleboardConstants {
         public static final boolean kPI_GRAPHS = false;
@@ -37,7 +34,7 @@ public final class Constants {
         );
 
         public static final double kFL_OFFSET = 16.523+180.0;
-        public static final double kFR_OFFSET = 217.529;
+        public static final double kFR_OFFSET = 217.529; // 217.529
         public static final double kRL_OFFSET = 177.803+180.0;
         public static final double kRR_OFFSET = 181.143-180.0;
     }
