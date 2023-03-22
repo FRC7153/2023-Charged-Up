@@ -10,6 +10,7 @@ import frc.robot.OI.Controller1;
 import frc.robot.autos.Autonomous;
 import frc.robot.autos.ChassisSpeedTestCommand;
 import frc.robot.autos.TestCommand;
+import frc.robot.commands.AimCommand;
 import frc.robot.commands.TeleopClawCommand;
 import frc.robot.commands.TeleopArmCommand;
 import frc.robot.commands.PresetArmCommand;
@@ -18,9 +19,11 @@ import frc.robot.commands.UnlockClawCommand;
 import frc.robot.peripherals.ArmPI;
 import frc.robot.peripherals.Limelight;
 import frc.robot.peripherals.ShuffleboardManager;
+import frc.robot.subsystems.Aim;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.AutoCenter;
 
 public class RobotContainer {
     // Peripherals
@@ -32,6 +35,7 @@ public class RobotContainer {
     private final DriveBase driveBase = new DriveBase();
     private final Arm arm = new Arm();
     private final Claw claw = new Claw();
+    private final Aim aim = new Aim();
 
     // Autonomous
     private Autonomous auto = new Autonomous(driveBase, arm, claw);
@@ -73,6 +77,16 @@ public class RobotContainer {
             new PresetArmCommand(arm, 34.0, 0.0),
             new GrabCommand(claw, GrabPos.STOW)
         ));*/
+        
+         //ll aim
+        Controller1.button2.whileTrue(new AimCommand(
+            driveBase,
+            Controller0::getLeftX, 
+            Controller0::getLeftY,
+            aim.getTurn()
+            //may not work with current set up, test asap
+        ));
+        
     }
 
     // Get Alliance
@@ -115,6 +129,8 @@ public class RobotContainer {
             ),
             new TeleopClawCommand(arm, claw, Controller0::getRightTrigger)
         );
+        
+        
     }
 
     // Get Auto Command
