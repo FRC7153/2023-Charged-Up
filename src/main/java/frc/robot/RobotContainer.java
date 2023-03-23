@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmPositions;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
@@ -51,6 +53,26 @@ public class RobotContainer {
 
     // Configure Button Bindings (teleop drive are defined in getTeleopCommand())
     private void configureBindings() {
+        // Drive Base Default
+        driveBase.setDefaultCommand(new TeleopDriveCommand(
+            driveBase,
+            Controller0::getLeftX,
+            Controller0::getLeftY,
+            Controller0::getRightX,
+            Controller0::getLeftTrigger
+        ));
+
+        // Arm Default
+        arm.setDefaultCommand(new TeleopArmCommand(
+            arm, 
+            Controller1::getY, 
+            Controller1::getThrottle,
+            60.0
+        ));
+        
+        // Claw Default
+        claw.setDefaultCommand(new TeleopClawCommand(arm, claw, Controller0::getRightTrigger));
+
         // Force wide release
         //Controller1.trigger.whileTrue(new GrabCommand(claw, GrabPositions.WIDE_RELEASE));
 
@@ -66,7 +88,7 @@ public class RobotContainer {
 
         // Auto Balance
         //Controller0.aButton.whileTrue(new BalanceCommand(driveBase));
-        Controller0.aButton.whileTrue(new ChassisSpeedTestCommand(driveBase));
+        //Controller0.aButton.whileTrue(new ChassisSpeedTestCommand(driveBase));
 
         // Stow Position (arm 34 degrees, claw stowed)
         /*Controller1.button2.whileTrue(new ParallelCommandGroup(
@@ -96,26 +118,6 @@ public class RobotContainer {
 
     // Run Shuffleboard (even when disabled)
     public void shuffleboardUpdate() { shuffleboard.periodic(); }
-
-    // Get Teleop Command
-    public Command getTeleopCommand() {
-        return new ParallelCommandGroup(
-            new TeleopDriveCommand(
-                driveBase,
-                Controller0::getLeftX,
-                Controller0::getLeftY,
-                Controller0::getRightX,
-                Controller0::getLeftTrigger
-            ),
-            new TeleopArmCommand(
-                arm, 
-                Controller1::getY, 
-                Controller1::getThrottle,
-                60.0
-            ),
-            new TeleopClawCommand(arm, claw, Controller0::getRightTrigger)
-        );
-    }
 
     // Get Auto Command
     public Command getAutonomousCommand() {

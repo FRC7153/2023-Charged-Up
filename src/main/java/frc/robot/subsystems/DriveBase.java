@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.ADXL345_I2C.AllAxes;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -162,7 +161,7 @@ public class DriveBase extends SubsystemBase {
     public void setMaxSpeed(double drive, double angle) { base.setMaxSpeed(drive, angle); }
 
     public void driveFieldOriented(double x, double y, double rot) { base.driveFieldOriented(y, x, rot, imu.getYaw()); }
-    public void driveRobotOriented(double x, double y, double rot) { System.out.println(String.format("Commanded to drive %s, %s, %s", x, y, rot)); base.drive(y, x, rot); }
+    public void driveRobotOriented(double x, double y, double rot) { base.drive(y, x, rot); }
     public void driveTankAbsolute(double lSpeed, double rSpeed) { base.tankDriveAbsolute(lSpeed, rSpeed);}
     public void setCoast(boolean coast) { base.toggleCoastMode(coast, true); }
 }

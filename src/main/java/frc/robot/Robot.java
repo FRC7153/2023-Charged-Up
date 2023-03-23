@@ -67,12 +67,9 @@ public class Robot extends TimedRobot {
         // Stop commands
         switchMode(true);
 
-        // Unlock
         if (container.checkHandsLocked()) {
-            CommandScheduler.getInstance().schedule(container.unlockClawCommand); // Unlock
+            container.unlockClawCommand.schedule();
         }
-
-        runningCommand = container.getTeleopCommand();
 
         if (runningCommand != null) {
             runningCommand.schedule();

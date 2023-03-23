@@ -49,4 +49,10 @@ public class UnlockClawCommand extends CommandBase {
     public boolean isFinished() {
         return arm.hasBeenReleased;
     }
+
+    // More Important!
+    @Override
+    public InterruptionBehavior getInterruptionBehavior() {
+        return InterruptionBehavior.kCancelIncoming;
+    }
 }

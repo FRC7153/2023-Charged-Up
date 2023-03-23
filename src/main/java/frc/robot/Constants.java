@@ -33,10 +33,10 @@ public final class Constants {
             Units.inchesToMeters(29.5)/2.0
         );
 
-        public static final double kFL_OFFSET = 16.523+180.0;
-        public static final double kFR_OFFSET = 217.529; // 217.529
-        public static final double kRL_OFFSET = 177.803+180.0;
-        public static final double kRR_OFFSET = 181.143-180.0;
+        public static final double kFL_OFFSET = 358.594;
+        public static final double kFR_OFFSET = 285.381;
+        public static final double kRL_OFFSET = 259.980;
+        public static final double kRR_OFFSET = 300.938;
     }
 
     /* ARM MOVEMENT CONSTANTS */
@@ -124,7 +124,7 @@ public final class Constants {
     }
 
     /* CLAW GRAB POSITIONS */
-    public static enum GrabPositions { GRAB(0.26, 0.98), RELEASE(0.431, 0.844), WIDE_RELEASE(0.47, 0.81), STOW(0.89, 0.39);
+    public static enum GrabPositions { GRAB(0.338 - 0.05, 0.934 + 0.05), RELEASE(0.431, 0.844), WIDE_RELEASE(0.47, 0.81), STOW(0.89, 0.39);
         public final double lPos, rPos;
         GrabPositions(double l, double r) { lPos = l; rPos = r; }
     }
