@@ -67,12 +67,9 @@ public class Robot extends TimedRobot {
         // Stop commands
         switchMode(true);
 
+        // Unlock claw, if not already unlocked
         if (container.checkHandsLocked()) {
             container.unlockClawCommand.schedule();
-        }
-
-        if (runningCommand != null) {
-            runningCommand.schedule();
         }
     }
 

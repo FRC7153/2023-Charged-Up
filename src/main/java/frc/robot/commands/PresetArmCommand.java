@@ -59,8 +59,10 @@ public class PresetArmCommand extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        armSubsys.setAngle(0.0);
-        armSubsys.setExtension(0.0);
+        if (interrupted) {
+            armSubsys.setAngle(0.0);
+            armSubsys.setExtension(0.0);
+        }
     }
 
     // Close other commands
@@ -70,6 +72,6 @@ public class PresetArmCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return armSubsys.atSetpoint();
     }
 }

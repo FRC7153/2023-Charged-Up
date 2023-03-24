@@ -109,6 +109,10 @@ public class PIDConstant {
      * @return 
      */
     public ProfiledPIDController toWPIProfiledPidController(double maxVelocity, double maxAccel) {
-        return new ProfiledPIDController(kP, kI, kD, new Constraints(maxVelocity, maxAccel));
+        ProfiledPIDController pid = new ProfiledPIDController(kP, kI, kD, new Constraints(maxVelocity, maxAccel));
+
+        if (!kERR.isNaN()) { pid.setTolerance(kERR); }
+
+        return pid;
     }
 }

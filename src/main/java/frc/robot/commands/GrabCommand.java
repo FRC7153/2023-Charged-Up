@@ -6,45 +6,18 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.GrabPositions;
 import frc.robot.subsystems.Claw;
 
-
-public class GrabCommand extends CommandBase {
-    private Claw claw;
-    private double lRots;
-    private double rRots;
-
+/**
+ * Moves claw hands to specific position (Instant command)
+ */
+public class GrabCommand extends InstantCommand {
     /** Creates a new GrabCommand. */
     public GrabCommand(Claw clawSubsys, double lPos, double rPos) {
-        // Use addRequirements() here to declare subsystem dependencies.
-        claw = clawSubsys;
-        lRots = lPos;
-        rRots = rPos;
-
-        addRequirements(claw);
+        super(() -> { clawSubsys.setPosition(lPos, rPos); }, clawSubsys);
     }
 
     public GrabCommand(Claw clawSubsys, GrabPositions pos) { this(clawSubsys, pos.lPos, pos.rPos); }
-
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {
-        claw.setPosition(lRots, rRots);
-    }
-
-    // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute() {}
-
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted) {}
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
 }

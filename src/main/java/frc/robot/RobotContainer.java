@@ -1,16 +1,14 @@
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmPositions;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
 import frc.robot.autos.Autonomous;
-import frc.robot.autos.ChassisSpeedTestCommand;
 import frc.robot.autos.TestCommand;
 import frc.robot.commands.TeleopClawCommand;
 import frc.robot.commands.TeleopArmCommand;
@@ -53,25 +51,32 @@ public class RobotContainer {
 
     // Configure Button Bindings (teleop drive are defined in getTeleopCommand())
     private void configureBindings() {
-        // Drive Base Default
+        // Not Disabled supplier
+        BooleanSupplier notEnabled = () -> { return !DriverStation.isTeleopEnabled(); };
+        
+        // Default/Teleop Drive Command
         driveBase.setDefaultCommand(new TeleopDriveCommand(
             driveBase,
             Controller0::getLeftX,
             Controller0::getLeftY,
             Controller0::getRightX,
             Controller0::getLeftTrigger
-        ));
+        ).unless(notEnabled));
 
-        // Arm Default
+        // Default/Teleop Arm Command (position setpoint)
         arm.setDefaultCommand(new TeleopArmCommand(
             arm, 
             Controller1::getY, 
-            Controller1::getThrottle,
+            Controller1::getThrottle, 
             60.0
-        ));
-        
-        // Claw Default
-        claw.setDefaultCommand(new TeleopClawCommand(arm, claw, Controller0::getRightTrigger));
+        ).unless(notEnabled));
+
+        // Default/Teleop Claw Command
+        claw.setDefaultCommand(new TeleopClawCommand(
+            arm, 
+            claw, 
+            Controller0::getRightTrigger
+        ).unless(notEnabled));
 
         // Force wide release
         //Controller1.trigger.whileTrue(new GrabCommand(claw, GrabPositions.WIDE_RELEASE));
@@ -126,7 +131,7 @@ public class RobotContainer {
 
     // Get Testing Command
     public Command getTestingCommand() {
-        return new TestCommand(arm, claw, shuffleboard, Controller1::getThrottle);
+        return new TestCommand(arm, shuffleboard, Controller1::getThrottle);
     }
 
     // Check if arms are locked
