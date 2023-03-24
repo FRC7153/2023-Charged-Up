@@ -16,6 +16,7 @@ import frc.robot.commands.UnlockClawCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.Arm.ArmState;
 
 /**
  * Manages auto events and commands
@@ -43,7 +44,7 @@ public class Autonomous {
         autoChooser.setDefaultOption("No-op (unlock hands)", this::createNoOpAuto);
         autoChooser.addOption("Basic - Time-based drive", this::createSimpleDriveAuto);
         autoChooser.addOption("Testing - Time-based shake drive", this::createSimpleShakeAuto);
-        autoChooser.addOption("Testing - Forward Test Trajectory", this::createTestTrajAuto);
+        autoChooser.addOption("Testing - Square Test Trajectory", this::createTestTrajAuto);
         autoChooser.addOption("Spot 1 - 3 Piece", this::createSpot1_3PieceAuto);
 
         // Create event map //
@@ -69,7 +70,7 @@ public class Autonomous {
 
     public Command createTestTrajAuto() {
         return new ParallelCommandGroup(
-            drive.getTrajectoryCommand("TestTraj1", autoEventMap, true, 6.0, 8.0)
+            drive.getTrajectoryCommand("SquareTest", autoEventMap, true, 3.0, 4.0)
         );
     }
 
@@ -94,7 +95,7 @@ public class Autonomous {
             new UnlockClawCommand(claw, arm, true),
             // Piece 1 (staged)
             new GrabCommand(claw, GrabPositions.GRAB),
-            new PresetArmCommand(arm, ArmPositions.kREAR_CONE_HIGH),
+            new PresetArmCommand(arm, new ArmState(-45.0, 999)),
             new GrabCommand(claw, GrabPositions.RELEASE)
         );
     }

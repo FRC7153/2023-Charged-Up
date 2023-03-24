@@ -10,7 +10,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -21,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.peripherals.IMU;
 
@@ -66,7 +66,7 @@ public class DriveBase extends SubsystemBase {
             return new Pose2d(
                 -base.getOdometryPose().getX(),
                 base.getOdometryPose().getY(),
-                base.getOdometryPose().getRotation()
+                Rotation2d.fromDegrees(base.getOdometryPose().getRotation().getDegrees())
             );
         }
     }
@@ -80,14 +80,14 @@ public class DriveBase extends SubsystemBase {
                 imu.getYaw(), 
                 -origin.getX(), 
                 4.0 - origin.getY() + 4.0, 
-                origin.getRotation().getDegrees()
+                MathUtils.normalizeAngle180(origin.getRotation().getDegrees())
             );
         } else {
             base.startOdometry(
                 imu.getYaw(), 
                 -origin.getX(), 
                 origin.getY(), 
-                origin.getRotation().getDegrees()
+                MathUtils.normalizeAngle180(origin.getRotation().getDegrees())
             );
         }
         //imu.resetPose(origin);
@@ -103,7 +103,6 @@ public class DriveBase extends SubsystemBase {
     public void setWheelStates(SwerveModuleState[] states) {
         if (RobotContainer.getAlliance().equals(Alliance.Blue)) {
             for (SwerveModuleState s : states) {
-                //s.angle = Rotation2d.fromDegrees(-MathUtils.normalizeAngle180(s.angle.getDegrees()));
                 s.speedMetersPerSecond = -s.speedMetersPerSecond;
             }
         } else {
@@ -138,9 +137,9 @@ public class DriveBase extends SubsystemBase {
             trajectory,
             () -> { return this.getPose(true); },
             this.base.getKinematics(),
-            new PIDController(1.0, 0.0, 0.0),
-            new PIDController(1.0, 0.0, 0.0),
-            new PIDController(1.4, 0.0, 0.0),
+            AutoConstants.kDRIVE_PID.toWPIPidController(),
+            AutoConstants.kDRIVE_PID.toWPIPidController(),
+            AutoConstants.kTHETA_PID.toWPIPidController(),
             this::setWheelStates,
             false,
             this

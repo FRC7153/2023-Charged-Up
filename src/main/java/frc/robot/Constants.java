@@ -44,13 +44,13 @@ public final class Constants {
      * Note that all distance measurements are in INCHES!
      */
     public static final class ArmConstants {
-        public static final PIDConstant kARM_PID = new PIDConstant(0.09, 0.01, 0.0).withOutputRange(-12.0, 12.0).withError(1.2);
+        public static final PIDConstant kARM_PID = new PIDConstant(0.09, 0.2, 0.0).withOutputRange(-12.0, 12.0).withError(1.2).withIntegratorRange(-100.0, 100.0);
         public static final PIDConstant kEXT_PID = new PIDConstant(0.01, 0.000001, 0).withError(0.05).withOutputRange(-8.0, 8.0);
 
         public static final double kWINCH_TOLERANCE = 4.0;
 
         public static final double kMAX_ANGLE_VELOCITY = 100.0;
-        public static final double kMAX_ANGLE_ACCELERATION = 200.0;
+        public static final double kMAX_ANGLE_ACCELERATION = 100.0;
 
         public static final double kJOINT_TO_FLOOR_DIST = 26.0;
         public static final double kJOINT_TO_BUMPER_DIST = 20.0;
@@ -106,7 +106,7 @@ public final class Constants {
         public static final Translation2d kREAR_CUBE_MID = new Translation2d(-48.491, 47.645);
         public static final Translation2d kREAR_CUBE_HIGH = new Translation2d(-64.0, 62.129);
         public static final Translation2d kREAR_CONE_MID = new Translation2d(-49.348, 53.327);
-        public static final Translation2d kREAR_CONE_HIGH = new Translation2d(-60.954, 74.0);
+        public static final Translation2d kREAR_CONE_HIGH = new Translation2d(-60.954, 74.0); // -60.954
 
         // Loading Station
         public static final Translation2d kFRONT_LOADING_STATION = new Translation2d(39.410, 45.377);
@@ -133,6 +133,11 @@ public final class Constants {
 
     /* AUTO CONSTANTS */
     public static final class AutoConstants {
+        // Drive Pid
+        public static final PIDConstant kDRIVE_PID = new PIDConstant(5.0, 2.1, 0.0).withIntegratorRange(-10.0, 10.0);
+        public static final PIDConstant kTHETA_PID = new PIDConstant(4.0, 2.0, 0.0).withIntegratorRange(-10.0, 10.0);
+
+        // Balance
         public static final PIDConstant kBALANCE_PID = new PIDConstant(0.05, 0.0, 0.0);
 
         public static final double kMAX_BALANCE_SPEED = 0.8;

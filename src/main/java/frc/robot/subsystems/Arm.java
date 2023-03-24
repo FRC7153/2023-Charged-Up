@@ -41,6 +41,7 @@ public class Arm extends SubsystemBase {
     private Double extRef = Double.NaN; // The actual value passed to the PID controller, post-calculations
     private Translation2d pose = new Translation2d(0.0, 0.0);
     private ArmState currentState = new ArmState(0.0, 0.0);
+    private double currentAngleVolts = 0.0;
 
     // Encoders
     private Encoder angleAbsEncoder = new Encoder((new DutyCycleEncoder(8))::getAbsolutePosition);
@@ -53,7 +54,8 @@ public class Arm extends SubsystemBase {
     public Arm() {
         // Config Arm
         angleMotor.setInverted(true);
-        angleMotor.setSmartCurrentLimit(70);
+        angleMotor.setSecondaryCurrentLimit(150);
+        angleMotor.setSmartCurrentLimit(100);
 
         angleAbsEncoder.setConversionFactor(360.0);
         angleAbsEncoder.setInverted(false);
@@ -112,9 +114,8 @@ public class Arm extends SubsystemBase {
             }
 
             // Set angle voltage
-            angleMotor.setVoltage(
-                anglePID.calculate(angleAbsEncoder.getPosition())
-            );
+            currentAngleVolts = anglePID.calculate(angleAbsEncoder.getPosition());
+            angleMotor.setVoltage(currentAngleVolts);
         }
     }
 
@@ -193,11 +194,14 @@ public class Arm extends SubsystemBase {
     // Getters
     public double getAngleSetpoint() { return angleSP; }
     public double getAngleActual() { return angleAbsEncoder.getPosition(); }
-    public double getAngleVoltage() { return angleMotor.getAppliedOutput(); }
+    public double getAngleVoltage() { return currentAngleVolts; }
+    public double getAngleCurrent() { return angleMotor.getOutputCurrent(); }
     public double getWinchEncPos() { return winchEnc.getPosition(); }
+    public double getWinchSetpoint() { return extRef; }
     public double getWinchEncVelocity() { return winchEnc.getVelocity(); }
     public Translation2d getPose() { return pose; }
     public ArmState getState() { return currentState; }
+    public double getAngleDutyCycle() { return angleMotor.getAppliedOutput(); }
 
     public double getAngleTemp() { return MathUtils.celsiusToFahrenheit(angleMotor.getMotorTemperature()); }
     public double getExtTemp() { return MathUtils.celsiusToFahrenheit(winchMotor.getMotorTemperature()); }

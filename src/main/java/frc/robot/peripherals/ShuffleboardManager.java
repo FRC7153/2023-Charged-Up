@@ -64,12 +64,15 @@ public class ShuffleboardManager {
     private GenericEntry armAngle;
     private GenericEntry armSP;
     private GenericEntry armVolt;
+    private GenericEntry armCurrent;
     private GenericEntry armWinchPos;
+    private GenericEntry armExtSP;
     private GenericEntry armLHand;
     private GenericEntry armRHand;
     private GenericEntry armPose;
     private GenericEntry armApplied;
     private GenericEntry armAtSP;
+    private GenericEntry armAngleDutyCycle;
 
     // Temp
     private GenericEntry tempAngle;
@@ -223,12 +226,18 @@ public class ShuffleboardManager {
             .withPosition(3, 1)
             .getEntry();
 
+        armCurrent = armTab.add("Angle Current", 0.0)
+            .getEntry();
+
         armVolt = armTab.add("Angle Voltage", 0.0)
             .withSize(3, 3)
             .withWidget((ShuffleboardConstants.kARM_GRAPHS) ? BuiltInWidgets.kGraph : BuiltInWidgets.kTextView)
             .getEntry();
 
         armWinchPos = armTab.add("Arm Winch Rot", 0.0)
+            .getEntry();
+        
+        armExtSP = armTab.add("Ext Setpoint", 0.0)
             .getEntry();
 
         armLHand = armTab.add("Left Hand Claw", 0.0)
@@ -244,6 +253,9 @@ public class ShuffleboardManager {
             .getEntry();
         
         armAtSP = armTab.add("Arm at setpoint?", false)
+            .getEntry();
+        
+        armAngleDutyCycle = armTab.add("Angle Duty Cycle", 0.0)
             .getEntry();
         
         // Temperature
@@ -299,7 +311,10 @@ public class ShuffleboardManager {
         armSP.setDouble(arm.getAngleSetpoint());
         armAngle.setDouble(arm.getAngleActual());
         armVolt.setDouble(arm.getAngleVoltage());
+        armCurrent.setDouble(arm.getAngleCurrent());
         armWinchPos.setDouble(arm.getWinchEncPos());
+        armExtSP.setDouble(arm.getWinchSetpoint());
+        armAngleDutyCycle.setDouble(arm.getAngleDutyCycle());
 
         armLHand.setDouble(claw.getLHandPos());
         armRHand.setDouble(claw.getRHandPos());

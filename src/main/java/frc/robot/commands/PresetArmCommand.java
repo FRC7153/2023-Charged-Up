@@ -50,15 +50,18 @@ public class PresetArmCommand extends CommandBase {
     @Override
     public void initialize() {
         if (state != null) {
+            // Use state
             armSubsys.setAngle(state.angle);
             armSubsys.setExtension(state.extension);
         } else if (imu != null && MathUtils.normalizeAngle180(imu.getYaw()) < 90.0 && MathUtils.normalizeAngle180(imu.getYaw()) > -90.0) {
+            // Use orientation pos
             if (invertedPos != null) {
                 armSubsys.setTarget(invertedPos.getX(), invertedPos.getY());
             } else {
                 armSubsys.setTarget(-pos.getX(), pos.getY());
             }
         } else {
+            // Use pos
             armSubsys.setTarget(pos.getX(), pos.getY());
         }
     }

@@ -21,6 +21,8 @@ public class PIDConstant {
     public Double kFF = Double.NaN;
     public Double kOUTPUT_MIN = Double.NaN;
     public Double kOUTPUT_MAX = Double.NaN;
+    public Double kMIN_I = Double.NaN;
+    public Double kMAX_I = Double.NaN;
 
     // Constructors
     /**
@@ -55,6 +57,7 @@ public class PIDConstant {
      * @return This object (modifications are done in place)
      */
     public PIDConstant withOutputRange(double min, double max) { kOUTPUT_MIN = min; kOUTPUT_MAX = max; return this; } 
+    public PIDConstant withIntegratorRange(double minI, double maxI) { kMIN_I = minI; kMAX_I = maxI; return this; }
 
     // Apply
     /**
@@ -69,6 +72,7 @@ public class PIDConstant {
         if (!kERR.isNaN()) { pid.setSmartMotionAllowedClosedLoopError(kERR, kSLOT); }
         if (!kFF.isNaN()) { pid.setFF(kFF); }
         if (!kOUTPUT_MIN.isNaN() && !kOUTPUT_MAX.isNaN()) { pid.setOutputRange(kOUTPUT_MIN, kOUTPUT_MAX); }
+        if (!kMAX_I.isNaN()) { pid.setIZone(kMAX_I, kSLOT); }
     }
 
     /**
@@ -112,6 +116,7 @@ public class PIDConstant {
         ProfiledPIDController pid = new ProfiledPIDController(kP, kI, kD, new Constraints(maxVelocity, maxAccel));
 
         if (!kERR.isNaN()) { pid.setTolerance(kERR); }
+        if (kMIN_I.isNaN()) { pid.setIntegratorRange(kMIN_I, kMAX_I); }
 
         return pid;
     }
