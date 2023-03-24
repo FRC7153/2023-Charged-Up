@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.peripherals.IMU;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Arm.ArmState;
 
 public class PresetArmCommand extends CommandBase {
     private Arm armSubsys;
@@ -17,12 +18,19 @@ public class PresetArmCommand extends CommandBase {
 
     // Config
     private Translation2d pos = null;
+    private ArmState state; // optional
     private Translation2d invertedPos = null; // if the inverted position is not just (-x, y)
 
     /** Creates a new PresetArmCommand. */
     public PresetArmCommand(Arm armSubsystem, Translation2d pos) {
         armSubsys = armSubsystem;
         this.pos = pos;
+        addRequirements(armSubsys);
+    }
+
+    public PresetArmCommand(Arm armSubsystem, ArmState pos) {
+        armSubsys = armSubsystem;
+        state = pos;
         addRequirements(armSubsys);
     }
     
@@ -41,7 +49,10 @@ public class PresetArmCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        if (imu != null && MathUtils.normalizeAngle180(imu.getYaw()) < 90.0 && MathUtils.normalizeAngle180(imu.getYaw()) > -90.0) {
+        if (state != null) {
+            armSubsys.setAngle(state.angle);
+            armSubsys.setExtension(state.extension);
+        } else if (imu != null && MathUtils.normalizeAngle180(imu.getYaw()) < 90.0 && MathUtils.normalizeAngle180(imu.getYaw()) > -90.0) {
             if (invertedPos != null) {
                 armSubsys.setTarget(invertedPos.getX(), invertedPos.getY());
             } else {

@@ -13,14 +13,19 @@ public class UnlockClawCommand extends CommandBase {
 
     // State
     private Double releaseTime;
+    private Boolean doNotExtend = false;
 
     // Constructor
-    public UnlockClawCommand(Claw clawSubsys, Arm armSubsys) {
+    public UnlockClawCommand(Claw clawSubsys, Arm armSubsys, boolean doNotExtend) {
         claw = clawSubsys;
         arm = armSubsys;
+        
+        this.doNotExtend = doNotExtend;
 
         addRequirements(claw, arm);
     }
+
+    public UnlockClawCommand(Claw clawSubsys, Arm armSubsys) { this(clawSubsys, armSubsys, false); }
 
     // Init
     @Override
@@ -30,7 +35,7 @@ public class UnlockClawCommand extends CommandBase {
 
         claw.setCoastMode(true);
 
-        arm.setAngle(0.0);
+        arm.setAngle((doNotExtend) ? Double.NaN : 0.0);
 
         arm.setWinchEncPosition(6.5); // 2.54
         arm.setExtension(0.0);

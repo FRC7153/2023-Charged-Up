@@ -44,10 +44,10 @@ public final class Constants {
      * Note that all distance measurements are in INCHES!
      */
     public static final class ArmConstants {
-        public static final PIDConstant kARM_PID = new PIDConstant(0.09, 0.01, 0.0).withOutputRange(-12.0, 12.0).withError(1.0);
+        public static final PIDConstant kARM_PID = new PIDConstant(0.09, 0.01, 0.0).withOutputRange(-12.0, 12.0).withError(1.2);
         public static final PIDConstant kEXT_PID = new PIDConstant(0.01, 0.000001, 0).withError(0.05).withOutputRange(-8.0, 8.0);
 
-        public static final double kWINCH_TOLERANCE = 0.1;
+        public static final double kWINCH_TOLERANCE = 4.0;
 
         public static final double kMAX_ANGLE_VELOCITY = 100.0;
         public static final double kMAX_ANGLE_ACCELERATION = 200.0;
@@ -67,7 +67,7 @@ public final class Constants {
         public static final double kMAX_REACH = 4.0 * 12.0;
         public static final double kMAX_HEIGHT = 6.0 * 12.0 + 6.0;
 
-        public static final double kCLEARANCE = 4.0;
+        public static final double kCLEARANCE = 2.0;
 
         public static final boolean kUSE_POSITION_NOT_VELOCITY = true;
 

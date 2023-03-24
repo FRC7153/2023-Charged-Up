@@ -15,14 +15,16 @@ import frc.robot.subsystems.Claw;
 public class TestCommand extends CommandBase {
     // Subsystems
     private Arm arm;
+    private Claw claw;
     private ShuffleboardManager shuffleboard;
 
     // Suppliers
     private Supplier<Double> extSupp;
 
     // Constructor
-    public TestCommand(Arm armSubsys, ShuffleboardManager shuffleboardManager, Supplier<Double> extSupplier) {
+    public TestCommand(Arm armSubsys, Claw clawSubsys, ShuffleboardManager shuffleboardManager, Supplier<Double> extSupplier) {
         arm = armSubsys;
+        claw = clawSubsys;
         shuffleboard = shuffleboardManager;
         extSupp = extSupplier;
     }
@@ -31,7 +33,7 @@ public class TestCommand extends CommandBase {
     @Override
     public void initialize() {
         arm.setAngle(0.0);
-        //claw.setPosition(GrabPositions.RELEASE);
+        claw.setCoastMode(true);
     }
 
     // Periodic
@@ -48,6 +50,7 @@ public class TestCommand extends CommandBase {
     @Override
     public void end(boolean terminated) {
         arm.setRawSpeed(0.0);
+        claw.setCoastMode(false);
     }
 
     // Does not finish

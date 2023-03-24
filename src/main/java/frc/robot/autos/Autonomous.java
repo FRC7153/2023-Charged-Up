@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmPositions;
 import frc.robot.Constants.GrabPositions;
+import frc.robot.commands.GrabCommand;
+import frc.robot.commands.PresetArmCommand;
 import frc.robot.commands.UnlockClawCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -39,9 +41,10 @@ public class Autonomous {
 
         // Create Auto Chooser
         autoChooser.setDefaultOption("No-op (unlock hands)", this::createNoOpAuto);
-        autoChooser.addOption("Basic/Time-based drive", this::createSimpleDriveAuto);
-        autoChooser.addOption("Testing/Time-based shake drive", this::createSimpleShakeAuto);
-        autoChooser.addOption("Testing/Forward Test Trajectory", this::createTestTrajAuto);
+        autoChooser.addOption("Basic - Time-based drive", this::createSimpleDriveAuto);
+        autoChooser.addOption("Testing - Time-based shake drive", this::createSimpleShakeAuto);
+        autoChooser.addOption("Testing - Forward Test Trajectory", this::createTestTrajAuto);
+        autoChooser.addOption("Spot 1 - 3 Piece", this::createSpot1_3PieceAuto);
 
         // Create event map //
         // Bring claw to front ground and open
@@ -66,7 +69,7 @@ public class Autonomous {
 
     public Command createTestTrajAuto() {
         return new ParallelCommandGroup(
-            drive.getTrajectoryCommand("spot1/spot1ToPiece1", autoEventMap, true, 2.0, 1.5)
+            drive.getTrajectoryCommand("TestTraj1", autoEventMap, true, 6.0, 8.0)
         );
     }
 
@@ -81,6 +84,18 @@ public class Autonomous {
         return new SequentialCommandGroup(
             new UnlockClawCommand(claw, arm),
             new SimpleAutoShake(drive, arm)
+        );
+    }
+
+    // SPOT 1
+    // 3 Piece Auto
+    public Command createSpot1_3PieceAuto() {
+        return new SequentialCommandGroup(
+            new UnlockClawCommand(claw, arm, true),
+            // Piece 1 (staged)
+            new GrabCommand(claw, GrabPositions.GRAB),
+            new PresetArmCommand(arm, ArmPositions.kREAR_CONE_HIGH),
+            new GrabCommand(claw, GrabPositions.RELEASE)
         );
     }
 }

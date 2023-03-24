@@ -69,6 +69,7 @@ public class ShuffleboardManager {
     private GenericEntry armRHand;
     private GenericEntry armPose;
     private GenericEntry armApplied;
+    private GenericEntry armAtSP;
 
     // Temp
     private GenericEntry tempAngle;
@@ -242,6 +243,9 @@ public class ShuffleboardManager {
         armApplied = armTab.add("Arm (l, r) Applied Output", "?, ?")
             .getEntry();
         
+        armAtSP = armTab.add("Arm at setpoint?", false)
+            .getEntry();
+        
         // Temperature
         ShuffleboardTab tempTab = Shuffleboard.getTab("Temps");
 
@@ -305,6 +309,8 @@ public class ShuffleboardManager {
             claw.getLeftOutput(),
             claw.getRightOutput()
         ));
+
+        armAtSP.setBoolean(arm.atSetpoint());
 
         // Temps
         tempAngle.setDouble(arm.getAngleTemp());
