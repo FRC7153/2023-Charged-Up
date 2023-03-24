@@ -11,15 +11,11 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
@@ -42,6 +38,7 @@ public class Arm extends SubsystemBase {
 
     private Double angleSP = Double.NaN;
     private Double extSP = Double.NaN;
+    private Double extRef = Double.NaN; // The actual value passed to the PID controller, post-calculations
     private Translation2d pose = new Translation2d(0.0, 0.0);
     private ArmState currentState = new ArmState(0.0, 0.0);
 
@@ -81,10 +78,9 @@ public class Arm extends SubsystemBase {
 
             if (testing) {
                 // Set angle (only testing)
-                //anglePID.setSetpoint(angleSP);
                 anglePID.setGoal(angleSP);
             } else {
-                // Constrain and set position
+                // Constrain position
                 Translation2d commandedPose = kinematics(extSP, angleSP);
                 double x = commandedPose.getX();
                 double y = commandedPose.getY();
@@ -108,11 +104,11 @@ public class Arm extends SubsystemBase {
                 pose = new Translation2d(x, y);
                 currentState = inverseKinematics(x, y);
 
-                //anglePID.setSetpoint(currentState.angle);
-                anglePID.setGoal(currentState.angle);
-                winchPID.setReference(Math.max(ArmConstants.extToWinchRots(currentState.extension - ArmConstants.kHAND_LENGTH), 0.0), ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
+                // Set position
+                extRef = Math.max(ArmConstants.extToWinchRots(currentState.extension - ArmConstants.kHAND_LENGTH), 0.0);
 
-                //System.out.println(String.format("ext: %s, angle: %s -> %s, %s -> driven ext: %s, driven angle: %s", extSP, angleSP, x,y, newPos.getX(), newPos.getY()));
+                anglePID.setGoal(currentState.angle);
+                winchPID.setReference(extRef, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
             }
 
             // Set angle voltage
@@ -120,14 +116,6 @@ public class Arm extends SubsystemBase {
                 anglePID.calculate(angleAbsEncoder.getPosition())
             );
         }
-    }
-
-    // Make a command wait until its unlocked to run
-    public Command waitForUnlock(Command commandToWait) {
-        return new SequentialCommandGroup(
-            new WaitUntilCommand(() -> { return this.hasBeenReleased; }),
-            commandToWait
-        );
     }
 
     /**
@@ -141,6 +129,10 @@ public class Arm extends SubsystemBase {
      * @param ext Total extension, joint to grab point
      */
     public void setExtension(double ext) { extSP = ext; }
+
+    public boolean atSetpoint() {
+        return (anglePID.atGoal()) && (Math.abs(winchEnc.getPosition() - extRef) <= ArmConstants.kWINCH_TOLERANCE);
+    }
 
     /**
      * Gets the position of the arm (forward kinematics)

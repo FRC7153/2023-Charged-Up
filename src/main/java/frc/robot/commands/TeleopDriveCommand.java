@@ -50,7 +50,7 @@ public class TeleopDriveCommand extends CommandBase {
       base.setMaxSpeed(5.0, 540.0);
     }
 
-    base.driveRobotOriented(xSupply.get(), ySupply.get(), -rSupply.get());
+    base.driveFieldOriented(xSupply.get(), ySupply.get(), -rSupply.get());
   }
 
   // Called once the command ends or is interrupted.

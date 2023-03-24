@@ -3,7 +3,6 @@ package frc.robot.autos;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.GrabPositions;
 import frc.robot.peripherals.ShuffleboardManager;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -16,16 +15,14 @@ import frc.robot.subsystems.Claw;
 public class TestCommand extends CommandBase {
     // Subsystems
     private Arm arm;
-    private Claw claw;
     private ShuffleboardManager shuffleboard;
 
     // Suppliers
     private Supplier<Double> extSupp;
 
     // Constructor
-    public TestCommand(Arm armSubsys, Claw clawSubsys, ShuffleboardManager shuffleboardManager, Supplier<Double> extSupplier) {
+    public TestCommand(Arm armSubsys, ShuffleboardManager shuffleboardManager, Supplier<Double> extSupplier) {
         arm = armSubsys;
-        claw = clawSubsys;
         shuffleboard = shuffleboardManager;
         extSupp = extSupplier;
     }

@@ -1,6 +1,7 @@
 package frc.robot.autos;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmPositions;
 import frc.robot.Constants.GrabPositions;
-import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.UnlockClawCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -25,8 +25,7 @@ public class Autonomous {
     private Claw claw;
 
     // Chooser
-    private static enum AutoType {NOP, SIMPLE_TIME, SIMPLE_TIME_SHAKE, GYRO_BALANCE, TRAJ_TEST};
-    private SendableChooser<AutoType> autoChooser = new SendableChooser<>();
+    private SendableChooser<Supplier<Command>> autoChooser = new SendableChooser<>();
 
     // Event Map
     public HashMap<String, Command> autoEventMap = new HashMap<>();
@@ -39,11 +38,10 @@ public class Autonomous {
         claw = clawSubsys;
 
         // Create Auto Chooser
-        autoChooser.setDefaultOption("No-op (unlock hands)", AutoType.NOP);
-        autoChooser.addOption("Time-based drive", AutoType.SIMPLE_TIME);
-        autoChooser.addOption("Time-based shake drive", AutoType.SIMPLE_TIME_SHAKE);
-        autoChooser.addOption("Gyro-based balance", AutoType.GYRO_BALANCE);
-        autoChooser.addOption("Forward Test Trajectory", AutoType.TRAJ_TEST);
+        autoChooser.setDefaultOption("No-op (unlock hands)", this::createNoOpAuto);
+        autoChooser.addOption("Basic/Time-based drive", this::createSimpleDriveAuto);
+        autoChooser.addOption("Testing/Time-based shake drive", this::createSimpleShakeAuto);
+        autoChooser.addOption("Testing/Forward Test Trajectory", this::createTestTrajAuto);
 
         // Create event map //
         // Bring claw to front ground and open
@@ -55,54 +53,34 @@ public class Autonomous {
 
     // Get Selected Auto
     public Command getSelectedAuto() {
-        switch (autoChooser.getSelected()) {
-            case SIMPLE_TIME:
-                // Simple time-based drive forward
-                return getSimpleDriveAuto();
-            case SIMPLE_TIME_SHAKE:
-                return getSimpleShakeAuto();
-            case GYRO_BALANCE:
-                // Use gyro to balance
-                return getGyroBalanceAuto();
-            case TRAJ_TEST:
-                return getTestTrajAuto();
-            case NOP:
-            default:
-                // No-op
-                return new UnlockClawCommand(claw, arm);
-        }
+        Supplier<Command> auto = autoChooser.getSelected();
+        return (auto == null) ? null : auto.get();
     }
 
-    public SendableChooser<AutoType> getChooser() { return autoChooser; }
+    public SendableChooser<Supplier<Command>> getChooser() { return autoChooser; }
 
-    // GETTERS //
-    public Command getTestTrajAuto() {
+    // CREATE AUTO COMMANDS //
+    public Command createNoOpAuto() {
+        return new UnlockClawCommand(claw, arm);
+    }
+
+    public Command createTestTrajAuto() {
         return new ParallelCommandGroup(
             drive.getTrajectoryCommand("spot1/spot1ToPiece1", autoEventMap, true, 2.0, 1.5)
         );
     }
 
-    public Command getSimpleDriveAuto() {
+    public Command createSimpleDriveAuto() {
         return new SequentialCommandGroup(
             new UnlockClawCommand(claw, arm),
             new SimpleAutoForward(drive, arm)
         );
     }
 
-    public Command getSimpleShakeAuto() {
+    public Command createSimpleShakeAuto() {
         return new SequentialCommandGroup(
             new UnlockClawCommand(claw, arm),
             new SimpleAutoShake(drive, arm)
-        );
-    }
-
-    public Command getGyroBalanceAuto() {
-        return new ParallelCommandGroup(
-            new UnlockClawCommand(claw, arm),
-            new SequentialCommandGroup(
-                new DriveUntilAngle(drive),
-                new BalanceCommand(drive)
-            )
         );
     }
 }

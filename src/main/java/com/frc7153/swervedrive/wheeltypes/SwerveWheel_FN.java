@@ -104,13 +104,7 @@ public class SwerveWheel_FN implements SwerveWheel {
         spinAbsEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
 
         // Set Relative Encoder Offset
-        // TODO remove this encoder skip
-        if (spinHomeLocation == 0.0) {
-            spinRelEncoder.setPosition(0.0);
-            DriverStation.reportWarning("Did not home encoder", false);
-        } else {
-            spinRelEncoder.setPosition((spinAbsEncoder.getAbsolutePosition() - spinHomeLocation) * k_SPIN_RATIO / 360.0);
-        }
+        spinRelEncoder.setPosition((spinAbsEncoder.getAbsolutePosition() - spinHomeLocation) * k_SPIN_RATIO / 360.0);
 
         // Spin PID
         spinPID = spinWheel.getPIDController();
