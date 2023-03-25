@@ -127,10 +127,10 @@ public class RobotContainer {
 
     // Run Shuffleboard (even when disabled)
     public void shuffleboardUpdate() { shuffleboard.periodic();
-        limeDump.add(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("tv").getDouble(0));
-        limeDump.add(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("tx").getDouble(0));
-        limeDump.add(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("ty").getDouble(0));
-        limeDump.add(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("botpose").getDouble(0));
+        limeDump.add(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("camerapose_targetspace").getDoubleArray(new double[6]));
+        //limeDump.add(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("tx").getDouble(0));
+        //limeDump.add(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("ty").getDouble(0));
+        //limeDump.add(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("botpose").getDouble(0));
         //hopefully this works
     }
         

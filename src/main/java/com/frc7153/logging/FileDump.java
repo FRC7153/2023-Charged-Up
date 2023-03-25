@@ -87,4 +87,7 @@ public class FileDump {
 
     public void add(double double1) {
     }
+
+    public void add(double[] doubleArray) {
+    }
 }
