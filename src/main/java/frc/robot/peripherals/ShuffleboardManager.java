@@ -54,6 +54,7 @@ public class ShuffleboardManager {
     private GenericEntry piAge;
     private GenericEntry piCache;
     private GenericEntry piTarget;
+    private GenericEntry piDistance;
 
     // Gyro & Accelerometer
     private GenericEntry gyroRoll;
@@ -202,6 +203,10 @@ public class ShuffleboardManager {
         piTarget = piTab.add("Target Info", "No target")
             .getEntry();
         
+        piDistance = piTab.add("Distance", 0.0)
+            .withPosition(10,1)
+            .getEntry();
+        
         piTab.add("Camera Server", new ConfigCommand(armPi::startCameraServer, "Start CS")).withPosition(6, 4);
         piTab.add("Pause", new ConfigCommand(armPi::pauseProcessing, "Pause")).withPosition(7, 4);
         piTab.add("Resume", new ConfigCommand(armPi::resumeProcessing, "Resume")).withPosition(8, 4);
@@ -295,6 +300,7 @@ public class ShuffleboardManager {
         piAge.setDouble(armPi.getAge());
         piVoltageStable.setBoolean(armPi.getVoltageStable());
         piCache.setString(armPi.getCache());
+        piDistance.setDouble(armPi.getDistance());
 
         if (armPi.hasTarget()) {
             piTarget.setString(String.format("Sees %s at %s, %s", armPi.getIsCone() ? "cone" : "cube", armPi.getXTargetAngle(), armPi.getYTargetAngle()));
