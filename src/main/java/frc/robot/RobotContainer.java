@@ -59,8 +59,7 @@ public class RobotContainer {
             driveBase,
             Controller0::getLeftX,
             Controller0::getLeftY,
-            Controller0::getRightX,
-            Controller0::getLeftTrigger
+            Controller0::getRightX
         ).unless(notEnabled));
 
         // Default/Teleop Arm Command (position setpoint)

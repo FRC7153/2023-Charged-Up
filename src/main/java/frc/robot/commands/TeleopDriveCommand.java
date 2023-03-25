@@ -20,14 +20,14 @@ public class TeleopDriveCommand extends CommandBase {
   private Supplier<Double> xSupply;
   private Supplier<Double> ySupply;
   private Supplier<Double> rSupply;
-  private Supplier<Boolean> turboSupply;
 
-  public TeleopDriveCommand(DriveBase swerveSubsystem, Supplier<Double> xSupplier, Supplier<Double> ySupplier, Supplier<Double> rotSupplier, Supplier<Boolean> turboSupplier) {
+
+  public TeleopDriveCommand(DriveBase swerveSubsystem, Supplier<Double> xSupplier, Supplier<Double> ySupplier, Supplier<Double> rotSupplier) {
     base = swerveSubsystem;
     xSupply = xSupplier;
     ySupply = ySupplier;
     rSupply = rotSupplier;
-    turboSupply = turboSupplier;
+
 
     addRequirements(base);
   }
@@ -44,11 +44,7 @@ public class TeleopDriveCommand extends CommandBase {
   @Override
   public void execute() {
     // Turbo (fast) mode
-    if (turboSupply.get()) {
-      base.setMaxSpeed(5.5, 540.0);
-    } else {
-      base.setMaxSpeed(5.0, 540.0);
-    }
+  
 
     base.driveFieldOriented(xSupply.get(), ySupply.get(), -rSupply.get());
   }
