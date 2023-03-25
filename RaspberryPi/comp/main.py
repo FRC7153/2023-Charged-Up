@@ -117,7 +117,7 @@ while True:
 
 	if not success:
 		log.warn("Could not fetch frame")
-		continue
+		##continue
 
 	# Detect objects
 	cones = coneDetector.process(numpy.copy(frame))

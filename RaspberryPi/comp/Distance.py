@@ -66,3 +66,4 @@ class UltrasonicSensor:
 
 		GPIO.cleanup()
 
+# nice
