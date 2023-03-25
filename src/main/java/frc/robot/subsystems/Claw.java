@@ -58,6 +58,11 @@ public class Claw extends SubsystemBase {
     public void setCoastMode(boolean coast) {
         lHand.setIdleMode(coast ? IdleMode.kCoast : IdleMode.kBrake);
         rHand.setIdleMode(coast ? IdleMode.kCoast : IdleMode.kBrake);
+
+        if (coast) {
+            lHand.disable();
+            rHand.disable();
+        }
     }
 
     /**

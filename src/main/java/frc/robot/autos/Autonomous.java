@@ -3,11 +3,13 @@ package frc.robot.autos;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmPositions;
 import frc.robot.Constants.GrabPositions;
 import frc.robot.commands.GrabCommand;
@@ -96,6 +98,9 @@ public class Autonomous {
             // Piece 1 (staged)
             new GrabCommand(claw, GrabPositions.GRAB),
             new PresetArmCommand(arm, ArmPositions.kREAR_CONE_HIGH),
+            new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
+            new PresetArmCommand(arm, new Translation2d(-60.954, 70.0)),
+            new PresetArmCommand(arm, new ArmState(0.0, ArmConstants.kJOINT_TO_EXT_PT)),
             new GrabCommand(claw, GrabPositions.RELEASE)
         );
     }

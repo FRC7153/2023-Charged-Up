@@ -39,6 +39,7 @@ public class Arm extends SubsystemBase {
     private Double angleSP = Double.NaN;
     private Double extSP = Double.NaN;
     private Double extRef = Double.NaN; // The actual value passed to the PID controller, post-calculations
+    private Double angRef = Double.NaN;
     private Translation2d pose = new Translation2d(0.0, 0.0);
     private ArmState currentState = new ArmState(0.0, 0.0);
     private double currentAngleVolts = 0.0;
@@ -108,8 +109,9 @@ public class Arm extends SubsystemBase {
 
                 // Set position
                 extRef = Math.max(ArmConstants.extToWinchRots(currentState.extension - ArmConstants.kHAND_LENGTH), 0.0);
+                angRef = currentState.angle;
 
-                anglePID.setGoal(currentState.angle);
+                anglePID.setGoal(angRef);
                 winchPID.setReference(extRef, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
             }
 
@@ -132,7 +134,7 @@ public class Arm extends SubsystemBase {
     public void setExtension(double ext) { extSP = ext; }
 
     public boolean atSetpoint() {
-        return (anglePID.atGoal()) && (Math.abs(winchEnc.getPosition() - extRef) <= ArmConstants.kWINCH_TOLERANCE);
+        return (Math.abs(angleAbsEncoder.getPosition() - angRef) <= ArmConstants.kANGLE_TOLERANCE) && (Math.abs(winchEnc.getPosition() - extRef) <= ArmConstants.kWINCH_TOLERANCE);
     }
 
     /**

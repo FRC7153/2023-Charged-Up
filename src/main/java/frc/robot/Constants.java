@@ -47,7 +47,8 @@ public final class Constants {
         public static final PIDConstant kARM_PID = new PIDConstant(0.09, 0.3, 0.0).withOutputRange(-12.0, 12.0).withError(1.2).withIntegratorRange(-100.0, 100.0);
         public static final PIDConstant kEXT_PID = new PIDConstant(0.01, 0.000001, 0).withError(0.05).withOutputRange(-8.0, 8.0);
 
-        public static final double kWINCH_TOLERANCE = 4.0;
+        public static final double kWINCH_TOLERANCE = 5.0;
+        public static final double kANGLE_TOLERANCE = 12.0;
 
         public static final double kMAX_ANGLE_VELOCITY = 100.0;
         public static final double kMAX_ANGLE_ACCELERATION = 100.0;
@@ -106,7 +107,7 @@ public final class Constants {
         public static final Translation2d kREAR_CUBE_MID = new Translation2d(-48.491, 47.645);
         public static final Translation2d kREAR_CUBE_HIGH = new Translation2d(-64.0, 62.129);
         public static final Translation2d kREAR_CONE_MID = new Translation2d(-49.348, 53.327);
-        public static final Translation2d kREAR_CONE_HIGH = new Translation2d(-60.954, 74.0); // -60.954
+        public static final Translation2d kREAR_CONE_HIGH = new Translation2d(-60.954, 74.0);
 
         // Loading Station
         public static final Translation2d kFRONT_LOADING_STATION = new Translation2d(39.410, 45.377);
@@ -126,7 +127,7 @@ public final class Constants {
     }
 
     /* CLAW GRAB POSITIONS */
-    public static enum GrabPositions { GRAB(0.338 - 0.05, 0.934 + 0.05), RELEASE(0.431, 0.844), WIDE_RELEASE(0.47, 0.81), STOW(0.89, 0.39);
+    public static enum GrabPositions { GRAB(0.338 - 0.05, 0.934 + 0.05), RELEASE(0.431, 0.844), WIDE_RELEASE(0.427, 0.850), STOW(0.89, 0.39);
         public final double lPos, rPos;
         GrabPositions(double l, double r) { lPos = l; rPos = r; }
     }
