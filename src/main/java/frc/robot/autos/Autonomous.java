@@ -95,7 +95,7 @@ public class Autonomous {
             new UnlockClawCommand(claw, arm, true),
             // Piece 1 (staged)
             new GrabCommand(claw, GrabPositions.GRAB),
-            new PresetArmCommand(arm, new ArmState(-45.0, 999)),
+            new PresetArmCommand(arm, ArmPositions.kREAR_CONE_HIGH),
             new GrabCommand(claw, GrabPositions.RELEASE)
         );
     }
