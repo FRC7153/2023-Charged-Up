@@ -7,8 +7,11 @@ import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
-// TODO javadocs
-
+/**
+ * For putting a Profiled Pid Controller onto Shuffleboard for quick tuning.
+ * <br><br>
+ * It is recommended to run the {@code refresh()} method periodically while tuning (but not at official competition)
+ */
 public class ShuffleboardProfiledPIDController extends ProfiledPIDController {
     // Shuffleboard Entries
     private GenericEntry entryP;
@@ -17,6 +20,14 @@ public class ShuffleboardProfiledPIDController extends ProfiledPIDController {
     private GenericPublisher entryReport;
 
     // Constructor
+    /**
+     * Creates a new ShuffleboardProfiledPIDController
+     * @param tabName The name of the Shuffleboard tab to use
+     * @param Kp Default P constant
+     * @param Ki Default I constant
+     * @param Kd Default D constant
+     * @param constraints Constraint constants (max velocity and acceleration)
+     */
     public ShuffleboardProfiledPIDController(String tabName, double Kp, double Ki, double Kd, Constraints constraints) {
         // Parent Constructor
         super(Kp, Ki, Kd, constraints);
@@ -31,6 +42,12 @@ public class ShuffleboardProfiledPIDController extends ProfiledPIDController {
     }
 
     // Refresh
+    /**
+     * Refreshes the P, I, and D constants from Shuffleboard, and reports what values it is using (to verify constants
+     * have set correctly).
+     * <br><br>
+     * <b>Note:</b> while tuning, run this function periodically.
+     */
     public void refresh() {
         super.setPID(
             entryP.getDouble(getP()), 
