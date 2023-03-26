@@ -24,8 +24,6 @@ import frc.robot.peripherals.ShuffleboardManager;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveBase;
-import com.frc7153.logging.FileDump;
-import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class RobotContainer {
     // Peripherals
@@ -129,7 +127,7 @@ public class RobotContainer {
     // Run Shuffleboard (even when disabled)
     public void shuffleboardUpdate() {
         shuffleboard.periodic();
-        limeDump.add(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("camerapose_targetspace").getDoubleArray(new double[6]));
+        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("camerapose_targetspace").getDoubleArray(new double[6]));
     }
 
     // Get Auto Command
