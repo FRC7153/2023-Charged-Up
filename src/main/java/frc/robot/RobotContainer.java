@@ -24,6 +24,8 @@ import frc.robot.peripherals.ShuffleboardManager;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveBase;
+import com.frc7153.logging.FileDump;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class RobotContainer {
     // Peripherals
@@ -63,8 +65,7 @@ public class RobotContainer {
             driveBase,
             Controller0::getLeftX,
             Controller0::getLeftY,
-            Controller0::getRightX,
-            Controller0::getLeftTrigger
+            Controller0::getRightX
         ).unless(notEnabled));
 
         // Default/Teleop Arm Command (position setpoint)
@@ -123,23 +124,12 @@ public class RobotContainer {
     public void setLimelightLED(boolean state) {
         frontLL.forceLEDMode(state);
         rearLL.forceLEDMode(state);
-    }
+    }   
 
     // Run Shuffleboard (even when disabled)
-    //public void shuffleboardUpdate() { shuffleboard.periodic(); }
-    // TODO testing
-    public void shuffleboardUpdate() { shuffleboard.periodic();
-        limeDump.log("Refresh");
-
-        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("tv").getDouble(0));
-        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("tx").getDouble(0));
-        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("ty").getDouble(0));
-        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("botpose").getDouble(0));
-
-        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-back").getEntry("tv").getDouble(0));
-        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-back").getEntry("tx").getDouble(0));
-        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-back").getEntry("ty").getDouble(0));
-        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-back").getEntry("botpose").getDouble(0));
+    public void shuffleboardUpdate() {
+        shuffleboard.periodic();
+        limeDump.add(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("camerapose_targetspace").getDoubleArray(new double[6]));
     }
 
     // Get Auto Command
