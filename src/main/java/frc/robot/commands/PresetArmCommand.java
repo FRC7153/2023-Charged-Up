@@ -18,8 +18,10 @@ public class PresetArmCommand extends CommandBase {
 
     // Config
     private Translation2d pos = null;
-    private ArmState state; // optional
     private Translation2d invertedPos = null; // if the inverted position is not just (-x, y)
+
+    private ArmState state = null; // optional
+    private ArmState invertedState = null;
 
     /** Creates a new PresetArmCommand. */
     public PresetArmCommand(Arm armSubsystem, Translation2d pos) {
@@ -46,23 +48,37 @@ public class PresetArmCommand extends CommandBase {
         this.invertedPos = invertedPos;
     }
 
+    public PresetArmCommand(Arm armSubsystem, IMU imu, ArmState state, ArmState invertedState) {
+        armSubsys = armSubsystem;
+
+        this.imu = imu;
+        this.state = state;
+        this.invertedState = invertedState;
+
+        addRequirements(armSubsystem);
+    }
+
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        if (state != null) {
-            // Use state
-            armSubsys.setAngle(state.angle);
-            armSubsys.setExtension(state.extension);
-        } else if (imu != null && MathUtils.normalizeAngle180(imu.getYaw()) < 90.0 && MathUtils.normalizeAngle180(imu.getYaw()) > -90.0) {
-            // Use orientation pos
+        if (imu != null && MathUtils.normalizeAngle180(imu.getYaw()) < 90.0 && MathUtils.normalizeAngle180(imu.getYaw()) > -90.0) {
+            // Use inverted position
             if (invertedPos != null) {
                 armSubsys.setTarget(invertedPos.getX(), invertedPos.getY());
+            } else if (invertedState != null) {
+                armSubsys.setAngle(invertedState.angle);
+                armSubsys.setExtension(invertedState.extension);
             } else {
-                armSubsys.setTarget(-pos.getX(), pos.getY());
+                armSubsys.setTarget(-invertedPos.getX(), invertedPos.getY());
             }
         } else {
-            // Use pos
-            armSubsys.setTarget(pos.getX(), pos.getY());
+            // Use default position
+            if (state != null) {
+                armSubsys.setAngle(state.angle);
+                armSubsys.setExtension(state.extension);
+            } else {
+                armSubsys.setTarget(pos.getX(), pos.getY());
+            }
         }
     }
 

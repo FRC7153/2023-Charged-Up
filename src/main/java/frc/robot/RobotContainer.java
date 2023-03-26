@@ -2,6 +2,9 @@ package frc.robot;
 
 import java.util.function.BooleanSupplier;
 
+import com.frc7153.logging.FileDump;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,6 +30,7 @@ public class RobotContainer {
     private final ArmPI armPi = new ArmPI();
     private final Limelight frontLL = new Limelight("front");
     private final Limelight rearLL = new Limelight("back");
+    public FileDump limeDump = new FileDump("limeDump");
 
     // Subsystems
     private final DriveBase driveBase = new DriveBase();
@@ -104,8 +108,8 @@ public class RobotContainer {
 
     // Get Alliance
     public static Alliance getAlliance() {
-        //return Alliance.Blue;
-        return DriverStation.getAlliance();
+        return Alliance.Blue;
+        //return DriverStation.getAlliance();
     }
 
     // Toggle Brakes (in drive and claw)
@@ -122,7 +126,21 @@ public class RobotContainer {
     }
 
     // Run Shuffleboard (even when disabled)
-    public void shuffleboardUpdate() { shuffleboard.periodic(); }
+    //public void shuffleboardUpdate() { shuffleboard.periodic(); }
+    // TODO testing
+    public void shuffleboardUpdate() { shuffleboard.periodic();
+        limeDump.log("Refresh");
+
+        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("tv").getDouble(0));
+        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("tx").getDouble(0));
+        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("ty").getDouble(0));
+        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("botpose").getDouble(0));
+
+        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-back").getEntry("tv").getDouble(0));
+        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-back").getEntry("tx").getDouble(0));
+        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-back").getEntry("ty").getDouble(0));
+        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-back").getEntry("botpose").getDouble(0));
+    }
 
     // Get Auto Command
     public Command getAutonomousCommand() {

@@ -204,7 +204,7 @@ public class ShuffleboardManager {
             .getEntry();
         
         piDistance = piTab.add("Distance", 0.0)
-            .withPosition(10,1)
+            .withPosition(9,0)
             .getEntry();
         
         piTab.add("Camera Server", new ConfigCommand(armPi::startCameraServer, "Start CS")).withPosition(6, 4);

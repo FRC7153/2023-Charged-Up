@@ -4,6 +4,7 @@ import com.frc7153.math.PIDConstant;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.Arm.ArmState;;
 
 /**
  * Stores constants the robot needs for math. 
@@ -44,8 +45,11 @@ public final class Constants {
      * Note that all distance measurements are in INCHES!
      */
     public static final class ArmConstants {
-        public static final PIDConstant kARM_PID = new PIDConstant(0.09, 0.3, 0.0).withOutputRange(-12.0, 12.0).withError(1.2).withIntegratorRange(-100.0, 100.0);
+        // Arm PID
+        public static final PIDConstant kARM_PID = new PIDConstant(0.15, 0.15, 0.0).withOutputRange(-12.0, 12.0).withError(1.2).withIntegratorRange(-100.0, 100.0);
         public static final PIDConstant kEXT_PID = new PIDConstant(0.01, 0.000001, 0).withError(0.05).withOutputRange(-8.0, 8.0);
+
+        public static final double kARM_FF = -0.009;
 
         public static final double kWINCH_TOLERANCE = 5.0;
         public static final double kANGLE_TOLERANCE = 12.0;
@@ -65,7 +69,7 @@ public final class Constants {
         public static final double kANGLE_RATIO = 160.0;
         public static final double kWINCH_RATIO = 20.0;
         
-        public static final double kMAX_REACH = 4.0 * 12.0;
+        public static final double kMAX_REACH = 4.0 * 12.0 + 3.0;
         public static final double kMAX_HEIGHT = 6.0 * 12.0 + 6.0;
 
         public static final double kCLEARANCE = 2.0;
@@ -98,25 +102,25 @@ public final class Constants {
         public static final Translation2d kREAR_GROUND = new Translation2d(-44.840, 12.048);
 
         // Front Placement
-        public static final Translation2d kFRONT_CUBE_MID = new Translation2d(41.67, 32.31);
-        public static final Translation2d kFRONT_CUBE_HIGH = new Translation2d(67.0, 47.39);
-        public static final Translation2d kFRONT_CONE_MID = new Translation2d(42.41, 41.97);
-        public static final Translation2d kFRONT_CONE_HIGH = new Translation2d(64.0, 60.0);
+        public static final ArmState kFRONT_CUBE_MID = ArmState.fromRots(84.25, 1.7);
+        public static final ArmState kFRONT_CUBE_HIGH = ArmState.fromRots(74.42, 156.9); // wrong
+        public static final ArmState kFRONT_CONE_MID = ArmState.fromRots(70.9, 44.76);
+        public static final ArmState kFRONT_CONE_HIGH = ArmState.fromRots(67.81, 189.8); // wrong
 
         // Rear Placement
-        public static final Translation2d kREAR_CUBE_MID = new Translation2d(-48.491, 47.645);
-        public static final Translation2d kREAR_CUBE_HIGH = new Translation2d(-64.0, 62.129);
-        public static final Translation2d kREAR_CONE_MID = new Translation2d(-49.348, 53.327);
-        public static final Translation2d kREAR_CONE_HIGH = new Translation2d(-60.954, 74.0);
+        public static final ArmState kREAR_CUBE_MID = ArmState.fromRots(-76.01, 42.9); // wrong
+        public static final ArmState kREAR_CUBE_HIGH = ArmState.fromRots(-67.9, 157.04);
+        public static final ArmState kREAR_CONE_MID = ArmState.fromRots(-64.83, 62.85);
+        public static final ArmState kREAR_CONE_HIGH = ArmState.fromRots(-58.5, 199.39);
 
         // Loading Station
-        public static final Translation2d kFRONT_LOADING_STATION = new Translation2d(39.410, 45.377);
-        public static final Translation2d kREAR_LOADING_STATION = new Translation2d(-29.841, 53.555);
+        public static final ArmState kFRONT_LOADING_STATION = ArmState.fromRots(68.45, 34.02);
+        public static final ArmState kREAR_LOADING_STATION = ArmState.fromRots(-57.13, 25.14);
     }
 
     /* CLAW CONSTANTS */
     public static final class ClawConstants {
-        public static final double kANGLE_RATIO = 25.0 * (36.0 / 16.0); 
+        public static final double kANGLE_RATIO = 25.0 * (36.0 / 16.0);
         
         public static final PIDConstant kHAND_PID = new PIDConstant(1.5, 0.0, 0.0).withOutputRange(-8.0, 8.0);
 
@@ -136,7 +140,7 @@ public final class Constants {
     public static final class AutoConstants {
         // Drive Pid
         public static final PIDConstant kDRIVE_PID = new PIDConstant(5.0, 2.1, 0.0).withIntegratorRange(-10.0, 10.0);
-        public static final PIDConstant kTHETA_PID = new PIDConstant(4.0, 2.0, 0.0).withIntegratorRange(-10.0, 10.0);
+        public static final PIDConstant kTHETA_PID = new PIDConstant(4.0, 2.5, 0.0).withIntegratorRange(-10.0, 10.0);
 
         // Balance
         public static final PIDConstant kBALANCE_PID = new PIDConstant(0.05, 0.0, 0.0);

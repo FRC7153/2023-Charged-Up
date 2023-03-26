@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.0765284129127775,
-        "y": 4.993659736182248
+        "x": 1.9300000000000002,
+        "y": 4.93
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0765284129127766,
-        "y": 4.993659736182248
+        "x": 2.929999999999998,
+        "y": 4.93
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -24,12 +24,12 @@
     },
     {
       "anchorPoint": {
-        "x": 6.120152470593039,
-        "y": 4.587083202786573
+        "x": 6.19,
+        "y": 4.5
       },
       "prevControl": {
-        "x": 4.796917302325887,
-        "y": 4.689853993999119
+        "x": 4.866764831732848,
+        "y": 4.602770791212546
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -45,9 +45,12 @@
       }
     }
   ],
+  "maxVelocity": 2.0,
+  "maxAcceleration": 1.0,
+  "isReversed": null,
   "markers": [
     {
-      "position": 0.6000710227272733,
+      "position": 0.32439630681818205,
       "names": [
         "clawFrontGrabPos"
       ]

@@ -43,7 +43,7 @@ public class FileDump {
      * @param msg
      * @return Success
      */
-    public boolean log(String msg) {
+    public boolean log(Object msg) {
         if (Robot.isSimulation()) {
             System.out.println(String.format("LOG %s -> %s -> %s", name, DateUtils.getInlineDate(), msg));
             return true;

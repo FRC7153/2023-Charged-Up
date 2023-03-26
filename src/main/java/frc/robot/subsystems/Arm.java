@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.frc7153.math.Encoder;
 import com.frc7153.math.MathUtils;
+import com.frc7153.math.ShuffleboardProfiledPIDController;
 import com.frc7153.math.Encoder.Range;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -10,11 +11,12 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
@@ -24,7 +26,17 @@ public class Arm extends SubsystemBase {
         public double angle;
         public double extension;
 
+        /**
+         * @param angle degrees, 0 upwards
+         * @param extension inches (joint to grab point)
+         */
         public ArmState(double angle, double extension) { this.angle = angle; this.extension = extension; }
+
+        /**
+         * @param angle degrees, 0 upwards
+         * @param extension rotations
+         */
+        public static ArmState fromRots(double angle, double extension) { return new ArmState(angle, ArmConstants.winchRotsToTargetExt(extension)); }
     }
 
     // Motors
@@ -32,8 +44,7 @@ public class Arm extends SubsystemBase {
     private CANSparkMax winchMotor = new CANSparkMax(15, MotorType.kBrushless);
 
     // PID
-    //private PIDController anglePID = ArmConstants.kARM_PID.toWPIPidController();
-    private ProfiledPIDController anglePID = ArmConstants.kARM_PID.toWPIProfiledPidController(ArmConstants.kMAX_ANGLE_VELOCITY, ArmConstants.kMAX_ANGLE_ACCELERATION);
+    private ShuffleboardProfiledPIDController anglePID = ArmConstants.kARM_PID.toWPIProfiledPidController(ArmConstants.kMAX_ANGLE_VELOCITY, ArmConstants.kMAX_ANGLE_ACCELERATION);
     private SparkMaxPIDController winchPID = winchMotor.getPIDController();
 
     private Double angleSP = Double.NaN;
@@ -50,6 +61,8 @@ public class Arm extends SubsystemBase {
 
     // State
     public boolean hasBeenReleased = false;
+
+    GenericEntry tempFF = Shuffleboard.getTab("Arm test").add("kFF", -0.009).getEntry();
 
     // Init
     public Arm() {
@@ -73,6 +86,8 @@ public class Arm extends SubsystemBase {
     public void periodic() { periodic(false); }
 
     public void periodic(boolean testing) {
+        anglePID.refresh();
+
         if (!DriverStation.isDisabled() && !angleSP.isNaN() && !extSP.isNaN()) {
             // Verify winch motor is safe
             if (winchEnc.getPosition() < 0.0) {
@@ -116,7 +131,15 @@ public class Arm extends SubsystemBase {
             }
 
             // Set angle voltage
-            currentAngleVolts = anglePID.calculate(angleAbsEncoder.getPosition());
+            if (Math.abs(angRef) <= 0.08 && Math.abs(angleAbsEncoder.getPosition()) <= 10.0) {
+                // Stop the arm wiggling
+                currentAngleVolts = 0.0;
+                anglePID.reset(0.0);
+            }  else {
+                // Get voltage position
+                currentAngleVolts = anglePID.calculate(angleAbsEncoder.getPosition());
+                currentAngleVolts += (Math.sin(Units.degreesToRadians(angleAbsEncoder.getPosition())) * winchEnc.getPosition()) * tempFF.getDouble(0.0); // Feed forward
+            }
             angleMotor.setVoltage(currentAngleVolts);
         }
     }
@@ -194,7 +217,7 @@ public class Arm extends SubsystemBase {
     }
 
     // Getters
-    public double getAngleSetpoint() { return angleSP; }
+    public double getAngleSetpoint() { return angRef; }
     public double getAngleActual() { return angleAbsEncoder.getPosition(); }
     public double getAngleVoltage() { return currentAngleVolts; }
     public double getAngleCurrent() { return angleMotor.getOutputCurrent(); }

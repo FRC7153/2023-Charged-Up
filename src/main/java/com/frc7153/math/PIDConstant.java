@@ -112,8 +112,8 @@ public class PIDConstant {
      * Creates a new WPI Profiled PID controller and returns it.
      * @return 
      */
-    public ProfiledPIDController toWPIProfiledPidController(double maxVelocity, double maxAccel) {
-        ProfiledPIDController pid = new ProfiledPIDController(kP, kI, kD, new Constraints(maxVelocity, maxAccel));
+    public ShuffleboardProfiledPIDController toWPIProfiledPidController(double maxVelocity, double maxAccel) {
+        ShuffleboardProfiledPIDController pid = new ShuffleboardProfiledPIDController("Arm test", kP, kI, kD, new Constraints(maxVelocity, maxAccel));
 
         if (!kERR.isNaN()) { pid.setTolerance(kERR); }
         if (kMIN_I.isNaN()) { pid.setIntegratorRange(kMIN_I, kMAX_I); }

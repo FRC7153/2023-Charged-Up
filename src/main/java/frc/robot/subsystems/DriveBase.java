@@ -43,7 +43,7 @@ public class DriveBase extends SubsystemBase {
         setPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)));
 
         // Config max speeds (only used for percentages, not autos)
-        base.setMaxSpeed(4.75, 540.0); // 1.5, 360.0
+        base.setMaxSpeed(5.25, 540.0); // 1.5, 360.0
     }
 
     // Get Odometry Position
@@ -60,7 +60,7 @@ public class DriveBase extends SubsystemBase {
             return new Pose2d(
                 -base.getOdometryPose().getX(),
                 4.0 - base.getOdometryPose().getY() + 4.0,
-                base.getOdometryPose().getRotation()
+                Rotation2d.fromDegrees(-base.getOdometryPose().getRotation().getDegrees())
             );
         } else {
             return new Pose2d(
@@ -80,7 +80,7 @@ public class DriveBase extends SubsystemBase {
                 imu.getYaw(), 
                 -origin.getX(), 
                 4.0 - origin.getY() + 4.0, 
-                MathUtils.normalizeAngle180(origin.getRotation().getDegrees())
+                MathUtils.normalizeAngle180(-origin.getRotation().getDegrees())
             );
         } else {
             base.startOdometry(
