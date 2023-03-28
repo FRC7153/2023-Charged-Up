@@ -24,12 +24,37 @@
     },
     {
       "anchorPoint": {
-        "x": 6.19,
+        "x": 6.0,
         "y": 4.5
       },
       "prevControl": {
-        "x": 4.866764831732848,
-        "y": 4.602770791212546
+        "x": 4.655757152423396,
+        "y": 4.566422909069595
+      },
+      "nextControl": {
+        "x": 4.655757152423396,
+        "y": 4.566422909069595
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.0,
+        "y": 4.38
+      },
+      "prevControl": {
+        "x": 3.7033940062985025,
+        "y": 4.834524761497075
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -50,9 +75,27 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.32439630681818205,
+      "position": 0.14808238636363635,
       "names": [
         "clawFrontGrabPos"
+      ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "armUp"
+      ]
+    },
+    {
+      "position": 0.9946732954545456,
+      "names": [
+        "grab"
+      ]
+    },
+    {
+      "position": 1.2024857954545447,
+      "names": [
+        "armUp"
       ]
     }
   ]

@@ -3,13 +3,16 @@ package frc.robot.autos;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmPositions;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.GrabPositions;
 import frc.robot.commands.GrabCommand;
 import frc.robot.commands.PresetArmCommand;
@@ -34,6 +37,10 @@ public class Autonomous {
     // Event Map
     public HashMap<String, Command> autoEventMap = new HashMap<>();
 
+    // Create Instant Arm Command
+    private Command instantArmCommand(double x, double y) { return new InstantCommand(() -> { arm.setTarget(x, y);}, arm); }
+    private Command instantArmCommand(Translation2d pos) { return new InstantCommand(() -> { arm.setTarget(pos); }, arm); }
+
     // Constructor
     public Autonomous(DriveBase driveSubsys, Arm armSubsys, Claw clawSubsys) {
         // Save subsystems
@@ -46,14 +53,20 @@ public class Autonomous {
         autoChooser.addOption("Basic - Time-based drive", this::createSimpleDriveAuto);
         autoChooser.addOption("Testing - Time-based shake drive", this::createSimpleShakeAuto);
         autoChooser.addOption("Testing - Square Test Trajectory", this::createTestTrajAuto);
-        autoChooser.addOption("Spot 1 - 3 Piece", this::createSpot1_3PieceAuto);
+        autoChooser.addOption("Spot 1 - 2 Piece", this::createSpot1_2PieceAuto);
 
         // Create event map //
+        // Bring arm to straight up
+        autoEventMap.put("armUp", instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT));
+
         // Bring claw to front ground and open
         autoEventMap.put("clawFrontGrabPos", new ParallelCommandGroup(
-            new InstantCommand(() -> { arm.setTarget(ArmPositions.kFRONT_GROUND); }, arm),
-            new InstantCommand(() -> { claw.setPosition(GrabPositions.RELEASE); }, claw)
+            instantArmCommand(AutoConstants.kFRONT_CUBE_GROUND),
+            new GrabCommand(clawSubsys, GrabPositions.WIDE_RELEASE)
         ));
+
+        // Grab with claw
+        autoEventMap.put("grab", new GrabCommand(clawSubsys, GrabPositions.GRAB));
     }
 
     // Get Selected Auto
@@ -91,18 +104,24 @@ public class Autonomous {
 
     // SPOT 1
     // 3 Piece Auto
-    public Command createSpot1_3PieceAuto() {
+    public Command createSpot1_2PieceAuto() {
         return new SequentialCommandGroup(
             new UnlockClawCommand(claw, arm, true),
             // Piece 1 (CONE, staged)
             new GrabCommand(claw, GrabPositions.GRAB),
-            new PresetArmCommand(arm, ArmPositions.kREAR_CONE_HIGH),
+            //new PresetArmCommand(arm, new ArmState(-45.0, 215.39)),
+            new PresetArmCommand(arm, AutoConstants.kREAR_CONE_HIGH),
+            new GrabCommand(claw, GrabPositions.STOW),
+            new WaitCommand(0.2),
             new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
-            new PresetArmCommand(arm, new ArmState(0.0, ArmConstants.kJOINT_TO_EXT_PT)),
-            new GrabCommand(claw, GrabPositions.RELEASE),
             // Grab Piece 2 (CUBE)
-            drive.getTrajectoryCommand("spot1/spot1ToPiece1", autoEventMap, true, 2.0, 1.0)
-            //new GrabCommand(claw, GrabPositions.GRAB)
+            drive.getTrajectoryCommand("spot1/spot1ToPiece1", autoEventMap, true, 2.0, 1.0),
+            new PresetArmCommand(arm, ArmPositions.kREAR_CUBE_HIGH),
+            new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
+            new WaitCommand(0.4),
+            new GrabCommand(claw, GrabPositions.RELEASE),
+            // Balance
+            drive.getTrajectoryCommand("spot1/spot1Piece2Balance", autoEventMap, false, 2.0, 1.0)
         );
     }
 }

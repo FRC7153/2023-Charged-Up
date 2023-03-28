@@ -8,6 +8,7 @@ import java.util.Map;
 import com.frc7153.commands.ConfigCommand;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -203,7 +204,7 @@ public class ShuffleboardManager {
         piTarget = piTab.add("Target Info", "No target")
             .getEntry();
         
-        piDistance = piTab.add("Distance", 0.0)
+        piDistance = piTab.add("Distance (in)", 0.0)
             .withPosition(9,0)
             .getEntry();
         
@@ -300,7 +301,7 @@ public class ShuffleboardManager {
         piAge.setDouble(armPi.getAge());
         piVoltageStable.setBoolean(armPi.getVoltageStable());
         piCache.setString(armPi.getCache());
-        piDistance.setDouble(armPi.getDistance());
+        piDistance.setDouble(Units.metersToInches(armPi.getDistance() / 1000.0)); // convert to inches
 
         if (armPi.hasTarget()) {
             piTarget.setString(String.format("Sees %s at %s, %s", armPi.getIsCone() ? "cone" : "cube", armPi.getXTargetAngle(), armPi.getYTargetAngle()));

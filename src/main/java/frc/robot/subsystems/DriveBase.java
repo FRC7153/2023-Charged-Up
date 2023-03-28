@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.HashMap;
 
+import com.frc7153.commands.PPSwerveFinishControllerCommand;
 import com.frc7153.math.MathUtils;
 import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.wheeltypes.SwerveWheel_FN;
@@ -133,7 +134,7 @@ public class DriveBase extends SubsystemBase {
             });
         }
 
-        PPSwerveControllerCommand trajectoryCommand = new PPSwerveControllerCommand(
+        PPSwerveFinishControllerCommand trajectoryCommand = new PPSwerveFinishControllerCommand(
             trajectory,
             () -> { return this.getPose(true); },
             this.base.getKinematics(),
@@ -142,6 +143,8 @@ public class DriveBase extends SubsystemBase {
             AutoConstants.kTHETA_PID.toWPIPidController(),
             this::setWheelStates,
             false,
+            0.5,
+            2.0,
             this
         );
 
@@ -152,6 +155,14 @@ public class DriveBase extends SubsystemBase {
             new FollowPathWithEvents(trajectoryCommand, trajectory.getMarkers(), eventMap)
         );
     }
+
+    // TODO
+    /*public Command goToTrajectoryHomeCommand(String trajectoryName) {
+        PathPlannerTrajectory
+        try {
+
+        }
+    }*/
 
     public Command getTrajectoryCommand(String trajectoryName, HashMap<String, Command> eventMap, boolean resetPos) { return getTrajectoryCommand(trajectoryName, eventMap, resetPos, 2.0, 1.5); }
     

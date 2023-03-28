@@ -69,7 +69,7 @@ public final class Constants {
         public static final double kANGLE_RATIO = 160.0;
         public static final double kWINCH_RATIO = 20.0;
         
-        public static final double kMAX_REACH = 4.0 * 12.0 + 3.0;
+        public static final double kMAX_REACH = 4.0 * 12.0 + 2.0; // + 3.0
         public static final double kMAX_HEIGHT = 6.0 * 12.0 + 6.0;
 
         public static final double kCLEARANCE = 2.0;
@@ -139,8 +139,12 @@ public final class Constants {
     /* AUTO CONSTANTS */
     public static final class AutoConstants {
         // Drive Pid
-        public static final PIDConstant kDRIVE_PID = new PIDConstant(5.0, 2.1, 0.0).withIntegratorRange(-10.0, 10.0);
+        public static final PIDConstant kDRIVE_PID = new PIDConstant(3.25, 1.28, 0.0).withIntegratorRange(-10.0, 10.0); // 5.0, 2.1, 0.0
         public static final PIDConstant kTHETA_PID = new PIDConstant(4.0, 2.5, 0.0).withIntegratorRange(-10.0, 10.0);
+
+        // Auto-Specific Presets
+        public static final ArmState kREAR_CONE_HIGH = ArmState.fromRots(-56.7, 215.39);
+        public static final Translation2d kFRONT_CUBE_GROUND = new Translation2d(35.98, 3.0);
 
         // Balance
         public static final PIDConstant kBALANCE_PID = new PIDConstant(0.05, 0.0, 0.0);
