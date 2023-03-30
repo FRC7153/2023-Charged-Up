@@ -42,9 +42,10 @@ public class OI {
         public static final double getY() { return controller.getY(); }
         public static final double getThrottle() { return controller.getThrottle(); }
 
-        // Buttons
+        // Trigger
         public static final JoystickButton trigger = new JoystickButton(controller, Joystick.ButtonType.kTrigger.value);
 
+        // Left Number Buttons
         public static final JoystickButton button2 = new JoystickButton(controller, 2);
         public static final JoystickButton button5 = new JoystickButton(controller, 5);
         public static final JoystickButton button7 = new JoystickButton(controller, 7);
@@ -53,5 +54,9 @@ public class OI {
         public static final JoystickButton button10 = new JoystickButton(controller, 10);
         public static final JoystickButton button11 = new JoystickButton(controller, 11);
         public static final JoystickButton button12 = new JoystickButton(controller, 12);
+
+        // Thumb Buttons
+        public static final JoystickButton lowerLeftTopButton = new JoystickButton(controller, 3);
+        public static final JoystickButton lowerRightTopButton = new JoystickButton(controller, 4);
     }
 }

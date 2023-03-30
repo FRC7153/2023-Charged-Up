@@ -109,6 +109,16 @@ public class PIDConstant {
     }
 
     /**
+     * Creates a new Shuffleboard PID controller and returns it.
+     * @return
+     */
+    public ShuffleboardPIDController toShuffleboardPIDController(String name) {
+        ShuffleboardPIDController pid = new ShuffleboardPIDController(name, 0.0, 0.0, 0.0);
+        apply(pid);
+        return pid;
+    }
+
+    /**
      * Creates a new WPI Profiled PID controller and returns it.
      * @return 
      */

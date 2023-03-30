@@ -8,19 +8,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmPositions;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.GrabPositions;
+import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GrabCommand;
 import frc.robot.commands.PresetArmCommand;
 import frc.robot.commands.UnlockClawCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveBase;
-import frc.robot.subsystems.Arm.ArmState;
 
 /**
  * Manages auto events and commands
@@ -54,6 +56,7 @@ public class Autonomous {
         autoChooser.addOption("Testing - Time-based shake drive", this::createSimpleShakeAuto);
         autoChooser.addOption("Testing - Square Test Trajectory", this::createTestTrajAuto);
         autoChooser.addOption("Spot 1 - 2 Piece", this::createSpot1_2PieceAuto);
+        autoChooser.addOption("Spot 3 - 2 Piece", this::createSpot3_2PieceAuto);
 
         // Create event map //
         // Bring arm to straight up
@@ -103,10 +106,11 @@ public class Autonomous {
     }
 
     // SPOT 1
-    // 3 Piece Auto
+    // 2 Piece Auto
     public Command createSpot1_2PieceAuto() {
         return new SequentialCommandGroup(
-            new UnlockClawCommand(claw, arm, true),
+            // Unlock Claw
+            new InstantCommand(() -> { arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); }),
             // Piece 1 (CONE, staged)
             new GrabCommand(claw, GrabPositions.GRAB),
             //new PresetArmCommand(arm, new ArmState(-45.0, 215.39)),
@@ -115,13 +119,35 @@ public class Autonomous {
             new WaitCommand(0.2),
             new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
             // Grab Piece 2 (CUBE)
-            drive.getTrajectoryCommand("spot1/spot1ToPiece1", autoEventMap, true, 2.0, 1.0),
+            drive.getTrajectoryCommand("redSpot1/spot1ToPiece1", autoEventMap, true, 3.0, 1.5), // 2.0, 1.0
             new PresetArmCommand(arm, ArmPositions.kREAR_CUBE_HIGH),
             new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
-            new WaitCommand(0.4),
+            new WaitCommand(0.3),
             new GrabCommand(claw, GrabPositions.RELEASE),
-            // Balance
-            drive.getTrajectoryCommand("spot1/spot1Piece2Balance", autoEventMap, false, 2.0, 1.0)
+            instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT)
+        );
+    }
+
+    // SPOT 3
+    // 2 Piece Auto
+    public Command createSpot3_2PieceAuto() {
+        return new SequentialCommandGroup(
+            // Unlock Claw
+            new InstantCommand(() -> { arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); }),
+            // Piece 1 (CONE, staged)
+            new GrabCommand(claw, GrabPositions.GRAB),
+            //new PresetArmCommand(arm, new ArmState(-45.0, 215.39)),
+            new PresetArmCommand(arm, AutoConstants.kREAR_CONE_HIGH),
+            new GrabCommand(claw, GrabPositions.STOW),
+            new WaitCommand(0.2),
+            new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
+            // Grab Piece 2 (CUBE)
+            drive.getTrajectoryCommand("redSpot3/spot3ToPiece1", autoEventMap, true, 3.0, 1.5), // 2.0, 1.0
+            new PresetArmCommand(arm, ArmPositions.kREAR_CUBE_HIGH),
+            new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
+            new WaitCommand(0.3),
+            new GrabCommand(claw, GrabPositions.RELEASE),
+            instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT)
         );
     }
 }

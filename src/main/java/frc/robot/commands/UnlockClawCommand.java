@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.GrabPositions;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -37,7 +38,7 @@ public class UnlockClawCommand extends CommandBase {
 
         arm.setAngle((doNotExtend) ? Double.NaN : 0.0);
 
-        arm.setWinchEncPosition(6.5); // 2.54
+        arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); // 2.54
         arm.setExtension(0.0);
     }
 

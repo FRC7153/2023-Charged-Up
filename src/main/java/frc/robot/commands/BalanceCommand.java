@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import com.frc7153.math.MathUtils;
+import com.frc7153.math.ShuffleboardPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -9,7 +10,7 @@ import frc.robot.subsystems.DriveBase;
 
 public class BalanceCommand extends CommandBase {
     // PID Control
-    private static PIDController balancePid = AutoConstants.kBALANCE_PID.toWPIPidController();
+    private static ShuffleboardPIDController balancePid = AutoConstants.kBALANCE_PID.toShuffleboardPIDController("Balance PID");
 
     // Drive Subsystem
     private DriveBase drive;
@@ -32,9 +33,11 @@ public class BalanceCommand extends CommandBase {
     // Run
     @Override
     public void execute() {
+        balancePid.refresh();
+
         System.out.println(String.format("Angle is -> %s", drive.imu.getPitch()));
-        double speed = MathUtils.symmetricClamp(balancePid.calculate(drive.imu.getPitch()), AutoConstants.kMAX_BALANCE_SPEED);
-        drive.driveRobotOriented(0.0, speed, 0.0);
+        double speed = balancePid.calculate(drive.imu.getPitch());
+        drive.driveRobotOriented(0.0, -speed, 0.0);
     }
 
     // End

@@ -2,12 +2,14 @@ package frc.robot;
 
 import java.util.function.BooleanSupplier;
 
+import com.frc7153.controllers.RevBlinkin.BlinkinSolidColor;
 import com.frc7153.logging.FileDump;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmPositions;
 import frc.robot.OI.Controller0;
 import frc.robot.OI.Controller1;
@@ -24,6 +26,7 @@ import frc.robot.peripherals.ShuffleboardManager;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveBase;
+import frc.robot.subsystems.LED;
 
 public class RobotContainer {
     // Peripherals
@@ -36,6 +39,7 @@ public class RobotContainer {
     private final DriveBase driveBase = new DriveBase();
     private final Arm arm = new Arm();
     private final Claw claw = new Claw();
+    private final LED led = new LED(0);
 
     // Autonomous
     private Autonomous auto = new Autonomous(driveBase, arm, claw);
@@ -93,6 +97,10 @@ public class RobotContainer {
         Controller1.button12.whileTrue(new PresetArmCommand(arm, ArmPositions.kREAR_GROUND).repeatedly());
 
         Controller1.trigger.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kREAR_LOADING_STATION, ArmPositions.kFRONT_LOADING_STATION).repeatedly()); // Opposite of the above commands
+
+        // Control LED Colors
+        Controller1.lowerLeftTopButton.onTrue(new InstantCommand(() -> { led.setColor(BlinkinSolidColor.YELLOW); }, led));
+        Controller1.lowerRightTopButton.onTrue(new InstantCommand(() -> { led.setColor(BlinkinSolidColor.VIOLET); }, led));
 
         // Auto Balance
         //Controller0.aButton.whileTrue(new BalanceCommand(driveBase));

@@ -54,6 +54,8 @@ public final class Constants {
         public static final double kWINCH_TOLERANCE = 5.0;
         public static final double kANGLE_TOLERANCE = 12.0;
 
+        public static final double kWINCH_HOME_ROT_POS = 6.5;
+
         public static final double kMAX_ANGLE_VELOCITY = 100.0;
         public static final double kMAX_ANGLE_ACCELERATION = 100.0;
 
@@ -144,12 +146,10 @@ public final class Constants {
 
         // Auto-Specific Presets
         public static final ArmState kREAR_CONE_HIGH = ArmState.fromRots(-56.7, 215.39);
-        public static final Translation2d kFRONT_CUBE_GROUND = new Translation2d(35.98, 3.0);
+        public static final Translation2d kFRONT_CUBE_GROUND = new Translation2d(37.98, 3.0);
 
         // Balance
-        public static final PIDConstant kBALANCE_PID = new PIDConstant(0.05, 0.0, 0.0);
-
-        public static final double kMAX_BALANCE_SPEED = 0.8;
+        public static final PIDConstant kBALANCE_PID = new PIDConstant(0.0, 0.0, 0.0);
     }
 
     /* FLIPPER CONSTANTS */

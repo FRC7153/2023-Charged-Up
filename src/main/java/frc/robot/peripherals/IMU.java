@@ -15,6 +15,9 @@ public class IMU {
     // IMU
     private ADIS16470_IMU imu = new ADIS16470_IMU();
     private double lastCalibration = Timer.getFPGATimestamp();
+
+    // Offsets
+    private double yawOffset = 0.0;
     
     // Set Yaw on init
     public IMU() {
@@ -23,9 +26,10 @@ public class IMU {
 
     // Calibrate
     public void calibrate() {
-        imu.configCalTime(CalibrationTime._1s);
-        imu.calibrate();
+        //imu.configCalTime(CalibrationTime._1s);
+        //imu.calibrate();
         imu.reset();
+        yawOffset = imu.getXComplementaryAngle();
         lastCalibration = Timer.getFPGATimestamp();
         DriverStation.reportWarning("Calibrating Gyro!", false);
     }
@@ -59,6 +63,6 @@ public class IMU {
     public boolean isCalibrated() { return imu.isConnected() && Timer.getFPGATimestamp() - lastCalibration >= 1.0; }
 
     public double getYaw() { return MathUtils.normalizeAngle360(imu.getAngle()); }
-    public double getRoll() { return MathUtils.normalizeAngle360(imu.getYComplementaryAngle()); }
-    public double getPitch() { return MathUtils.normalizeAngle360(imu.getXComplementaryAngle()); }
+    public double getRoll() { return imu.getXComplementaryAngle(); }
+    public double getPitch() { return imu.getXFilteredAccelAngle(); }
 }
