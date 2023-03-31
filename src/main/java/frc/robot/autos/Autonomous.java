@@ -4,19 +4,18 @@ import java.util.HashMap;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmPositions;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.GrabPositions;
-import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GrabCommand;
 import frc.robot.commands.PresetArmCommand;
 import frc.robot.commands.UnlockClawCommand;
@@ -119,7 +118,13 @@ public class Autonomous {
             new WaitCommand(0.2),
             new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
             // Grab Piece 2 (CUBE)
-            drive.getTrajectoryCommand("redSpot1/spot1ToPiece1", autoEventMap, true, 3.0, 1.5), // 2.0, 1.0
+            drive.getTrajectoryCommand(
+                String.format("%sSpot1/spot1ToPiece1", RobotContainer.getAlliance().equals(Alliance.Red) ? "red" : "blue"), 
+                autoEventMap, 
+                true, 
+                3.0, // 2.0
+                1.5 //1.0
+            ),
             new PresetArmCommand(arm, ArmPositions.kREAR_CUBE_HIGH),
             new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
             new WaitCommand(0.3),
@@ -142,7 +147,13 @@ public class Autonomous {
             new WaitCommand(0.2),
             new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
             // Grab Piece 2 (CUBE)
-            drive.getTrajectoryCommand("redSpot3/spot3ToPiece1", autoEventMap, true, 3.0, 1.5), // 2.0, 1.0
+            drive.getTrajectoryCommand(
+                String.format("redSpot3/spot3ToPiece1", RobotContainer.getAlliance().equals(Alliance.Red) ? "red" : "blue"), 
+                autoEventMap, 
+                true, 
+                3.0, // 2.0
+                1.5 // 1.0
+            ),
             new PresetArmCommand(arm, ArmPositions.kREAR_CUBE_HIGH),
             new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
             new WaitCommand(0.3),

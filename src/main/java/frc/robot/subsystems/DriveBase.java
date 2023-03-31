@@ -9,18 +9,15 @@ import com.frc7153.swervedrive.wheeltypes.SwerveWheel_FN;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.peripherals.IMU;
@@ -48,49 +45,32 @@ public class DriveBase extends SubsystemBase {
     }
 
     // Get Odometry Position
-    public Pose2d getPose(boolean allianceOrient) {
+    public Pose2d getPose() {
         // Collect positions
-        Pose2d baseOdometry = new Pose2d(
+        /*Pose2d baseOdometry = new Pose2d(
             base.getOdometryPose().getX(),
             base.getOdometryPose().getY(),
             base.getOdometryPose().getRotation()
-        );
+        );*/
 
-        // Orient to alliances (invert if red)
-        if (RobotContainer.getAlliance().equals(Alliance.Blue)) {
-            return new Pose2d(
-                -base.getOdometryPose().getX(),
-                4.0 - base.getOdometryPose().getY() + 4.0,
-                Rotation2d.fromDegrees(-base.getOdometryPose().getRotation().getDegrees())
-            );
-        } else {
-            return new Pose2d(
-                -base.getOdometryPose().getX(),
-                base.getOdometryPose().getY(),
-                Rotation2d.fromDegrees(base.getOdometryPose().getRotation().getDegrees())
-            );
-        }
+        // Orient to field
+        return new Pose2d(
+            -base.getOdometryPose().getX(),
+            4.0 - base.getOdometryPose().getY() + 4.0,
+            Rotation2d.fromDegrees(-base.getOdometryPose().getRotation().getDegrees())
+        );
     }
 
-    // Reset Odometry Position
+    // Reset Odometry Position (Relative to field)
     public void setPose(Pose2d origin) {
         DriverStation.reportWarning(origin.toString(), false);
 
-        if (RobotContainer.getAlliance().equals(Alliance.Blue)) {
-            base.startOdometry(
-                imu.getYaw(), 
-                -origin.getX(), 
-                4.0 - origin.getY() + 4.0, 
-                MathUtils.normalizeAngle180(-origin.getRotation().getDegrees())
-            );
-        } else {
-            base.startOdometry(
-                imu.getYaw(), 
-                -origin.getX(), 
-                origin.getY(), 
-                MathUtils.normalizeAngle180(origin.getRotation().getDegrees())
-            );
-        }
+        base.startOdometry(
+            imu.getYaw(), 
+            -origin.getX(), 
+            4.0 - origin.getY() + 4.0, 
+            MathUtils.normalizeAngle180(-origin.getRotation().getDegrees())
+        );
         //imu.resetPose(origin);
     }
 
@@ -100,17 +80,10 @@ public class DriveBase extends SubsystemBase {
         base.updateOdometry(imu.getYaw());
     }
 
-    // Set Wheel Speeds (with alliance orientation, inverted if red)
+    // Set Wheel Speeds (from trajectory)
     public void setWheelStates(SwerveModuleState[] states) {
-        if (RobotContainer.getAlliance().equals(Alliance.Blue)) {
-            for (SwerveModuleState s : states) {
-                s.speedMetersPerSecond = -s.speedMetersPerSecond;
-            }
-        } else {
-            for (SwerveModuleState s : states) {
-                s.angle = Rotation2d.fromDegrees(-MathUtils.normalizeAngle180(s.angle.getDegrees()));
-                s.speedMetersPerSecond = -s.speedMetersPerSecond;
-            }
+        for (SwerveModuleState s : states) {
+            s.speedMetersPerSecond = -s.speedMetersPerSecond;
         }
 
         base.distributeStates(states);
@@ -136,7 +109,7 @@ public class DriveBase extends SubsystemBase {
 
         PPSwerveFinishControllerCommand trajectoryCommand = new PPSwerveFinishControllerCommand(
             trajectory,
-            () -> { return this.getPose(true); },
+            this::getPose,
             this.base.getKinematics(),
             AutoConstants.kDRIVE_PID.toWPIPidController(),
             AutoConstants.kDRIVE_PID.toWPIPidController(),

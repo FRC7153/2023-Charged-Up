@@ -282,10 +282,10 @@ public class ShuffleboardManager {
         // Drive
         driveGyroConnected.setBoolean(drive.imu.isCalibrated());
         driveHandUnlocked.setBoolean(arm.hasBeenReleased);
-        drivePos.setString(drive.getPose(true).toString());
+        drivePos.setString(drive.getPose().toString());
 
         if (ShuffleboardConstants.kFIELD_PLOT) {
-            Pose2d robotPose = drive.getPose(true);
+            Pose2d robotPose = drive.getPose();
             driveField.setRobotPose(robotPose.getX(), robotPose.getY(), robotPose.getRotation());
         }
 
