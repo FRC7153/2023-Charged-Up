@@ -148,7 +148,7 @@ public class Autonomous {
             new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
             // Grab Piece 2 (CUBE)
             drive.getTrajectoryCommand(
-                String.format("redSpot3/spot3ToPiece1", RobotContainer.getAlliance().equals(Alliance.Red) ? "red" : "blue"), 
+                String.format("%sSpot3/spot3ToPiece1", RobotContainer.getAlliance().equals(Alliance.Red) ? "red" : "blue"), 
                 autoEventMap, 
                 true, 
                 3.0, // 2.0
