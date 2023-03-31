@@ -113,7 +113,7 @@ public class PIDConstant {
      * @return
      */
     public ShuffleboardPIDController toShuffleboardPIDController(String name) {
-        ShuffleboardPIDController pid = new ShuffleboardPIDController(name, 0.0, 0.0, 0.0);
+        ShuffleboardPIDController pid = new ShuffleboardPIDController(name, kP, kI, kD);
         apply(pid);
         return pid;
     }

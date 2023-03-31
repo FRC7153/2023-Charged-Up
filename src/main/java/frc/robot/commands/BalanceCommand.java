@@ -10,7 +10,7 @@ import frc.robot.subsystems.DriveBase;
 
 public class BalanceCommand extends CommandBase {
     // PID Control
-    private static ShuffleboardPIDController balancePid = AutoConstants.kBALANCE_PID.toShuffleboardPIDController("Balance PID");
+    private static PIDController balancePid = AutoConstants.kBALANCE_PID.toWPIPidController();
 
     // Drive Subsystem
     private DriveBase drive;
@@ -33,8 +33,6 @@ public class BalanceCommand extends CommandBase {
     // Run
     @Override
     public void execute() {
-        balancePid.refresh();
-
         System.out.println(String.format("Angle is -> %s", drive.imu.getPitch()));
         double speed = balancePid.calculate(drive.imu.getPitch());
         drive.driveRobotOriented(0.0, -speed, 0.0);

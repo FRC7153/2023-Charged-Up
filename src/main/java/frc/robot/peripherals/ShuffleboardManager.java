@@ -6,6 +6,7 @@ package frc.robot.peripherals;
 import java.util.Map;
 
 import com.frc7153.commands.ConfigCommand;
+import com.frc7153.validation.ValidationManager;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
@@ -35,6 +36,8 @@ public class ShuffleboardManager {
     private Arm arm;
     private Claw claw;
     private DriveBase drive;
+
+    private ValidationManager validator;
 
     // Drive Tab
     private GenericEntry driveGyroConnected;
@@ -88,6 +91,15 @@ public class ShuffleboardManager {
         this.arm = arm;
         this.claw = claw;
         this.drive = drive;
+
+        // Init Validator
+        if (ShuffleboardConstants.kVALIDATE) {
+            validator = new ValidationManager();
+
+            
+
+            validator.start();
+        }
 
         // Drive Tab (Main)
         ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");

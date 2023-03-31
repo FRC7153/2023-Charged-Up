@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
@@ -56,6 +57,8 @@ public class Autonomous {
         autoChooser.addOption("Testing - Square Test Trajectory", this::createTestTrajAuto);
         autoChooser.addOption("Spot 1 - 2 Piece", this::createSpot1_2PieceAuto);
         autoChooser.addOption("Spot 3 - 2 Piece", this::createSpot3_2PieceAuto);
+        autoChooser.addOption("Spot 2 - Balance (!)", this::createSpot2_BalanceAuto);
+        autoChooser.addOption("Spot 2 - 1 Piece Balance (!)", this::createSpot2_1PieceBalanceAuto);
 
         // Create event map //
         // Bring arm to straight up
@@ -130,6 +133,36 @@ public class Autonomous {
             new WaitCommand(0.3),
             new GrabCommand(claw, GrabPositions.RELEASE),
             instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT)
+        );
+    }
+
+    // SPOT 2
+    // Only Balance
+    public Command createSpot2_BalanceAuto() {
+        return new AutoBalance(drive);
+    }
+
+    // 1 High, balance
+    public Command createSpot2_1PieceBalanceAuto() {
+        return new SequentialCommandGroup(
+            // Unlock Claw
+            new InstantCommand(() -> { arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); }),
+            // Piece 1 (CONE, staged)
+            new GrabCommand(claw, GrabPositions.GRAB),
+            //new PresetArmCommand(arm, new ArmState(-45.0, 215.39)),
+            new PresetArmCommand(arm, AutoConstants.kREAR_CONE_HIGH),
+            new GrabCommand(claw, GrabPositions.STOW),
+            new WaitCommand(0.2),
+            new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
+            // Claw to 0
+            instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT),
+            // Over shoot for taxi points
+            new InstantCommand(() -> drive.driveRobotOriented(0.0, -0.7, 0.0)),
+            new WaitCommand(5.0),
+            new PrintCommand("## MOVING TO BALANCE ROUTINE"),
+            new InstantCommand(() -> drive.driveRobotOriented(0.0, 0.0, 0.0)),
+            // Balance
+            new AutoBalance(drive, true)
         );
     }
 

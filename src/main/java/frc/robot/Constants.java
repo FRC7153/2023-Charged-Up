@@ -25,6 +25,7 @@ public final class Constants {
         public static final boolean kARM_GRAPHS = false;
         public static final boolean kCAMERA_STREAMS = true;
         public static final boolean kFIELD_PLOT = false;
+        public static final boolean kVALIDATE = false;
     }
 
     /* SWERVE DRIVE CONSTANTS */
@@ -71,7 +72,7 @@ public final class Constants {
         public static final double kANGLE_RATIO = 160.0;
         public static final double kWINCH_RATIO = 20.0;
         
-        public static final double kMAX_REACH = 4.0 * 12.0 + 2.0; // + 3.0
+        public static final double kMAX_REACH = 4.0 * 12.0; // + 2.0
         public static final double kMAX_HEIGHT = 6.0 * 12.0 + 6.0;
 
         public static final double kCLEARANCE = 2.0;
@@ -149,7 +150,7 @@ public final class Constants {
         public static final Translation2d kFRONT_CUBE_GROUND = new Translation2d(37.98, 3.0);
 
         // Balance
-        public static final PIDConstant kBALANCE_PID = new PIDConstant(0.0, 0.0, 0.0);
+        public static final PIDConstant kBALANCE_PID = new PIDConstant(5.0, 0.0, 0.1);
     }
 
     /* FLIPPER CONSTANTS */
