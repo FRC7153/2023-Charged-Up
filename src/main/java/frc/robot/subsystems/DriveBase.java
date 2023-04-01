@@ -6,6 +6,7 @@ import com.frc7153.commands.PPSwerveFinishControllerCommand;
 import com.frc7153.math.MathUtils;
 import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.wheeltypes.SwerveWheel_FN;
+import com.frc7153.validation.Validatable;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
@@ -25,7 +26,7 @@ import frc.robot.peripherals.IMU;
 /**
  * For controlling the swerve drive base
  */
-public class DriveBase extends SubsystemBase {
+public class DriveBase extends SubsystemBase implements Validatable {
     // Drive Base
     private SwerveWheel_FN fl = new SwerveWheel_FN(9, 5, 13, SwerveConstants.kWHEEL_DISTANCE.getX(), -SwerveConstants.kWHEEL_DISTANCE.getY(), SwerveConstants.kFL_OFFSET);
     private SwerveWheel_FN fr = new SwerveWheel_FN(10, 6, 14, -SwerveConstants.kWHEEL_DISTANCE.getX(), -SwerveConstants.kWHEEL_DISTANCE.getY() , SwerveConstants.kFR_OFFSET);
@@ -147,4 +148,34 @@ public class DriveBase extends SubsystemBase {
     public void driveRobotOriented(double x, double y, double rot) { base.drive(y, x, rot); }
     public void driveTankAbsolute(double lSpeed, double rSpeed) { base.tankDriveAbsolute(lSpeed, rSpeed);}
     public void setCoast(boolean coast) { base.toggleCoastMode(coast, true); }
+
+    // Validate for faults
+    private HashMap<String, Boolean> validationMap = new HashMap<>(17);
+
+    @Override
+    public HashMap<String, Boolean> validate() {
+        validationMap.put("Swerve 1 - Neo", rl.validateNEO());
+        validationMap.put("Swerve 1 - Falcon", rl.validateFalcon());
+        validationMap.put("Swerve 1 - Abs Enc", rl.validateCANCoder());
+        validationMap.put("Swerve 1 - Rel Enc", rl.validateRelEncoder());
+
+        validationMap.put("Swerve 2 - Neo", rr.validateNEO());
+        validationMap.put("Swerve 2 - Falcon", rr.validateFalcon());
+        validationMap.put("Swerve 2 - Abs Enc", rr.validateCANCoder());
+        validationMap.put("Swerve 2 - Rel Enc", rr.validateRelEncoder());
+
+        validationMap.put("Swerve 3 - Neo", fl.validateNEO());
+        validationMap.put("Swerve 3 - Falcon", fl.validateFalcon());
+        validationMap.put("Swerve 3 - Abs Enc", fl.validateCANCoder());
+        validationMap.put("Swerve 3 - Rel Enc", fl.validateRelEncoder());
+
+        validationMap.put("Swerve 4 - Neo", fr.validateNEO());
+        validationMap.put("Swerve 4 - Falcon", fr.validateFalcon());
+        validationMap.put("Swerve 4 - Abs Enc", fr.validateCANCoder());
+        validationMap.put("Swerve 4 - Rel Enc", fr.validateRelEncoder());
+
+        validationMap.put("Gyro", imu.isCalibrated());
+
+        return validationMap;
+    }
 }

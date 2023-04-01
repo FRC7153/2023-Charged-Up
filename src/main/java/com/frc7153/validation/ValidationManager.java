@@ -1,7 +1,9 @@
 package com.frc7153.validation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,8 +19,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
  */
 public class ValidationManager {
     // Objects
-    private ArrayList<Validatable> toValidate;
-    private HashMap<String, GenericPublisher> ntEntries; // For pushing to dashboards
+    private ArrayList<Validatable> toValidate = new ArrayList<>();
+    private Map<String, GenericPublisher> ntEntries = Collections.synchronizedMap(new HashMap<>()); // For pushing to dashboards
     private ShuffleboardLayout layout; // layout to publish to
 
     private ScheduledExecutorService threadRunner = Executors.newSingleThreadScheduledExecutor(); // Validate Thread runner
@@ -84,15 +86,19 @@ public class ValidationManager {
     // Thread
     private class ValidateThread implements Runnable {
         // Preallocated space for map
-        private HashMap<String, Boolean> checks;
+        private Map<String, Boolean> checks;
 
         @Override
         public void run() {
+            System.out.println("Validated!");
             for (Validatable obj : toValidate) {
+                System.out.println(obj.getClass().getName());
+
                 checks = obj.validate();
 
                 for (String id : checks.keySet()) {
                     // Add entry if it does not exist
+                    
                     if (!ntEntries.containsKey(id)) {
                         ntEntries.put(id, layout.add(id, false).getEntry());
                     }

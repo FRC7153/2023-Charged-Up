@@ -25,7 +25,7 @@ public final class Constants {
         public static final boolean kARM_GRAPHS = false;
         public static final boolean kCAMERA_STREAMS = true;
         public static final boolean kFIELD_PLOT = false;
-        public static final boolean kVALIDATE = false;
+        public static final boolean kVALIDATE = true;
     }
 
     /* SWERVE DRIVE CONSTANTS */
@@ -153,11 +153,8 @@ public final class Constants {
         public static final PIDConstant kBALANCE_PID = new PIDConstant(5.0, 0.0, 0.1);
     }
 
-    /* FLIPPER CONSTANTS */
-    public static final class FlipperConstants {
-        public static final double k0_ANGLE = 0.4;
-        public static final double kGEAR_RATIO = 25.0;
-
-        public static final double kMAX_ANGLE = 150.0; // Assumed that min is 0
+    /* PDH CONSTANTS */
+    public static final class PDHConstants {
+        public static final int[] kCHANNELS = {0, 1, 2, 3, 5, 6, 7, 8, 9, 15, 16, 17, 18, 20, 21, 22};
     }
 }

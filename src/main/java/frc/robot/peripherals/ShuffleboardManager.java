@@ -85,7 +85,7 @@ public class ShuffleboardManager {
     private GenericEntry tempHand;
 
     // Constructor (Init)
-    public ShuffleboardManager(RobotContainer container, Autonomous auto, ArmPI armPi, Arm arm, Claw claw, DriveBase drive) {
+    public ShuffleboardManager(RobotContainer container, Autonomous auto, ArmPI armPi, Arm arm, Claw claw, DriveBase drive, PDH pdh) {
         // Store objects
         this.armPi = armPi;
         this.arm = arm;
@@ -95,8 +95,12 @@ public class ShuffleboardManager {
         // Init Validator
         if (ShuffleboardConstants.kVALIDATE) {
             validator = new ValidationManager();
-
-            
+        
+            //validator.register(drive);
+            //validator.register(arm);
+            //validator.register(claw);
+            //validator.register(pdh);
+            validator.register(armPi);
 
             validator.start();
         }

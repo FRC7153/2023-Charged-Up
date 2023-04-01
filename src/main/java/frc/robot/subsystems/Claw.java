@@ -1,6 +1,10 @@
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+
 import com.frc7153.math.MathUtils;
+import com.frc7153.validation.DeviceChecker;
+import com.frc7153.validation.Validatable;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
@@ -13,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.GrabPositions;
 
-public class Claw extends SubsystemBase {
+public class Claw extends SubsystemBase implements Validatable {
     // Motors
     private CANSparkMax lHand = new CANSparkMax(18, MotorType.kBrushless);
     private CANSparkMax rHand = new CANSparkMax(17, MotorType.kBrushless);
@@ -91,4 +95,18 @@ public class Claw extends SubsystemBase {
 
     public double getLTemp() { return MathUtils.celsiusToFahrenheit(lHand.getMotorTemperature()); }
     public double getRTemp() { return MathUtils.celsiusToFahrenheit(rHand.getMotorTemperature()); }
+
+    // Validate
+    private HashMap<String, Boolean> validationMap = new HashMap<>(4);
+
+    @Override
+    public HashMap<String, Boolean> validate() {
+        validationMap.put("L Hand NEO", DeviceChecker.validateMotor(lHand));
+        validationMap.put("L Hand Encoders", DeviceChecker.validateEncoder(lHand));
+
+        validationMap.put("R Hand NEO", DeviceChecker.validateMotor(rHand));
+        validationMap.put("R Hand Encoders", DeviceChecker.validateEncoder(rHand));
+
+        return validationMap;
+    }
 }

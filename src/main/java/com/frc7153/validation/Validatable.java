@@ -1,6 +1,6 @@
 package com.frc7153.validation;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public interface Validatable {
     /**
@@ -8,7 +8,7 @@ public interface Validatable {
      * a dictionary with all their statuses. This dictionary will be the same size
      * each time.<br><br>
      * <b>All IDs should be UNIQUE!</b>
-     * @return HashMap with all the statuses
+     * @return HashMap with all the statuses (thread safe)
      */
-    public HashMap<String, Boolean> validate();
+    public Map<String, Boolean> validate();
 }

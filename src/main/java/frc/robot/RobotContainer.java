@@ -22,6 +22,7 @@ import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.commands.UnlockClawCommand;
 import frc.robot.peripherals.ArmPI;
 import frc.robot.peripherals.Limelight;
+import frc.robot.peripherals.PDH;
 import frc.robot.peripherals.ShuffleboardManager;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -33,6 +34,7 @@ public class RobotContainer {
     private final ArmPI armPi = new ArmPI();
     private final Limelight frontLL = new Limelight("front");
     private final Limelight rearLL = new Limelight("back");
+    private final PDH pdh = new PDH();
     public FileDump limeDump = new FileDump("limeDump");
 
     // Subsystems
@@ -54,7 +56,7 @@ public class RobotContainer {
         configureBindings();
 
         // Start Shuffleboard
-        shuffleboard = new ShuffleboardManager(this, auto, armPi, arm, claw, driveBase);
+        shuffleboard = new ShuffleboardManager(this, auto, armPi, arm, claw, driveBase, pdh);
     }
 
     // Configure Button Bindings (teleop drive are defined in getTeleopCommand())
@@ -135,7 +137,15 @@ public class RobotContainer {
     // Run Shuffleboard (even when disabled)
     public void shuffleboardUpdate() {
         shuffleboard.periodic();
-        limeDump.log(NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("camerapose_targetspace").getDoubleArray(new double[6]));
+        
+        // TODO temporary
+        double[] lfPos = NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("camerapose_targetspace").getDoubleArray(new double[6]);
+        double[] lrPos = NetworkTableInstance.getDefault().getTable("limelight-rear").getEntry("camerapose_targetspace").getDoubleArray(new double[6]);
+
+        /*limeDump.log(String.format("F LL -> %s, %s, %s, %s, %s, %s", lfPos[0], lfPos[1], lfPos[2], lfPos[3], lfPos[4], lfPos[5]));
+        limeDump.log(String.format("R LL -> %s, %s, %s, %s, %s, %s", lrPos[0], lrPos[1], lrPos[2], lrPos[3], lrPos[4], lrPos[5]));
+        limeDump.log(driveBase.getPose().toString());
+        limeDump.log(String.format("Gyro: r %s, p %s, y %s", driveBase.imu.getRoll(), driveBase.imu.getPitch(), driveBase.imu.getYaw()));*/
     }
 
     // Get Auto Command
