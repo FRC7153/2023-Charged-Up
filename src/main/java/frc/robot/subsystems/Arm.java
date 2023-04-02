@@ -91,7 +91,7 @@ public class Arm extends SubsystemBase implements Validatable {
     public void periodic() { periodic(false); }
 
     public void periodic(boolean testing) {
-        anglePID.refresh();
+        //anglePID.refresh();
 
         if (!DriverStation.isDisabled() && !angleSP.isNaN() && !extSP.isNaN()) {
             // Verify winch motor is safe

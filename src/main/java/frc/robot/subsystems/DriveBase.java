@@ -147,6 +147,8 @@ public class DriveBase extends SubsystemBase implements Validatable {
     public void driveFieldOriented(double x, double y, double rot) { base.driveFieldOriented(y, x, rot, imu.getYaw()); }
     public void driveRobotOriented(double x, double y, double rot) { base.drive(y, x, rot); }
     public void driveTankAbsolute(double lSpeed, double rSpeed) { base.tankDriveAbsolute(lSpeed, rSpeed);}
+    public void driveDiag(double forSpeed, double ang) { base.setAngle(ang); base.setSpeed(forSpeed * base.getMaxDriveSpeed()); }
+
     public void setCoast(boolean coast) { base.toggleCoastMode(coast, true); }
 
     // Validate for faults

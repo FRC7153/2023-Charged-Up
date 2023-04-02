@@ -64,6 +64,12 @@ public class Autonomous {
         // Bring arm to straight up
         autoEventMap.put("armUp", instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT));
 
+        autoEventMap.put("armSafeUp", new SequentialCommandGroup(
+            new InstantCommand(() -> { arm.setExtension(ArmConstants.kJOINT_TO_EXT_PT); }), 
+            new WaitCommand(0.5),
+            instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT)
+        ));
+
         // Bring claw to front ground and open
         autoEventMap.put("clawFrontGrabPos", new ParallelCommandGroup(
             instantArmCommand(AutoConstants.kFRONT_CUBE_GROUND),
@@ -139,7 +145,20 @@ public class Autonomous {
     // SPOT 2
     // Only Balance
     public Command createSpot2_BalanceAuto() {
-        return new AutoBalance(drive);
+        return new SequentialCommandGroup(
+            // Over shoot for taxi points
+            /*new InstantCommand(() -> drive.driveRobotOriented(0.0, -0.7, 0.0)),
+            new WaitCommand(3.0),
+            new PrintCommand("## MOVING TO BALANCE ROUTINE"),
+            new InstantCommand(() -> drive.driveRobotOriented(0.0, 0.0, 0.0)),
+            // Balance
+            */
+            instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT),
+            new InstantCommand(() -> drive.driveRobotOriented(0.0, -0.7, 0.0)),
+            new WaitCommand(3.5),
+            new InstantCommand(() -> drive.driveRobotOriented(0.0, 0.0, 0.0)),
+            new AutoBalance(drive, true)
+        );
     }
 
     // 1 High, balance
