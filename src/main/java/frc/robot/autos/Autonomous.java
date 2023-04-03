@@ -76,6 +76,12 @@ public class Autonomous {
             new GrabCommand(clawSubsys, GrabPositions.WIDE_RELEASE)
         ));
 
+        // Bring claw lower for certain autos
+        autoEventMap.put("clawFrontLowGrabPos", new ParallelCommandGroup(
+            instantArmCommand(AutoConstants.kFRONT_LOW_CUBE_GROUND),
+            new GrabCommand(clawSubsys, GrabPositions.WIDE_RELEASE)
+        ));
+
         // Grab with claw
         autoEventMap.put("grab", new GrabCommand(clawSubsys, GrabPositions.GRAB));
     }

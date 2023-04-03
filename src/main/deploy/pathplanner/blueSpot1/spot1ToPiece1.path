@@ -77,7 +77,7 @@
     {
       "position": 0.14808238636363635,
       "names": [
-        "clawFrontGrabPos"
+        "clawFrontLowGrabPos"
       ]
     },
     {
@@ -87,7 +87,7 @@
       ]
     },
     {
-      "position": 0.9946732954545456,
+      "position": 1.025,
       "names": [
         "grab"
       ]

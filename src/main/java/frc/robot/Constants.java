@@ -39,7 +39,7 @@ public final class Constants {
         public static final double kFL_OFFSET = 358.594;
         public static final double kFR_OFFSET = 285.381;
         public static final double kRL_OFFSET = 259.980;
-        public static final double kRR_OFFSET = 300.938;
+        public static final double kRR_OFFSET = 117.773 + 180.0; // 300.938
     }
 
     /* ARM MOVEMENT CONSTANTS */
@@ -151,6 +151,7 @@ public final class Constants {
         // Auto-Specific Presets
         public static final ArmState kREAR_CONE_HIGH = ArmState.fromRots(-56.7, 215.39);
         public static final Translation2d kFRONT_CUBE_GROUND = new Translation2d(37.98, 3.0);
+        public static final Translation2d kFRONT_LOW_CUBE_GROUND = new Translation2d(37.98, 0.9);
 
         // Balance
         public static final PIDConstant kBALANCE_PID = new PIDConstant(5.0, 0.0, 0.1);
