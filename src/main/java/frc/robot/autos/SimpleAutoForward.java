@@ -10,13 +10,17 @@ public class SimpleAutoForward extends CommandBase {
     private DriveBase drive;
     private Arm arm;
     private double startTime;
+    private double moveTime;
 
-    public SimpleAutoForward(DriveBase driveSubsystem, Arm armSubsystem) {
+    public SimpleAutoForward(DriveBase driveSubsystem, Arm armSubsystem, double  moveTime) {
         drive = driveSubsystem;
         arm = armSubsystem;
+        this.moveTime = moveTime;
 
         addRequirements(drive, arm);
     }
+
+    public SimpleAutoForward(DriveBase driveSubsystem, Arm armSubsystem) { this(driveSubsystem, armSubsystem, 2.5); }
 
     @Override
     public void initialize() {
@@ -32,7 +36,7 @@ public class SimpleAutoForward extends CommandBase {
 
     @Override
     public void execute() {
-        if (Timer.getFPGATimestamp() - startTime >= 2.5) {
+        if (Timer.getFPGATimestamp() - startTime >= moveTime) {
             DriverStation.reportWarning("AUTO STOPPED (time)", false);
             drive.stop();
         } else {

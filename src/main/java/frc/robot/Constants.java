@@ -120,7 +120,7 @@ public final class Constants {
         public static final ArmState kREAR_CONE_HIGH = ArmState.fromRots(-58.5, 199.39);
 
         // Loading Station
-        public static final ArmState kFRONT_LOADING_STATION = ArmState.fromRots(68.45, 34.02);
+        public static final ArmState kFRONT_LOADING_STATION = ArmState.fromRots(60.0, 26.33);
         public static final ArmState kREAR_LOADING_STATION = ArmState.fromRots(-57.13, 25.14);
     }
 

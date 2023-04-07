@@ -59,6 +59,7 @@ public class Autonomous {
         autoChooser.addOption("Spot 3 - 2 Piece", this::createSpot3_2PieceAuto);
         autoChooser.addOption("Spot 2 - Balance (!)", this::createSpot2_BalanceAuto);
         autoChooser.addOption("Spot 2 - 1 Piece Balance (!)", this::createSpot2_1PieceBalanceAuto);
+        autoChooser.addOption("Spot 1/3 - 1 Piece Drive", this::createAnySpot_1PieceMove);
 
         // Create event map //
         // Bring arm to straight up
@@ -152,18 +153,14 @@ public class Autonomous {
     // Only Balance
     public Command createSpot2_BalanceAuto() {
         return new SequentialCommandGroup(
-            // Over shoot for taxi points
-            /*new InstantCommand(() -> drive.driveRobotOriented(0.0, -0.7, 0.0)),
-            new WaitCommand(3.0),
-            new PrintCommand("## MOVING TO BALANCE ROUTINE"),
-            new InstantCommand(() -> drive.driveRobotOriented(0.0, 0.0, 0.0)),
-            // Balance
-            */
+            // Unlock arm
             instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT),
+            // Over shoot for taxi points
             new InstantCommand(() -> drive.driveRobotOriented(0.0, -0.7, 0.0)),
             new WaitCommand(3.5),
             new InstantCommand(() -> drive.driveRobotOriented(0.0, 0.0, 0.0)),
-            new AutoBalance(drive, true)
+            // Balancing
+            new AutoBalance(drive, arm)
         );
     }
 
@@ -174,7 +171,6 @@ public class Autonomous {
             new InstantCommand(() -> { arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); }),
             // Piece 1 (CONE, staged)
             new GrabCommand(claw, GrabPositions.GRAB),
-            //new PresetArmCommand(arm, new ArmState(-45.0, 215.39)),
             new PresetArmCommand(arm, AutoConstants.kREAR_CONE_HIGH),
             new GrabCommand(claw, GrabPositions.STOW),
             new WaitCommand(0.2),
@@ -183,11 +179,11 @@ public class Autonomous {
             instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT),
             // Over shoot for taxi points
             new InstantCommand(() -> drive.driveRobotOriented(0.0, -0.7, 0.0)),
-            new WaitCommand(5.0),
+            new WaitCommand(3.5),
             new PrintCommand("## MOVING TO BALANCE ROUTINE"),
             new InstantCommand(() -> drive.driveRobotOriented(0.0, 0.0, 0.0)),
             // Balance
-            new AutoBalance(drive, true)
+            new AutoBalance(drive, arm)
         );
     }
 
@@ -199,7 +195,6 @@ public class Autonomous {
             new InstantCommand(() -> { arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); }),
             // Piece 1 (CONE, staged)
             new GrabCommand(claw, GrabPositions.GRAB),
-            //new PresetArmCommand(arm, new ArmState(-45.0, 215.39)),
             new PresetArmCommand(arm, AutoConstants.kREAR_CONE_HIGH),
             new GrabCommand(claw, GrabPositions.STOW),
             new WaitCommand(0.2),
@@ -217,6 +212,23 @@ public class Autonomous {
             new WaitCommand(0.3),
             new GrabCommand(claw, GrabPositions.RELEASE),
             instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT)
+        );
+    }
+
+    // ANY SPOT
+    // Cone high and time based move
+    public Command createAnySpot_1PieceMove() {
+        return  new SequentialCommandGroup(
+            // Unlock Claw
+            new InstantCommand(() -> { arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); }),
+            // Piece 1 (CONE, staged)
+            new GrabCommand(claw, GrabPositions.GRAB),
+            new PresetArmCommand(arm, AutoConstants.kREAR_CONE_HIGH),
+            new GrabCommand(claw, GrabPositions.STOW),
+            new WaitCommand(0.2),
+            new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
+            // Move
+            new SimpleAutoForward(drive, arm, 3.0)
         );
     }
 }

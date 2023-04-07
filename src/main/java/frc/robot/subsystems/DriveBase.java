@@ -14,7 +14,10 @@ import com.pathplanner.lib.commands.FollowPathWithEvents;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -150,6 +153,7 @@ public class DriveBase extends SubsystemBase implements Validatable {
     public void driveDiag(double forSpeed, double ang) { base.setAngle(ang); base.setSpeed(forSpeed * base.getMaxDriveSpeed()); }
 
     public void setCoast(boolean coast) { base.toggleCoastMode(coast, true); }
+    public void lockWheels() { base.stop(false); base.setAngle(90.0); }
 
     // Validate for faults
     private HashMap<String, Boolean> validationMap = new HashMap<>(17);

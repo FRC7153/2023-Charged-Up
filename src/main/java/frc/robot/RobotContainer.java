@@ -4,13 +4,10 @@ import java.util.function.BooleanSupplier;
 
 import com.frc7153.controllers.RevBlinkin.BlinkinSolidColor;
 import com.frc7153.logging.FileDump;
-import com.frc7153.math.ShuffleboardPIDController;
 
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmPositions;
@@ -33,11 +30,6 @@ import frc.robot.subsystems.DriveBase;
 import frc.robot.subsystems.LED;
 
 public class RobotContainer {
-    // TEMP
-    public static ShuffleboardPIDController balancePID = new ShuffleboardPIDController("balance pid", 5.0, 0.0, 0.1);
-    public static GenericEntry balanceKFF = Shuffleboard.getTab("balance pid").add("kff in", 0.0).getEntry();
-    public static GenericEntry balanceKFFO = Shuffleboard.getTab("balance pid").add("KFF Out", 0.0).getEntry();
-
     // Peripherals
     private final ArmPI armPi = new ArmPI();
     private final Limelight frontLL = new Limelight("front");

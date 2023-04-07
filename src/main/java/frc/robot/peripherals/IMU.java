@@ -33,4 +33,5 @@ public class IMU {
     public double getYaw() { return MathUtils.normalizeAngle180(imu.getAngle(IMUAxis.kY)); }
     public double getRoll() { return MathUtils.normalizeAngle180(imu.getAngle(IMUAxis.kY)); }
     public double getPitch() { return MathUtils.normalizeAngle180(imu.getAngle(IMUAxis.kZ)); }
+    public double getPitchRate() { return imu.getRate(imu.getPitchAxis()); }
 }

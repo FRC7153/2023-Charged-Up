@@ -1,104 +1,74 @@
 package frc.robot.commands;
 
-import com.frc7153.math.MathUtils;
-import com.frc7153.math.ShuffleboardPIDController;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
-import frc.robot.Constants.AutoConstants;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveBase;
 
 public class BalanceCommand extends CommandBase {
-    // PID Control
-    //private static ShuffleboardPIDController balancePid = AutoConstants.kBALANCE_PID.toShuffleboardPIDController("balance pid");
-
-    // Drive Subsystem
+    // Drive Subsys
     private DriveBase drive;
+    private Arm arm;
+    
+    // Config
+    private boolean direction;
+    private double startTime;
+    private double maxAngle;
 
     // Constructor
-    public BalanceCommand(DriveBase driveSubsys) {
-        drive = driveSubsys;
+    /**
+     * 
+     * @param driveBase
+     * @param direction true is forward, false is backwards
+     */
+    public BalanceCommand(DriveBase driveBase, Arm armSubsys, boolean direction) {
+        drive = driveBase;
+        arm = armSubsys;
+        this.direction = direction;
 
-        addRequirements(drive);
+        addRequirements(drive, arm);
     }
 
     // Init
     @Override
     public void initialize() {
-        drive.driveTankAbsolute(0.0, 0.0);
+        drive.driveRobotOriented(0.0, (direction) ? -0.7 : 0.7, 0.0);
+        //arm.setExtension(ArmConstants.kJOINT_TO_EXT_PT);
+        //arm.setAngle((direction) ? 90.0 : -90.0);
 
-        RobotContainer.balancePID.setSetpoint(0.0);
-
-        dir = 0.4;
-        lastSwitch = Timer.getFPGATimestamp();
+        startTime = Timer.getFPGATimestamp();
+        maxAngle = drive.imu.getPitch();
     }
 
-    // Run
-    double dir = 0.6;
-    double lastSwitch = 0.0;
-
-    boolean kBANG = false;
-
+    // Execute
     @Override
     public void execute() {
-        if (!kBANG) {
-            RobotContainer.balancePID.refresh();
+        if (direction) {
 
-            double speed = RobotContainer.balancePID.calculate(drive.imu.getPitch());
-
-            // MARK kFF
-            double kff = RobotContainer.balanceKFF.getDouble(0.0);
-            RobotContainer.balanceKFFO.setDouble(kff);
-
-            speed += (drive.imu.getPitch() * kff);
-            
-            DriverStation.reportWarning(String.format("Angle -> %s, Speed -> %s, kFF -> %s", drive.imu.getPitch(), -speed, drive.imu.getPitch() * kff), false);
-
-            drive.driveRobotOriented(0.0, -speed, 0.0);
         } else {
-        // END MARK
-
-        //drive.driveRobotOriented(0.0, -speed, 0.0);
-        //double speed = 0.0;
-
-        // MARK BANG
-            double speed = 0.0;
-            if (drive.imu.getPitch() > 5.0) {
-                speed = 0.4;
-            } else if (drive.imu.getPitch() < 5.0) {
-                speed = -0.4;
+            if (drive.imu.getPitch() > maxAngle) {
+                maxAngle = drive.imu.getPitch();
             }
-
-            drive.driveRobotOriented(0.0, speed, 0.0);
         }
-
-        // END MARK
-
-        //drive.driveDiag(-speed, drive.imu.getPitch() * 1.5); // 25.0
-        //drive.driveRobotOriented(dir, -speed, 0.0);
-        /*drive.driveRobotOriented(0.0, -speed, (Timer.getFPGATimestamp() - lastSwitch) * dir);
-
-        if (Timer.getFPGATimestamp() - lastSwitch >= 1.0) {
-            dir = -dir;
-            lastSwitch = Timer.getFPGATimestamp();
-        }*/
     }
 
     // End
     @Override
     public void end(boolean terminated) {
-        drive.stop();
+        //drive.lockWheels();
+        //arm.setAngle(0.0);
     }
 
-    // Check if balanced
+    // Is done
     @Override
     public boolean isFinished() {
-        return false;
-        //return Math.abs(drive.imu.getPitch()) <= balancePid.getPositionTolerance();
+        if (direction && false) {
+            return (drive.imu.getPitch() >= 10.5) && (Timer.getFPGATimestamp() - startTime >= 0.0);
+        } else {
+            //return (drive.imu.getPitch() <= -9.5) && (Timer.getFPGATimestamp() - startTime >= 0.0); // 10.5
+            //DriverStation.reportWarning(String.format("%s, %s", maxAngle, drive.imu.getPitch()), false);
+            return maxAngle - drive.imu.getPitch() > 3.0 && Timer.getFPGATimestamp() - startTime >= 0.5; // 1.5
+        }
     }
 }
