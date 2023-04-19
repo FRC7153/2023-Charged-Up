@@ -1,11 +1,9 @@
 package frc.robot.peripherals;
 
 import java.util.BitSet;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.Map;
 
 import com.frc7153.validation.Validatable;
 
@@ -218,12 +216,12 @@ public class ArmPI implements Validatable {
     public double getAge() { return Timer.getFPGATimestamp() - cache_age; }
 
     // Validation
-    private Map<String, Boolean> validate = Collections.synchronizedMap(new HashMap<String, Boolean>(2));
+    private HashMap<String, Boolean> validate = new HashMap<>(2);
 
     @Override
-    public Map<String, Boolean> validate() {
-        validate.put("Pi CAN", getAge() > 2.0); // 2 second tolerance
-        validate.put("Pi Temp", getTemp() > 185.0);
+    public HashMap<String, Boolean> validate() {
+        validate.put("Pi CAN", getAge() <= 2.0); // 2 second tolerance
+        validate.put("Pi Temp", getTemp() < 185.0);
 
         return validate;
     }

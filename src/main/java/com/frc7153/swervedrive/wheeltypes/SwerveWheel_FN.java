@@ -109,7 +109,7 @@ public class SwerveWheel_FN implements SwerveWheel {
         CANCoderFaults spinAbsEncFaults = new CANCoderFaults();
         spinAbsEncoder.getFaults(spinAbsEncFaults);
 
-        didCANCoderLoad = spinAbsEncFaults.hasAnyFault();
+        didCANCoderLoad = !spinAbsEncFaults.hasAnyFault();
 
         // Set Relative Encoder Offset
         spinRelEncoder.setPosition((spinAbsEncoder.getAbsolutePosition() - spinHomeLocation) * k_SPIN_RATIO / 360.0);

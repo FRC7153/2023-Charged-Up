@@ -143,7 +143,7 @@ public class Arm extends SubsystemBase implements Validatable {
             }  else {
                 // Get voltage position
                 currentAngleVolts = anglePID.calculate(angleAbsEncoder.getPosition());
-                currentAngleVolts += (Math.sin(Units.degreesToRadians(angleAbsEncoder.getPosition())) * winchEnc.getPosition()) * tempFF.getDouble(0.0); // Feed forward
+                currentAngleVolts += (Math.sin(Units.degreesToRadians(angleAbsEncoder.getPosition())) * winchEnc.getPosition()) * -0.009; // Feed forward (0.0 if this causes problems)
             }
             angleMotor.setVoltage(currentAngleVolts);
         }

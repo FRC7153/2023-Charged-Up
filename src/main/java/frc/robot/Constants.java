@@ -23,10 +23,12 @@ public final class Constants {
     public static final class ShuffleboardConstants {
         public static final boolean kPI_GRAPHS = false;
         public static final boolean kARM_GRAPHS = false;
-        public static final boolean kCAMERA_STREAMS = true;
+        public static final boolean kCAMERA_STREAMS = false;
         public static final boolean kFIELD_PLOT = false;
-        public static final boolean kVALIDATE = false;
-        public static final boolean kPITCH_GRAPHS = true;
+        public static final boolean kVALIDATE = true;
+        public static final boolean kPITCH_GRAPHS = false;
+
+        public static final boolean kMINIMIZE_TRAFFIC = true; // For comps
     }
 
     /* SWERVE DRIVE CONSTANTS */
@@ -66,14 +68,14 @@ public final class Constants {
 
         public static final double kHAND_LENGTH = 14.0;
 
-        public static final double kWINCH_MAX_POSITION = 5.0 * 12.0; // Max extension of the winch, from the extension point to the edge, physically and legally
+        public static final double kWINCH_MAX_POSITION = 6.0 * 12.0; // Max extension of the winch, from the extension point to the edge, physically and legally
         public static final double kJOINT_TO_EXT_PT = 28.0;
         public static final double kMAX_ANGLE = 125.0;
 
         public static final double kANGLE_RATIO = 160.0;
         public static final double kWINCH_RATIO = 20.0;
         
-        public static final double kMAX_REACH = 4.0 * 12.0 + 2.0; // + 2.0
+        public static final double kMAX_REACH = 4.0 * 12.0 + 10.0; // + 2.0
         public static final double kMAX_HEIGHT = 6.0 * 12.0 + 6.0;
 
         public static final double kCLEARANCE = 2.0;
@@ -108,9 +110,9 @@ public final class Constants {
         // Front Placement
         public static final ArmState kFRONT_CUBE_MID = ArmState.fromRots(84.25, 1.7);
         public static final ArmState kFRONT_CUBE_HIGH = ArmState.fromRots(74.42, 156.9);
-        public static final ArmState kFRONT_CONE_MID = ArmState.fromRots(66, 64.0); // 53.4
+        public static final ArmState kFRONT_CONE_MID = ArmState.fromRots(66, 84.0); // 66, 64
         //public static final ArmState kFRONT_CONE_HIGH = ArmState.fromRots(67.81, 189.8); // wrong
-        public static final ArmState kFRONT_CONE_HIGH = ArmState.fromRots(64.0, 192.0);
+        public static final ArmState kFRONT_CONE_HIGH = ArmState.fromRots(68.0, 215); // 64, 192
 
 
         // Rear Placement

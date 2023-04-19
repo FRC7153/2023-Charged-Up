@@ -1,9 +1,7 @@
 package com.frc7153.validation;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 public class ValidationManager {
     // Objects
     private ArrayList<Validatable> toValidate = new ArrayList<>();
-    private Map<String, GenericPublisher> ntEntries = Collections.synchronizedMap(new HashMap<>()); // For pushing to dashboards
+    private HashMap<String, GenericPublisher> ntEntries = new HashMap<>(); // For pushing to dashboards
     private ShuffleboardLayout layout; // layout to publish to
 
     private ScheduledExecutorService threadRunner = Executors.newSingleThreadScheduledExecutor(); // Validate Thread runner
@@ -43,13 +41,13 @@ public class ValidationManager {
 
         layout = Shuffleboard.getTab(tabName).getLayout("Validation", BuiltInLayouts.kGrid)
             .withPosition(0, 0)
-            .withSize(7, 4);
+            .withSize(9, 4);
     }
 
     /**
      * Creates a new ValidationManager, with default values. There should only be one per robot project.
      */
-    public ValidationManager() { this("Validation", 10, true); }
+    public ValidationManager() { this("Validation", 2, true); }
 
     // Register
     /**
@@ -57,9 +55,27 @@ public class ValidationManager {
      * @param obj The objects to validate
      */
     public void register(Validatable... objs) {
+        HashMap<String, Boolean> initialChecks;
+
+        // Add each object
         for (Validatable obj : objs) {
+            // Check if object is already added
             if (!toValidate.contains(obj)) {
                 toValidate.add(obj);
+
+                // Get all IDs to create NT entries
+                initialChecks = obj.validate();
+
+                for (String id : initialChecks.keySet()) {
+                    // Check that entry has not already been created
+                    if (!ntEntries.containsKey(id)) {
+                        ntEntries.put(id, layout.add(id, false).getEntry());
+                    } else {
+                        DriverStation.reportError(String.format("Could not add check '%s' of %s because another check with the same ID already exists!", id, obj.getClass().getName()), false);
+                    }
+                }
+            } else {
+                DriverStation.reportWarning(String.format("Did not register validatable %s because it has already been registered!", obj.getClass().getName()), false);
             }
         }
     }
@@ -83,31 +99,27 @@ public class ValidationManager {
         running = false;
     }
 
-    // Thread
+    // Validation Thread
     private class ValidateThread implements Runnable {
         // Preallocated space for map
-        private Map<String, Boolean> checks;
+        private HashMap<String, Boolean> checks;
 
         @Override
         public void run() {
-            System.out.println("Validated!");
             for (Validatable obj : toValidate) {
-                System.out.println(obj.getClass().getName());
-
                 checks = obj.validate();
 
                 for (String id : checks.keySet()) {
-                    // Add entry if it does not exist
-                    
-                    if (!ntEntries.containsKey(id)) {
-                        ntEntries.put(id, layout.add(id, false).getEntry());
+                    // Update value
+                    if (ntEntries.containsKey(id)) {
+                        ntEntries.get(id).setBoolean(checks.get(id));
+                    } else {
+                        // NT entry does not exit!
+                        DriverStation.reportError(String.format("Could not publish check '%s' of %s because a NT publisher was never created with its ID", id, obj.getClass().getName()), false);
                     }
 
-                    // Update value
-                    ntEntries.get(id).setBoolean(checks.get(id));
-
-                    // Error
-                    if (outputErrors && checks.get(id)) {
+                    // Output Driver Station warning
+                    if (outputErrors && !checks.get(id)) {
                         DriverStation.reportWarning(String.format("Check '%s' did not pass validation!", id), false);
                     }
                 }

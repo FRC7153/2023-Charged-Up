@@ -11,6 +11,7 @@ import com.frc7153.validation.ValidationManager;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -95,13 +96,8 @@ public class ShuffleboardManager {
         // Init Validator
         if (ShuffleboardConstants.kVALIDATE) {
             validator = new ValidationManager();
-        
-            //validator.register(drive);
-            //validator.register(arm);
-            //validator.register(claw);
-            //validator.register(pdh);
-            validator.register(armPi);
 
+            validator.register(drive, arm, claw, pdh, armPi);
             validator.start();
         }
 
@@ -291,6 +287,11 @@ public class ShuffleboardManager {
 
         tempHand = tempTab.add("L, R Hand (f)", "?, ?")
             .getEntry();
+
+        // Warn
+        if (ShuffleboardConstants.kMINIMIZE_TRAFFIC) {
+            DriverStation.reportWarning("Shuffleboard traffic minimization is enabled, only the DRIVE tab will be kept up-to-date throughout the match.", false);
+        }
     }
 
     // Update Values
@@ -305,54 +306,56 @@ public class ShuffleboardManager {
             driveField.setRobotPose(robotPose.getX(), robotPose.getY(), robotPose.getRotation());
         }
 
-        // Controllers
-        controller0Update.setString(String.format("%s seconds", Controller0.getLastOffsetUpdate()));
-        controller1Update.setString(String.format("%s seconds", Controller1.getLastOffsetUpdate()));
+        if (!ShuffleboardConstants.kMINIMIZE_TRAFFIC) {
+            // Controllers
+            controller0Update.setString(String.format("%s seconds", Controller0.getLastOffsetUpdate()));
+            controller1Update.setString(String.format("%s seconds", Controller1.getLastOffsetUpdate()));
 
-        // Pi
-        piCPUTemp.setDouble(armPi.getTemp());
-        piCPUUsage.setDouble(armPi.getCPU());
-        piMemUsage.setDouble(armPi.getMemory());
-        piFPS.setDouble(armPi.getFPS());
-        piAge.setDouble(armPi.getAge());
-        piVoltageStable.setBoolean(armPi.getVoltageStable());
-        piCache.setString(armPi.getCache());
-        piDistance.setDouble(Units.metersToInches(armPi.getDistance() / 1000.0)); // convert to inches
+            // Pi
+            piCPUTemp.setDouble(armPi.getTemp());
+            piCPUUsage.setDouble(armPi.getCPU());
+            piMemUsage.setDouble(armPi.getMemory());
+            piFPS.setDouble(armPi.getFPS());
+            piAge.setDouble(armPi.getAge());
+            piVoltageStable.setBoolean(armPi.getVoltageStable());
+            piCache.setString(armPi.getCache());
+            piDistance.setDouble(Units.metersToInches(armPi.getDistance() / 1000.0)); // convert to inches
 
-        if (armPi.hasTarget()) {
-            piTarget.setString(String.format("Sees %s at %s, %s", armPi.getIsCone() ? "cone" : "cube", armPi.getXTargetAngle(), armPi.getYTargetAngle()));
-        } else {
-            piTarget.setString("No target");
+            if (armPi.hasTarget()) {
+                piTarget.setString(String.format("Sees %s at %s, %s", armPi.getIsCone() ? "cone" : "cube", armPi.getXTargetAngle(), armPi.getYTargetAngle()));
+            } else {
+                piTarget.setString("No target");
+            }
+
+            // Gyro
+            gyroRoll.setDouble(drive.imu.getRoll());
+            gyroPitch.setDouble(drive.imu.getPitch());
+            gyroYaw.setDouble(drive.imu.getYaw());
+
+            // Arm
+            armSP.setDouble(arm.getAngleSetpoint());
+            armAngle.setDouble(arm.getAngleActual());
+            armVolt.setDouble(arm.getAngleVoltage());
+            armCurrent.setDouble(arm.getAngleCurrent());
+            armWinchPos.setDouble(arm.getWinchEncPos());
+            armExtSP.setDouble(arm.getWinchSetpoint());
+            armAngleDutyCycle.setDouble(arm.getAngleDutyCycle());
+
+            armLHand.setDouble(claw.getLHandPos());
+            armRHand.setDouble(claw.getRHandPos());
+
+            armPose.setString(String.format("%s, %s (in)", arm.getPose().getX(), arm.getPose().getY()));
+            armApplied.setString(String.format("%s, %s",
+                claw.getLeftOutput(),
+                claw.getRightOutput()
+            ));
+
+            armAtSP.setBoolean(arm.atSetpoint());
+
+            // Temps
+            tempAngle.setDouble(arm.getAngleTemp());
+            tempExt.setDouble(arm.getExtTemp());
+            tempHand.setString(String.format("%s, %s", claw.getLTemp(), claw.getRTemp()));
         }
-
-        // Gyro
-        gyroRoll.setDouble(drive.imu.getRoll());
-        gyroPitch.setDouble(drive.imu.getPitch());
-        gyroYaw.setDouble(drive.imu.getYaw());
-
-        // Arm
-        armSP.setDouble(arm.getAngleSetpoint());
-        armAngle.setDouble(arm.getAngleActual());
-        armVolt.setDouble(arm.getAngleVoltage());
-        armCurrent.setDouble(arm.getAngleCurrent());
-        armWinchPos.setDouble(arm.getWinchEncPos());
-        armExtSP.setDouble(arm.getWinchSetpoint());
-        armAngleDutyCycle.setDouble(arm.getAngleDutyCycle());
-
-        armLHand.setDouble(claw.getLHandPos());
-        armRHand.setDouble(claw.getRHandPos());
-
-        armPose.setString(String.format("%s, %s (in)", arm.getPose().getX(), arm.getPose().getY()));
-        armApplied.setString(String.format("%s, %s",
-            claw.getLeftOutput(),
-            claw.getRightOutput()
-        ));
-
-        armAtSP.setBoolean(arm.atSetpoint());
-
-        // Temps
-        tempAngle.setDouble(arm.getAngleTemp());
-        tempExt.setDouble(arm.getExtTemp());
-        tempHand.setString(String.format("%s, %s", claw.getLTemp(), claw.getRTemp()));
     }
 }
