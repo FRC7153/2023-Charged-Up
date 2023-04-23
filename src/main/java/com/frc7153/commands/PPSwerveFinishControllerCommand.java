@@ -75,6 +75,9 @@ public class PPSwerveFinishControllerCommand extends PPSwerveControllerCommand {
     // Check end
     @Override
     public boolean isFinished() {
+        // TODO fix
+        return super.isFinished();
+        /*
         // First check if the parent command has finished
         if (!super.isFinished()) { return false; }
 
@@ -85,6 +88,6 @@ public class PPSwerveFinishControllerCommand extends PPSwerveControllerCommand {
             Math.abs(pose.getX() - m_finalState.getX()) <= translationTolerance &&
             Math.abs(pose.getY() - m_finalState.getY()) <= translationTolerance &&
             Math.abs(pose.getRotation().getDegrees() - m_finalState.getRotation().getDegrees()) <= thetaTolerance
-        );
+        );*/
     }
 }

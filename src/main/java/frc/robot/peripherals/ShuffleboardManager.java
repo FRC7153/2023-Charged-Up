@@ -44,6 +44,7 @@ public class ShuffleboardManager {
     private GenericEntry driveGyroConnected;
     private GenericEntry driveHandUnlocked;
     private GenericEntry drivePos;
+    private GenericEntry driveThrottleDown;
     private Field2d driveField;
 
     // Controller Update Counter
@@ -139,6 +140,10 @@ public class ShuffleboardManager {
         
         driveTab.add("Auto", auto.getChooser())
             .withPosition(7, 3);
+
+        driveThrottleDown = driveTab.add("Throttle Down (!)", false)
+            .withPosition(7, 1)
+            .getEntry();
         
         if (ShuffleboardConstants.kFIELD_PLOT) {
             driveField = new Field2d();
@@ -300,6 +305,7 @@ public class ShuffleboardManager {
         driveGyroConnected.setBoolean(drive.imu.isCalibrated());
         driveHandUnlocked.setBoolean(arm.hasBeenReleased);
         drivePos.setString(drive.getPose().toString());
+        driveThrottleDown.setBoolean(Controller1.getThrottle() <= -0.9);
 
         if (ShuffleboardConstants.kFIELD_PLOT) {
             Pose2d robotPose = drive.getPose();

@@ -127,12 +127,79 @@ public class Arm extends SubsystemBase implements Validatable {
                 pose = new Translation2d(x, y);
                 currentState = inverseKinematics(x, y);
 
-                // Set position
+                // Set position safely
                 extRef = Math.max(ArmConstants.extToWinchRots(currentState.extension - ArmConstants.kHAND_LENGTH), 0.0);
                 angRef = currentState.angle;
 
-                anglePID.setGoal(angRef);
-                winchPID.setReference(extRef, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
+                // Safety Check
+                /*if (kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).getY() <= 72.0 && Math.abs(angleSP) > 0.1) {
+                    anglePID.setGoal(angRef);
+                }*/
+
+                if (Math.abs(angleSP) < 0.1) {
+                //if (Math.abs(angleSP) < 0.1 || (angleAbsEncoder.getPosition() > 0.1 && angleSP < 0.1) || (angleAbsEncoder.getPosition() < -0.1 && angleSP > -0.1)) {
+                    // Going to straight up, ANGLE is problem
+                    boolean setAngle;
+
+                    if (angleAbsEncoder.getPosition() > 0.0) {
+                        // Forwards
+                        // angleAbsEncoder.getPosition()
+                        setAngle = kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).getY() <= 50.0;
+                    } else {
+                        // Backwards
+                        setAngle = kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).getY() <= 60.0;
+                    }
+
+                    // Only set angle if safe
+                    if (setAngle) {
+                        anglePID.setGoal(angRef);
+                    } else {
+                        DriverStation.reportWarning("Arm SP above limit, angle not set!", false);
+                    }
+
+                    // Set ext
+                    winchPID.setReference(extRef, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
+                } else {
+                    // Going to not straight up, EXTENSION is problem
+                    boolean setExt = true;
+
+                    // extRef
+                    if (angleAbsEncoder.getPosition() > 0.0) {
+                        // Forwards
+                        setExt = kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).getY() <= 58.0;
+                    } else {
+                        // Backwards
+                        setExt = kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).getY() <= 68.0;
+                    }
+
+                    // Only set extension if safe
+                    if (setExt) {
+                        winchPID.setReference(extRef, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
+                    } else {
+                        DriverStation.reportWarning("Arm SP above limit, extension not set!", false);
+                    }
+
+                    // Set angle
+                    anglePID.setGoal(angRef);
+                }
+
+                /*if (angleAbsEncoder.getPosition() > 0.0) { // TODO dependent on actual side not SP
+                    // Forwards
+                    DriverStation.reportError(kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).toString(), false);
+                    DriverStation.reportError(angleSP.toString(), false);
+                    if (Math.abs(angleSP) < 0.1 && kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).getY() > 50.0) {
+                        DriverStation.reportWarning("Arm SP above limit, angle not set!", false);
+                    } else {
+                        anglePID.setGoal(angRef);
+                    }
+                } else {
+                    // Backwards
+                    if (Math.abs(angleSP) < 0.1 && kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).getY() > 60.0) {
+                        DriverStation.reportWarning("Arm SP above limit, angle not set!", false);
+                    } else {
+                        anglePID.setGoal(angRef);
+                    }
+                }*/
             }
 
             // Set angle voltage

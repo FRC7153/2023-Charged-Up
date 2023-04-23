@@ -25,9 +25,10 @@ public class AutoBalance extends SequentialCommandGroup {
             // Balance
             new BalanceCommand(drive, arm, false),
             new InstantCommand(() -> { drive.lockWheels(); }, drive),
-            new WaitCommand(1.0),
+            new WaitCommand(0.7),
             // Fix Balance
-            new BangBalancer(drive, arm)
+            //new BangBalancer(drive, arm),
+            (new Rebalance(drive)).repeatedly()
         );
     }
 

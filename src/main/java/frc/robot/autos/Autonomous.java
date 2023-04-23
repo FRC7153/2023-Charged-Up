@@ -43,6 +43,12 @@ public class Autonomous {
     private Command instantArmCommand(double x, double y) { return new InstantCommand(() -> { arm.setTarget(x, y);}, arm); }
     private Command instantArmCommand(Translation2d pos) { return new InstantCommand(() -> { arm.setTarget(pos); }, arm); }
 
+
+    // Instant Home Command (for fast autos)
+    private Command createInstantHomeCommand() {
+        return new InstantCommand(() -> { arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); arm.hasBeenReleased = true; }, arm);
+    }
+
     // Constructor
     public Autonomous(DriveBase driveSubsys, Arm armSubsys, Claw clawSubsys) {
         // Save subsystems
@@ -66,8 +72,8 @@ public class Autonomous {
         autoEventMap.put("armUp", instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT));
 
         autoEventMap.put("armSafeUp", new SequentialCommandGroup(
-            new InstantCommand(() -> { arm.setExtension(ArmConstants.kJOINT_TO_EXT_PT); }), 
-            new WaitCommand(0.5),
+            //new InstantCommand(() -> { arm.setExtension(ArmConstants.kJOINT_TO_EXT_PT); }), 
+            //new WaitCommand(1.5), // 0.5
             instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT)
         ));
 
@@ -125,7 +131,7 @@ public class Autonomous {
     public Command createSpot1_2PieceAuto() {
         return new SequentialCommandGroup(
             // Unlock Claw
-            new InstantCommand(() -> { arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); }),
+            createInstantHomeCommand(),
             // Piece 1 (CONE, staged)
             new GrabCommand(claw, GrabPositions.GRAB),
             //new PresetArmCommand(arm, new ArmState(-45.0, 215.39)),
@@ -154,7 +160,7 @@ public class Autonomous {
     public Command createSpot2_BalanceAuto() {
         return new SequentialCommandGroup(
             // Unlock arm
-            instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT),
+            createInstantHomeCommand(),
             // Over shoot for taxi points
             new InstantCommand(() -> drive.driveRobotOriented(0.0, -0.7, 0.0)),
             new WaitCommand(3.5),
@@ -168,7 +174,7 @@ public class Autonomous {
     public Command createSpot2_1PieceBalanceAuto() {
         return new SequentialCommandGroup(
             // Unlock Claw
-            new InstantCommand(() -> { arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); }),
+            createInstantHomeCommand(),
             // Piece 1 (CONE, staged)
             new GrabCommand(claw, GrabPositions.GRAB),
             new PresetArmCommand(arm, AutoConstants.kREAR_CONE_HIGH),
@@ -192,7 +198,7 @@ public class Autonomous {
     public Command createSpot3_2PieceAuto() {
         return new SequentialCommandGroup(
             // Unlock Claw
-            new InstantCommand(() -> { arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); }),
+            createInstantHomeCommand(),
             // Piece 1 (CONE, staged)
             new GrabCommand(claw, GrabPositions.GRAB),
             new PresetArmCommand(arm, AutoConstants.kREAR_CONE_HIGH),
@@ -220,7 +226,7 @@ public class Autonomous {
     public Command createAnySpot_1PieceMove() {
         return  new SequentialCommandGroup(
             // Unlock Claw
-            new InstantCommand(() -> { arm.setWinchEncPosition(ArmConstants.kWINCH_HOME_ROT_POS); }),
+            createInstantHomeCommand(),
             // Piece 1 (CONE, staged)
             new GrabCommand(claw, GrabPositions.GRAB),
             new PresetArmCommand(arm, AutoConstants.kREAR_CONE_HIGH),

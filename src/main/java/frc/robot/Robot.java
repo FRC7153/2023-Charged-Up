@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
 
         // Unlock claw, if not already unlocked
         if (container.checkHandsLocked()) {
+            DriverStation.reportError("Hands unlocked in Teleop", false);
             container.unlockClawCommand.schedule();
         }
     }

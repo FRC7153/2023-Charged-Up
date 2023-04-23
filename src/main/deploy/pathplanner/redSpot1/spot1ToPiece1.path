@@ -50,7 +50,7 @@
         {
             "anchorPoint": {
                 "x": 6.0,
-                "y": 4.38
+                "y": 4.19
             },
             "prevControl": {
                 "x": 4.2966059937014975,
@@ -75,7 +75,7 @@
     "isReversed": null,
     "markers": [
         {
-            "position": 0.14808238636363635,
+            "position": 0.06,
             "names": [
                 "clawFrontGrabPos"
             ]
