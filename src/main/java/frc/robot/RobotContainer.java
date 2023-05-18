@@ -101,7 +101,7 @@ public class RobotContainer {
         Controller1.trigger.whileTrue(new PresetArmCommand(arm, driveBase.imu, ArmPositions.kREAR_LOADING_STATION, ArmPositions.kFRONT_LOADING_STATION).repeatedly()); // Opposite of the above commands
 
         // Control LED Colors
-        Controller1.lowerLeftTopButton.onTrue(new InstantCommand(() -> { led.setColor(BlinkinSolidColor.YELLOW); }, led));
+        Controller1.lowerLeftTopButton.onTrue(new InstantCommand(() -> { led.setHue(18); }, led));
         Controller1.lowerRightTopButton.onTrue(new InstantCommand(() -> { led.setColor(BlinkinSolidColor.VIOLET); }, led));
 
         // Auto Balance

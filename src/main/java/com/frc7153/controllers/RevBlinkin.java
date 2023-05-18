@@ -128,7 +128,7 @@ public class RevBlinkin {
     public void setMulticolorPattern(BlinkinMulticolorPattern pattern) { spark.set(pattern.signal); }
 
     /**
-     * Set hue
+     * Set hue. This math may have a bug.
      * @param hue (0 - 360 degrees)
      */
     public void setHue(int hue) {
@@ -148,4 +148,10 @@ public class RevBlinkin {
         lightness = -MathUtil.clamp(lightness, 0.0, 1.0) + 1.0;
         spark.set(0.06 * lightness + 0.93);
     }
+
+    /**
+     * **MUST BE CALLED PERIODICALLY**<br><br>
+     * Feed the PWM values to the controller.
+     */
+    public void feed() { spark.feed(); }
 }
