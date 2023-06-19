@@ -22,6 +22,9 @@ public class AutoBalance extends SequentialCommandGroup {
             // Drive up
             new InstantCommand(() -> { drive.driveRobotOriented(0.0, 0.7, 0.0); }, drive),
             new WaitUntilCommand(() -> { return drive.imu.getPitch() >= 10.5; }),
+            //new WaitCommand(0.2),
+            // Stop
+            //new InstantCommand(() -> { drive.driveRobotOriented(0.0, 0.0, 0.0); }, drive),
             // Balance
             new BalanceCommand(drive, arm, false),
             new InstantCommand(() -> { drive.lockWheels(); }, drive),
@@ -29,6 +32,7 @@ public class AutoBalance extends SequentialCommandGroup {
             // Fix Balance
             //new BangBalancer(drive, arm),
             (new Rebalance(drive)).repeatedly()
+            //new PDBalance(drive)
         );
     }
 

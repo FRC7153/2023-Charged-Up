@@ -35,7 +35,7 @@ public class TeleopDriveCommand extends CommandBase {
   public void initialize() {
     base.stop();
 
-    base.setMaxSpeed(5.25, 540.0);
+    base.setMaxSpeed(6.25, 570.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

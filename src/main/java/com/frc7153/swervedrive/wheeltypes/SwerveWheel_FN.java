@@ -49,7 +49,7 @@ public class SwerveWheel_FN implements SwerveWheel {
     private static int k_SPIN_PID_INDEX = 0;
     private static int k_DRIVE_PID_INDEX = 0;
 
-    private static double spin_kP = 0.3;
+    private static double spin_kP = 0.45;
     private static double spin_kI = 0.00001;
     private static double spin_kD = 0.0;
     private static double spin_kO = 10.0;

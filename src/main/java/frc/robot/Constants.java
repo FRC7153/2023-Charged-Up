@@ -28,7 +28,7 @@ public final class Constants {
         public static final boolean kVALIDATE = true;
         public static final boolean kPITCH_GRAPHS = false;
 
-        public static final boolean kMINIMIZE_TRAFFIC = true; // For comps
+        public static final boolean kMINIMIZE_TRAFFIC = false; // For comps
     }
 
     /* SWERVE DRIVE CONSTANTS */
@@ -51,7 +51,7 @@ public final class Constants {
     public static final class ArmConstants {
         // Arm PID
         public static final PIDConstant kARM_PID = new PIDConstant(0.15, 0.15, 0.0).withOutputRange(-12.0, 12.0).withError(1.2).withIntegratorRange(-100.0, 100.0);
-        public static final PIDConstant kEXT_PID = new PIDConstant(0.01, 0.000001, 0).withError(0.05).withOutputRange(-8.0, 8.0);
+        public static final PIDConstant kEXT_PID = new PIDConstant(0.05, 0.000001, 0).withError(0.05).withOutputRange(-8.5, 8.5);
 
         public static final double kARM_FF = -0.009;
 
@@ -60,8 +60,8 @@ public final class Constants {
 
         public static final double kWINCH_HOME_ROT_POS = 6.5;
 
-        public static final double kMAX_ANGLE_VELOCITY = 100.0;
-        public static final double kMAX_ANGLE_ACCELERATION = 100.0;
+        public static final double kMAX_ANGLE_VELOCITY = 140.0;
+        public static final double kMAX_ANGLE_ACCELERATION = 130.0;
 
         public static final double kJOINT_TO_FLOOR_DIST = 26.0;
         public static final double kJOINT_TO_BUMPER_DIST = 20.0;
@@ -104,25 +104,25 @@ public final class Constants {
     /* ARM PRE-CONFIGURED POSITIONS */
     public static final class ArmPositions {
         // Ground
-        public static final Translation2d kFRONT_GROUND = new Translation2d(35.98, 4.34);
-        public static final Translation2d kREAR_GROUND = new Translation2d(-44.840, 12.048);
+        public static final Translation2d kFRONT_GROUND = new Translation2d(35.98, 12.34);
+        public static final Translation2d kREAR_GROUND = new Translation2d(44.840, 12.048);
 
         // Front Placement
-        public static final ArmState kFRONT_CUBE_MID = ArmState.fromRots(84.25, 1.7);
-        public static final ArmState kFRONT_CUBE_HIGH = ArmState.fromRots(74.42, 156.9);
-        public static final ArmState kFRONT_CONE_MID = ArmState.fromRots(66, 84.0); // 66, 64
+        public static final ArmState kFRONT_CUBE_MID = ArmState.fromRots(74.25, 1.7);
+        public static final ArmState kFRONT_CUBE_HIGH = ArmState.fromRots(61.42, 160.9);
+        public static final ArmState kFRONT_CONE_MID = ArmState.fromRots(56, 84.0); // 66, 64
         //public static final ArmState kFRONT_CONE_HIGH = ArmState.fromRots(67.81, 189.8); // wrong
-        public static final ArmState kFRONT_CONE_HIGH = ArmState.fromRots(68.0, 215); // 64, 192
-
+        public static final ArmState kFRONT_CONE_HIGH = ArmState.fromRots(58.0, 215); // 64, 192
 
         // Rear Placement
         public static final ArmState kREAR_CUBE_MID = ArmState.fromRots(-76.01, 42.9);
-        public static final ArmState kREAR_CUBE_HIGH = ArmState.fromRots(-67.9, 157.04);
-        public static final ArmState kREAR_CONE_MID = ArmState.fromRots(-64.83, 62.85);
-        public static final ArmState kREAR_CONE_HIGH = ArmState.fromRots(-58.5, 199.39);
+        public static final ArmState kREAR_CUBE_HIGH = ArmState.fromRots(-67.9, 160.0);
+
+        public static final ArmState kREAR_CONE_MID = ArmState.fromRots(-64.83, 63.5);
+        public static final ArmState kREAR_CONE_HIGH = ArmState.fromRots(-62.0, 206.0);
 
         // Loading Station
-        public static final ArmState kFRONT_LOADING_STATION = ArmState.fromRots(60.0, 26.33);
+        public static final ArmState kFRONT_LOADING_STATION = ArmState.fromRots(53.0, 26.33);
         public static final ArmState kREAR_LOADING_STATION = ArmState.fromRots(-57.13, 25.14);
     }
 
@@ -151,7 +151,7 @@ public final class Constants {
         public static final PIDConstant kTHETA_PID = new PIDConstant(4.0, 2.5, 0.0).withIntegratorRange(-10.0, 10.0);
 
         // Auto-Specific Presets
-        public static final ArmState kREAR_CONE_HIGH = ArmState.fromRots(-56.7, 215.39);
+        public static final ArmState kREAR_CONE_HIGH = ArmState.fromRots(-65.001, 225);
         public static final Translation2d kFRONT_CUBE_GROUND = new Translation2d(37.98, 3.0);
         public static final Translation2d kFRONT_LOW_CUBE_GROUND = new Translation2d(37.98, 0.9);
 

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmPositions;
 import frc.robot.Constants.AutoConstants;
@@ -35,6 +35,7 @@ public class Autonomous {
 
     // Chooser
     private SendableChooser<Supplier<Command>> autoChooser = new SendableChooser<>();
+    private SendableChooser<Alliance> allianceChooser = new SendableChooser<>();
 
     // Event Map
     public HashMap<String, Command> autoEventMap = new HashMap<>();
@@ -63,9 +64,14 @@ public class Autonomous {
         autoChooser.addOption("Testing - Square Test Trajectory", this::createTestTrajAuto);
         autoChooser.addOption("Spot 1 - 2 Piece", this::createSpot1_2PieceAuto);
         autoChooser.addOption("Spot 3 - 2 Piece", this::createSpot3_2PieceAuto);
+        autoChooser.addOption("High Cone + Sit", this::create_HighConeAndSitAuto);
         autoChooser.addOption("Spot 2 - Balance (!)", this::createSpot2_BalanceAuto);
         autoChooser.addOption("Spot 2 - 1 Piece Balance (!)", this::createSpot2_1PieceBalanceAuto);
         autoChooser.addOption("Spot 1/3 - 1 Piece Drive", this::createAnySpot_1PieceMove);
+
+        // Create Alliance Chooser
+        allianceChooser.setDefaultOption("Blue Alliance", Alliance.Blue);
+        allianceChooser.addOption("Red Alliance", Alliance.Red);
 
         // Create event map //
         // Bring arm to straight up
@@ -100,6 +106,7 @@ public class Autonomous {
     }
 
     public SendableChooser<Supplier<Command>> getChooser() { return autoChooser; }
+    public SendableChooser<Alliance> getAllianceChooser() { return allianceChooser; }
 
     // CREATE AUTO COMMANDS //
     public Command createNoOpAuto() {
@@ -141,7 +148,7 @@ public class Autonomous {
             new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
             // Grab Piece 2 (CUBE)
             drive.getTrajectoryCommand(
-                String.format("%sSpot1/spot1ToPiece1", RobotContainer.getAlliance().equals(Alliance.Red) ? "red" : "blue"), 
+                String.format("%sSpot1/spot1ToPiece1", allianceChooser.getSelected().equals(Alliance.Red) ? "red" : "blue"), 
                 autoEventMap, 
                 true, 
                 3.0, // 2.0
@@ -193,6 +200,22 @@ public class Autonomous {
         );
     }
 
+    // 1 High and sit
+    public Command create_HighConeAndSitAuto() {
+        return new SequentialCommandGroup(
+            // Unlock Claw
+            createInstantHomeCommand(),
+            // Piece 1 (CONE, staged)
+            new GrabCommand(claw, GrabPositions.GRAB),
+            new PresetArmCommand(arm, AutoConstants.kREAR_CONE_HIGH),
+            new GrabCommand(claw, GrabPositions .STOW),
+            new WaitCommand(0.2),
+            new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
+            // Claw to 0
+            instantArmCommand(0.0, ArmConstants.kJOINT_TO_EXT_PT)
+        );
+    }
+
     // SPOT 3
     // 2 Piece Auto
     public Command createSpot3_2PieceAuto() {
@@ -207,7 +230,7 @@ public class Autonomous {
             new GrabCommand(claw, GrabPositions.WIDE_RELEASE),
             // Grab Piece 2 (CUBE)
             drive.getTrajectoryCommand(
-                String.format("%sSpot3/spot3ToPiece1", RobotContainer.getAlliance().equals(Alliance.Red) ? "red" : "blue"), 
+                String.format("%sSpot3/spot3ToPiece1", allianceChooser.getSelected().equals(Alliance.Red) ? "red" : "blue"), 
                 autoEventMap, 
                 true, 
                 3.0, // 2.0

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class IMU {
     // IMU
-    private ADIS16470_3Axis imu = new ADIS16470_3Axis(IMUAxis.kY, IMUAxis.kZ, IMUAxis.kX, CalibrationTime._2s);
+    private ADIS16470_3Axis imu = new ADIS16470_3Axis(IMUAxis.kY, IMUAxis.kX, IMUAxis.kZ, CalibrationTime._2s);
     private double lastCalibration = Timer.getFPGATimestamp();
 
     // Calibrate
@@ -30,8 +30,8 @@ public class IMU {
     public boolean isConnected() { return imu.isConnected(); }
     public boolean isCalibrated() { return imu.isConnected() && Timer.getFPGATimestamp() - lastCalibration >= 2.0; }
 
-    public double getYaw() { return MathUtils.normalizeAngle180(imu.getAngle(IMUAxis.kY)); }
-    public double getRoll() { return MathUtils.normalizeAngle180(imu.getAngle(IMUAxis.kY)); }
-    public double getPitch() { return MathUtils.normalizeAngle180(imu.getAngle(IMUAxis.kZ)); }
+    public double getYaw() { return MathUtils.normalizeAngle180(imu.getAngle(imu.getYawAxis())); }
+    public double getRoll() { return MathUtils.normalizeAngle180(imu.getAngle(imu.getRollAxis())); }
+    public double getPitch() { return MathUtils.normalizeAngle180(imu.getAngle(imu.getPitchAxis())); }
     public double getPitchRate() { return imu.getRate(imu.getPitchAxis()); }
 }

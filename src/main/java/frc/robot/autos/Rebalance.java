@@ -21,7 +21,7 @@ public class Rebalance extends SequentialCommandGroup {
 
         addCommands(
             new InstantCommand(this::setWheels2),
-            new WaitCommand(0.35), // 0.5
+            new WaitCommand(0.45), // 0.5
             new InstantCommand(drive::lockWheels),
             new WaitCommand(0.5) // 0.9
         );

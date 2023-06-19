@@ -29,7 +29,7 @@ public class Encoder {
 
     /**
      * Sets the zero-position (offset) of the encoder. 
-     * This is in the native units, not affected by the conversion factor.
+     * This is not in the native units, affected by the conversion factor.
      * @param offset
      */
     public void setZeroOffset(double offset) { zeroOffset = offset; }
@@ -54,7 +54,8 @@ public class Encoder {
      */
     public double getPosition(boolean alter) {
         if (alter) {
-            double angle = (encSupply.get() - zeroOffset) * (inverted ? -1 : 1) * conversion;
+            double angle = encSupply.get() * (inverted ? -1 : 1) * conversion;
+            angle += zeroOffset;
 
             switch (range) {
                 case FROM_0_TO_1:

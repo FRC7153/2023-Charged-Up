@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.util.HashMap;
 
 import com.frc7153.commands.PPSwerveFinishControllerCommand;
+import com.frc7153.logging.FileDump;
 import com.frc7153.math.MathUtils;
 import com.frc7153.swervedrive.SwerveBase;
 import com.frc7153.swervedrive.wheeltypes.SwerveWheel_FN;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.peripherals.IMU;
@@ -75,10 +77,18 @@ public class DriveBase extends SubsystemBase implements Validatable {
         //imu.resetPose(origin);
     }
 
+    // Temp logging
+    private FileDump balanceLog = new FileDump("BalanceLog");
+    private double currentX = 0.0;
+    private double currentY = 0.0;
+
     // Update odometry
     @Override
     public void periodic() {
         base.updateOdometry(imu.getYaw());
+
+        // Log PITCH
+        balanceLog.log(String.format("pitch: %s; y speed: %s; x speed: %s;", imu.getPitch(), currentX, currentY));
     }
 
     // Set Wheel Speeds (from trajectory)
@@ -144,7 +154,7 @@ public class DriveBase extends SubsystemBase implements Validatable {
     public void stop() { base.stop(true); }
     public void setMaxSpeed(double drive, double angle) { base.setMaxSpeed(drive, angle); }
 
-    public void driveFieldOriented(double x, double y, double rot) { base.driveFieldOriented(y, x, rot, imu.getYaw()); }
+    public void driveFieldOriented(double x, double y, double rot) { currentX = x; currentY = y; base.driveFieldOriented(y, x, rot, imu.getYaw()); }
     public void driveRobotOriented(double x, double y, double rot) { base.drive(y, x, rot); }
     public void driveTankAbsolute(double lSpeed, double rSpeed) { base.tankDriveAbsolute(lSpeed, rSpeed);}
     public void driveDiag(double forSpeed, double ang) { base.setAngle(ang); base.setSpeed(forSpeed * base.getMaxDriveSpeed()); }

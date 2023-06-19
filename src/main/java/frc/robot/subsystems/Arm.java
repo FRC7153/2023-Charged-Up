@@ -73,12 +73,12 @@ public class Arm extends SubsystemBase implements Validatable {
     public Arm() {
         // Config Arm
         angleMotor.setInverted(true);
-        angleMotor.setSecondaryCurrentLimit(150);
-        angleMotor.setSmartCurrentLimit(100);
+        angleMotor.setSecondaryCurrentLimit(120);
+        angleMotor.setSmartCurrentLimit(90);
 
         angleAbsEncoder.setConversionFactor(360.0);
         angleAbsEncoder.setInverted(false);
-        angleAbsEncoder.setZeroOffset(0.0);
+        angleAbsEncoder.setZeroOffset(-73.3);
         angleAbsEncoder.setRange(Range.FROM_NEGATIVE_180_TO_180);
 
         // Config Winch
@@ -173,7 +173,7 @@ public class Arm extends SubsystemBase implements Validatable {
                     }
 
                     // Only set extension if safe
-                    if (setExt) {
+                    if (setExt || extRef < winchEnc.getPosition()) {
                         winchPID.setReference(extRef, ControlType.kPosition, ArmConstants.kEXT_PID.kSLOT);
                     } else {
                         DriverStation.reportWarning("Arm SP above limit, extension not set!", false);

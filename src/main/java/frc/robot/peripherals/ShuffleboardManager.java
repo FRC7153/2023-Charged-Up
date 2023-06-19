@@ -141,6 +141,9 @@ public class ShuffleboardManager {
         driveTab.add("Auto", auto.getChooser())
             .withPosition(7, 3);
 
+        driveTab.add("Auto Alliance", auto.getAllianceChooser())
+            .withPosition(8, 3);
+
         driveThrottleDown = driveTab.add("Throttle Down (!)", false)
             .withPosition(7, 1)
             .getEntry();

@@ -115,12 +115,6 @@ public class RobotContainer {
         ));*/
     }
 
-    // Get Alliance
-    public static Alliance getAlliance() {
-        //return Alliance.Blue;
-        return DriverStation.getAlliance();
-    }
-
     // Toggle Brakes (in drive and claw)
     public void toggleBrakes(boolean brake) {
         driveBase.setCoast(!brake);
