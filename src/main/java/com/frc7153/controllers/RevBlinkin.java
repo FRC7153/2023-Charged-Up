@@ -1,7 +1,9 @@
 package com.frc7153.controllers;
 
+import edu.wpi.first.hal.HAL;
+import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.PWM;
 
 /**
  * Class for controlling REV's Blinking LED Driver over PWM
@@ -88,27 +90,34 @@ public class RevBlinkin {
     }
 
     // PWM Controller
-    private PWMSparkMax spark;
+    private PWM pwm;
     
     /**
      * Creates a new PWM Rev Blinkin LED controller
      * @param pwmChannel
      */
     public RevBlinkin(int pwmChannel) {
-        spark = new PWMSparkMax(pwmChannel);
+        pwm = new PWM(pwmChannel);
+
+        pwm.setBounds(2.003, 1.55, 1.50, 1.46, 0.999);
+        pwm.setPeriodMultiplier(PWM.PeriodMultiplier.k1X);
+        pwm.setSpeed(0.0);
+        pwm.setZeroLatch();
+
+        HAL.report(tResourceType.kResourceType_PWM, pwmChannel + 1);
     }
 
     /**
      * Set the PWM signal manually
      * @param signal -1.0 to 1.0
      */
-    public void setSignal(double signal) { spark.set(signal); }
+    public void setSignal(double signal) { pwm.setSpeed(signal); }
 
     /**
      * Set the color of the LED strip
      * @param color
      */
-    public void setConstantColor(BlinkinSolidColor color) { spark.set(color.signal); }
+    public void setConstantColor(BlinkinSolidColor color) { pwm.setSpeed(color.signal); }
 
     /**
      * Sets the color pattern, using the preset color.
@@ -117,7 +126,7 @@ public class RevBlinkin {
      * @param color The preset color to use, either 1 or 2
      */
     public void setColorPattern(BlinkinPattern pattern, int color) {
-        spark.set(-0.03 + (0.2 * pattern.index) + ((color == 1) ? 0.0 : 0.2));
+        pwm.setSpeed(-0.03 + (0.2 * pattern.index) + ((color == 1) ? 0.0 : 0.2));
     }
 
     /**
@@ -125,7 +134,7 @@ public class RevBlinkin {
      * Some of these may only work for the 1m 5v addressable LED strips.
      * @param pattern
      */
-    public void setMulticolorPattern(BlinkinMulticolorPattern pattern) { spark.set(pattern.signal); }
+    public void setMulticolorPattern(BlinkinMulticolorPattern pattern) { pwm.setSpeed(pattern.signal); }
 
     /**
      * Set hue. This math may have a bug.
@@ -134,9 +143,9 @@ public class RevBlinkin {
     public void setHue(int hue) {
         hue = MathUtil.clamp(hue, 0, 360);
         if (hue > 300) {
-            spark.set(((hue - 300.0) / 60.0) * 0.04 + 0.57);
+            pwm.setSpeed(((hue - 300.0) / 60.0) * 0.04 + 0.57);
         } else {
-            spark.set((hue / 300.0) * 0.3 + 0.61);
+            pwm.setSpeed((hue / 300.0) * 0.3 + 0.61);
         }
     }
 
@@ -146,12 +155,6 @@ public class RevBlinkin {
      */
     public void setGrayscale(double lightness) {
         lightness = -MathUtil.clamp(lightness, 0.0, 1.0) + 1.0;
-        spark.set(0.06 * lightness + 0.93);
+        pwm.setSpeed(0.06 * lightness + 0.93);
     }
-
-    /**
-     * **MUST BE CALLED PERIODICALLY**<br><br>
-     * Feed the PWM values to the controller.
-     */
-    public void feed() { spark.feed(); }
 }

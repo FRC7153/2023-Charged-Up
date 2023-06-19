@@ -1,6 +1,5 @@
 package frc.robot.autos;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -28,6 +27,7 @@ public class Rebalance extends SequentialCommandGroup {
     }
 
     // Run
+    @SuppressWarnings("unused")
     private void setWheels() {
         if (drive.imu.getPitch() > 4.2) {
             //drive.driveRobotOriented(0.0, 0.67, 0.0);

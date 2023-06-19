@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import com.frc7153.controllers.RevBlinkin;
 import com.frc7153.controllers.RevBlinkin.BlinkinSolidColor;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LED extends SubsystemBase {
@@ -13,7 +16,7 @@ public class LED extends SubsystemBase {
         controller = new RevBlinkin(port);
 
         // Lights should start OFF
-        setColor(BlinkinSolidColor.BLACK);
+        setColor((DriverStation.getAlliance() == Alliance.Blue) ? BlinkinSolidColor.BLUE : BlinkinSolidColor.RED);
     }
     
     // Set Color
@@ -23,11 +26,5 @@ public class LED extends SubsystemBase {
 
     public void setHue(int hue) {
         controller.setHue(hue);
-    }
-
-    // Feed
-    @Override
-    public void periodic() {
-        controller.feed();
     }
 }

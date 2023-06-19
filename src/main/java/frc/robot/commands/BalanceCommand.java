@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
@@ -63,12 +62,14 @@ public class BalanceCommand extends CommandBase {
     // Is done
     @Override
     public boolean isFinished() {
+        return maxAngle - drive.imu.getPitch() > 3.0 && Timer.getFPGATimestamp() - startTime >= 0.5; // 1.5
+        /*
         if (direction && false) {
             return (drive.imu.getPitch() >= 10.5) && (Timer.getFPGATimestamp() - startTime >= 0.0);
         } else {
             //return (drive.imu.getPitch() <= -9.5) && (Timer.getFPGATimestamp() - startTime >= 0.0); // 10.5
             //DriverStation.reportWarning(String.format("%s, %s", maxAngle, drive.imu.getPitch()), false);
             return maxAngle - drive.imu.getPitch() > 3.0 && Timer.getFPGATimestamp() - startTime >= 0.5; // 1.5
-        }
+        }*/
     }
 }

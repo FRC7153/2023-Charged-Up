@@ -3,11 +3,8 @@ package frc.robot;
 import java.util.function.BooleanSupplier;
 
 import com.frc7153.controllers.RevBlinkin.BlinkinSolidColor;
-import com.frc7153.logging.FileDump;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ArmPositions;
@@ -35,7 +32,7 @@ public class RobotContainer {
     private final Limelight frontLL = new Limelight("front");
     private final Limelight rearLL = new Limelight("back");
     private final PDH pdh = new PDH();
-    public FileDump limeDump = new FileDump("limeDump");
+    //public FileDump limeDump = new FileDump("limeDump");
 
     // Subsystems
     private final DriveBase driveBase = new DriveBase();
@@ -133,8 +130,8 @@ public class RobotContainer {
         shuffleboard.periodic();
         
         // TODO temporary
-        double[] lfPos = NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("camerapose_targetspace").getDoubleArray(new double[6]);
-        double[] lrPos = NetworkTableInstance.getDefault().getTable("limelight-rear").getEntry("camerapose_targetspace").getDoubleArray(new double[6]);
+        //double[] lfPos = NetworkTableInstance.getDefault().getTable("limelight-front").getEntry("camerapose_targetspace").getDoubleArray(new double[6]);
+        //double[] lrPos = NetworkTableInstance.getDefault().getTable("limelight-rear").getEntry("camerapose_targetspace").getDoubleArray(new double[6]);
 
         /*limeDump.log(String.format("F LL -> %s, %s, %s, %s, %s, %s", lfPos[0], lfPos[1], lfPos[2], lfPos[3], lfPos[4], lfPos[5]));
         limeDump.log(String.format("R LL -> %s, %s, %s, %s, %s, %s", lrPos[0], lrPos[1], lrPos[2], lrPos[3], lrPos[4], lrPos[5]));
