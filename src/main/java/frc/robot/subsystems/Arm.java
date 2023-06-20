@@ -73,8 +73,8 @@ public class Arm extends SubsystemBase implements Validatable {
     public Arm() {
         // Config Arm
         angleMotor.setInverted(true);
-        angleMotor.setSecondaryCurrentLimit(120);
-        angleMotor.setSmartCurrentLimit(90);
+        angleMotor.setSecondaryCurrentLimit(150);
+        angleMotor.setSmartCurrentLimit(100);
 
         angleAbsEncoder.setConversionFactor(360.0);
         angleAbsEncoder.setInverted(false);

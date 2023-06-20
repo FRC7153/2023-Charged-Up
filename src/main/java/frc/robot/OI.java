@@ -1,7 +1,10 @@
 package frc.robot;
 
+import java.util.HashMap;
+
 import com.frc7153.inputs.Joystick;
 import com.frc7153.inputs.XboxController;
+import com.frc7153.validation.Validatable;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -11,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class OI {
     /** Primary Xbox Drive Controller */
-    public static final class Controller0 {
+    public static final class Controller0 implements Validatable {
         private static final XboxController controller = new XboxController(0);
 
         // Config
@@ -28,10 +31,20 @@ public class OI {
         // Buttons
         public static final JoystickButton aButton = new JoystickButton(controller, XboxController.Button.kA.value);
         public static final JoystickButton lBumper = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
+
+        // Validate
+        private HashMap<String, Boolean> validate = new HashMap<>(1);
+
+        @Override
+        public HashMap<String, Boolean> validate() {
+            validate.put("Xbox Controller 0", controller.isConnected());
+
+            return validate;
+        }
     }
 
     /** Secondary Joystick Arm Controller */
-    public static final class Controller1 {
+    public static final class Controller1 implements Validatable{
         private static final Joystick controller = new Joystick(1);
 
         // Config
@@ -58,5 +71,15 @@ public class OI {
         // Thumb Buttons
         public static final JoystickButton lowerLeftTopButton = new JoystickButton(controller, 3);
         public static final JoystickButton lowerRightTopButton = new JoystickButton(controller, 4);
+
+        // Validate
+        private HashMap<String, Boolean> validate = new HashMap<>(1);
+
+        @Override
+        public HashMap<String, Boolean> validate() {
+            validate.put("Joystick 1", controller.isConnected());
+
+            return validate;
+        }
     }
 }

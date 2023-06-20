@@ -51,7 +51,7 @@ public final class Constants {
     public static final class ArmConstants {
         // Arm PID
         public static final PIDConstant kARM_PID = new PIDConstant(0.15, 0.15, 0.0).withOutputRange(-12.0, 12.0).withError(1.2).withIntegratorRange(-100.0, 100.0);
-        public static final PIDConstant kEXT_PID = new PIDConstant(0.05, 0.000001, 0).withError(0.05).withOutputRange(-8.5, 8.5);
+        public static final PIDConstant kEXT_PID = new PIDConstant(0.015, 0.000001, 0).withError(0.05).withOutputRange(-8.5, 8.5);
 
         public static final double kARM_FF = -0.009;
 
@@ -60,8 +60,8 @@ public final class Constants {
 
         public static final double kWINCH_HOME_ROT_POS = 6.5;
 
-        public static final double kMAX_ANGLE_VELOCITY = 140.0;
-        public static final double kMAX_ANGLE_ACCELERATION = 130.0;
+        public static final double kMAX_ANGLE_VELOCITY = 100.0;
+        public static final double kMAX_ANGLE_ACCELERATION = 100.0;
 
         public static final double kJOINT_TO_FLOOR_DIST = 26.0;
         public static final double kJOINT_TO_BUMPER_DIST = 20.0;

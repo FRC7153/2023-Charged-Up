@@ -1,0 +1,141 @@
+package com.frc7153.controllers;
+
+import com.frc7153.math.MathUtils;
+
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DriverStation;
+
+// TODO: what is 'zero latch'?
+/**
+ * Run PWM signal over RoboRIO's PWM ports.
+ * This should only be used to control LEDs
+ */
+public class DIO_PWM {
+    // DIO Object
+    private DigitalOutput output;
+
+    // Thread
+    private Thread generatorThread;
+
+    // Config (all units in ms)
+    private double maxPW = 2.0; // Max pulse width
+    private double maxDB_PW = 1.99; // Max deadband pulse width
+    private double center = 1.5; // center
+    private double minPW = 1.0; // Min pulse width
+    private double minDB_PW = 1.01; // Min deadband pulse width
+    private static double kPERIOD = 5.005; // PWM pulses occur at this frequency in ms
+
+    // State
+    private Double targetPW = center;
+
+    /**
+     * Create PWM generator on DIO pin
+     * @param channel DIO channel # (0 - 9)
+     */
+    public DIO_PWM(int channel) {
+        output = new DigitalOutput(channel);
+    }
+
+    /**
+     * Create PWM Generator on DIO pin and set config
+     * @param channel DIO channel # (0 - 9)
+     * @param maxPulseWidth The max PWM pulse width in ms
+     * @param maxDeadbandPulseWidth The high end of the deadband range pulse width in ms
+     * @param centerPulseWidth The center (off) pulse width in ms
+     * @param minPulseWidth The low end of the deadband pulse width in ms
+     * @param minDeadbandPulseWidth The minimum pulse width in ms
+     */
+    public DIO_PWM(int channel, double maxPulseWidth, double maxDeadbandPulseWidth, double centerPulseWidth, double minPulseWidth, double minDeadbandPulseWidth) {
+        this(channel);
+
+        maxPW = maxPulseWidth; maxDB_PW = maxDeadbandPulseWidth; center = centerPulseWidth; minPW = minPulseWidth; minDB_PW = minDeadbandPulseWidth;
+        targetPW = centerPulseWidth;
+    }
+
+    /**
+     * Set pulse width by percentage
+     * @param percent -1.0 to 1.0
+     */
+    public void setPercent(double percent) {
+        percent = MathUtils.symmetricClamp(percent, 1.0);
+
+        if (percent > 0.0) {
+            setPulseWidth(center + (percent * (maxDB_PW - center)));
+        } else {
+            setPulseWidth(center - (percent * (minDB_PW - center)));
+        }
+    }
+
+    /**
+     * Manually set pulse width
+     * @param pulseWidth Pulse width in ms
+     */
+    public void setPulseWidth(double pulseWidth) {
+        targetPW = Math.min(Math.max(pulseWidth, maxPW), minPW);
+    }
+
+    // Busy wait (for microsecond accuracy). Also checks if thread is interrupted
+    private boolean busyWaitAndCheck(double ms) {
+        long releaseTime = System.nanoTime() + ((long)ms * 1000000);
+
+        if (ms > 0.01) {
+            // Enough time to check if interrupted while busy-waiting
+            if (Thread.interrupted()) { return true; }
+        }
+
+        while (releaseTime > System.nanoTime()) { ; }
+        return false;
+    }
+
+    // Generator function to bit bang PWM signal. Should be called in a separate thread.
+    private void generate() {
+        while (true) {
+            // High
+            output.set(true);
+            if (busyWaitAndCheck(targetPW)) { break; };
+
+            // Low
+            output.set(false);
+            if (busyWaitAndCheck(kPERIOD - targetPW)) { break; };
+        }
+    }
+
+    // Thread to generate PWM signal
+    private static class GeneratorThread implements Runnable {
+        private DIO_PWM dio;
+
+        public GeneratorThread(DIO_PWM dio) {
+            this.dio = dio;
+        }
+
+        @Override
+        public void run() {
+            dio.generate();
+        }
+    }
+
+    /**
+     * Start PWM generation. Called by default
+     */
+    public void start() {
+        if (generatorThread != null && generatorThread.isAlive()) {
+            DriverStation.reportError("Could not start PWM generator thread because it is already running!", false);
+            return;
+        }
+
+        generatorThread = new Thread(new GeneratorThread(this));
+        generatorThread.start();
+    }
+
+    /**
+     * Stop PWM generation
+     */
+    public void stop() {
+        if (generatorThread == null || !generatorThread.isAlive()) {
+            DriverStation.reportError("Could not stop PWM generator thread because it is not running!", false);
+            return;
+        }
+
+        generatorThread.interrupt();
+    }
+}

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.PWM;
 /**
  * Class for controlling REV's Blinking LED Driver over PWM
  */
-public class RevBlinkin {
+public class RevBlinkin2 {
     // Preset Configurations
     /**
      * REV Blinkin's preset supported colors
@@ -92,34 +92,27 @@ public class RevBlinkin {
     }
 
     // PWM Controller
-    private PWM pwm;
+    private DIO_PWM pwm;
     
     /**
      * Creates a new PWM Rev Blinkin LED controller
      * @param pwmChannel
      */
-    public RevBlinkin(int pwmChannel) {
-        pwm = new PWM(pwmChannel);
-
-        pwm.setBounds(2.003, 1.55, 1.50, 1.46, 0.999);
-        pwm.setPeriodMultiplier(PWM.PeriodMultiplier.k1X);
-        pwm.setSpeed(0.0);
-        pwm.setZeroLatch();
-
-        HAL.report(tResourceType.kResourceType_PWM, pwmChannel + 1);
+    public RevBlinkin2(int pwmChannel) {
+        pwm = new DIO_PWM(pwmChannel, 2.003, 1.55, 1.5, 1.46, 0.999);
     }
 
     /**
      * Set the PWM signal manually
      * @param signal -1.0 to 1.0
      */
-    public void setSignal(double signal) { pwm.setSpeed(signal); }
+    public void setSignal(double signal) { pwm.setPercent(signal); }
 
     /**
      * Set the color of the LED strip
      * @param color
      */
-    public void setConstantColor(BlinkinSolidColor color) { pwm.setSpeed(color.signal); }
+    public void setConstantColor(BlinkinSolidColor color) { pwm.setPercent(color.signal); }
 
     /**
      * Sets the color pattern, using the preset color.
@@ -128,7 +121,7 @@ public class RevBlinkin {
      * @param color The preset color to use, either 1 or 2
      */
     public void setColorPattern(BlinkinPattern pattern, int color) {
-        pwm.setSpeed(-0.03 + (0.2 * pattern.index) + ((color == 1) ? 0.0 : 0.2));
+        pwm.setPercent(-0.03 + (0.2 * pattern.index) + ((color == 1) ? 0.0 : 0.2));
     }
 
     /**
@@ -136,7 +129,7 @@ public class RevBlinkin {
      * Some of these may only work for the 1m 5v addressable LED strips.
      * @param pattern
      */
-    public void setMulticolorPattern(BlinkinMulticolorPattern pattern) { pwm.setSpeed(pattern.signal); }
+    public void setMulticolorPattern(BlinkinMulticolorPattern pattern) { pwm.setPercent(pattern.signal); }
 
     /**
      * Set hue. This math may have a bug.
@@ -145,9 +138,9 @@ public class RevBlinkin {
     public void setHue(int hue) {
         hue = MathUtil.clamp(hue, 0, 360);
         if (hue > 300) {
-            pwm.setSpeed(((hue - 300.0) / 60.0) * 0.04 + 0.57);
+            pwm.setPercent(((hue - 300.0) / 60.0) * 0.04 + 0.57);
         } else {
-            pwm.setSpeed((hue / 300.0) * 0.3 + 0.61);
+            pwm.setPercent((hue / 300.0) * 0.3 + 0.61);
         }
     }
 
@@ -157,6 +150,6 @@ public class RevBlinkin {
      */
     public void setGrayscale(double lightness) {
         lightness = -MathUtil.clamp(lightness, 0.0, 1.0) + 1.0;
-        pwm.setSpeed(0.06 * lightness + 0.93);
+        pwm.setPercent(0.06 * lightness + 0.93);
     }
 }
