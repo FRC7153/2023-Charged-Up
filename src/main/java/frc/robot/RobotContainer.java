@@ -2,7 +2,7 @@ package frc.robot;
 
 import java.util.function.BooleanSupplier;
 
-import com.frc7153.controllers.RevBlinkin.BlinkinSolidColor;
+import com.frc7153.controllers.RevBlinkin2.BlinkinSolidColor;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;

@@ -1,11 +1,6 @@
 package com.frc7153.controllers;
 
-import edu.wpi.first.hal.DIOJNI;
-import edu.wpi.first.hal.HAL;
-import edu.wpi.first.hal.PWMJNI;
-import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.PWM;
 
 /**
  * Class for controlling REV's Blinking LED Driver over PWM

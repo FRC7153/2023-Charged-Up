@@ -45,7 +45,7 @@ public class FileDump {
      */
     public boolean log(Object msg) {
         if (Robot.isSimulation()) {
-            System.out.println(String.format("LOG %s -> %s -> %s", name, DateUtils.getInlineDate(), msg));
+            //System.out.println(String.format("LOG %s -> %s -> %s", name, DateUtils.getInlineDate(), msg));
             return true;
         }
 

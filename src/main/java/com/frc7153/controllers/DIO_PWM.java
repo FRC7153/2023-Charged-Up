@@ -5,12 +5,14 @@ import com.frc7153.math.MathUtils;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 
-// TODO: what is 'zero latch'?
 /**
  * Run PWM signal over RoboRIO's PWM ports.
  * This should only be used to control LEDs
  */
 public class DIO_PWM {
+    // Conversion
+    private static double kMS_TO_NANO = 1000000.0; // ms to nanoseconds
+
     // DIO Object
     private DigitalOutput output;
 
@@ -23,10 +25,10 @@ public class DIO_PWM {
     private double center = 1.5; // center
     private double minPW = 1.0; // Min pulse width
     private double minDB_PW = 1.01; // Min deadband pulse width
-    private static double kPERIOD = 5.005; // PWM pulses occur at this frequency in ms
+    private static long kPERIOD = (long)(5.005 * kMS_TO_NANO); // PWM pulses occur at this frequency in nanoseconds
 
-    // State
-    private Double targetPW = center;
+    // State (nano seconds)
+    private long targetPW = (long)(center * kMS_TO_NANO);
 
     /**
      * Create PWM generator on DIO pin
@@ -34,6 +36,7 @@ public class DIO_PWM {
      */
     public DIO_PWM(int channel) {
         output = new DigitalOutput(channel);
+        start();
     }
 
     /**
@@ -46,10 +49,12 @@ public class DIO_PWM {
      * @param minDeadbandPulseWidth The minimum pulse width in ms
      */
     public DIO_PWM(int channel, double maxPulseWidth, double maxDeadbandPulseWidth, double centerPulseWidth, double minPulseWidth, double minDeadbandPulseWidth) {
-        this(channel);
+        output = new DigitalOutput(channel);
 
         maxPW = maxPulseWidth; maxDB_PW = maxDeadbandPulseWidth; center = centerPulseWidth; minPW = minPulseWidth; minDB_PW = minDeadbandPulseWidth;
-        targetPW = centerPulseWidth;
+        setPulseWidth(centerPulseWidth);
+
+        start();
     }
 
     /**
@@ -71,33 +76,65 @@ public class DIO_PWM {
      * @param pulseWidth Pulse width in ms
      */
     public void setPulseWidth(double pulseWidth) {
-        targetPW = Math.min(Math.max(pulseWidth, maxPW), minPW);
-    }
-
-    // Busy wait (for microsecond accuracy). Also checks if thread is interrupted
-    private boolean busyWaitAndCheck(double ms) {
-        long releaseTime = System.nanoTime() + ((long)ms * 1000000);
-
-        if (ms > 0.01) {
-            // Enough time to check if interrupted while busy-waiting
-            if (Thread.interrupted()) { return true; }
+        pulseWidth = Math.min(Math.max(pulseWidth, maxPW), minPW);
+        pulseWidth *= kMS_TO_NANO; // To nano seconds
+        
+        synchronized (this) {
+            targetPW = (long)pulseWidth;
         }
-
-        while (releaseTime > System.nanoTime()) { ; }
-        return false;
     }
 
     // Generator function to bit bang PWM signal. Should be called in a separate thread.
     private void generate() {
+        // Init values (nano seconds)
+        long pulseHighWidth;
+        long pulseLowWidth;
+        long releaseTime;
+
+        synchronized (this) {
+            pulseHighWidth = targetPW;
+            pulseLowWidth = kPERIOD - targetPW;
+        }
+
+        // Loop
         while (true) {
             // High
             output.set(true);
-            if (busyWaitAndCheck(targetPW)) { break; };
+            releaseTime = System.nanoTime() + pulseHighWidth;
+
+            if (pulseHighWidth > pulseLowWidth) {
+                // This busy-wait is longer, do work
+                synchronized (this) {
+                    pulseHighWidth = targetPW;
+                    pulseLowWidth = kPERIOD - targetPW;
+                }
+
+                if (Thread.interrupted()) { break; }
+            }
+
+            // Busy-wait
+            while (releaseTime > System.nanoTime()) { ; }
 
             // Low
             output.set(false);
-            if (busyWaitAndCheck(kPERIOD - targetPW)) { break; };
+            releaseTime = System.nanoTime() + pulseLowWidth;
+
+            if (pulseLowWidth >= pulseHighWidth) {
+                // This busy-wait is longer, do work
+                synchronized (this) {
+                    pulseHighWidth = targetPW;
+                    pulseLowWidth = kPERIOD - targetPW;
+                }
+
+                if (Thread.interrupted()) { break; }
+            }
+
+            // Busy-wait
+            while (releaseTime > System.nanoTime()) { ; }
         }
+
+        // Thread was interrupted
+        output.set(false);
     }
 
     // Thread to generate PWM signal
