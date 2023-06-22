@@ -28,7 +28,7 @@ public final class Constants {
         public static final boolean kVALIDATE = true;
         public static final boolean kPITCH_GRAPHS = false;
 
-        public static final boolean kMINIMIZE_TRAFFIC = false; // For comps
+        public static final boolean kMINIMIZE_TRAFFIC = true; // For comps
     }
 
     /* SWERVE DRIVE CONSTANTS */
