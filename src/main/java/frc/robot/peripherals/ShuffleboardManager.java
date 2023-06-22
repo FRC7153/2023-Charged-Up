@@ -46,6 +46,7 @@ public class ShuffleboardManager {
     private GenericEntry drivePos;
     private GenericEntry driveThrottleDown;
     private Field2d driveField;
+    private GenericEntry driveAngleEncConnected;
 
     // Controller Update Counter
     private GenericEntry controller0Update;
@@ -154,6 +155,10 @@ public class ShuffleboardManager {
                 .withPosition(7, 0)
                 .withSize(4, 3);
         }
+
+        driveAngleEncConnected = driveTab.add("Ang Enc Connected", false)
+            .withPosition(9, 0)
+            .getEntry();
 
         // Controller Tab Init
         ShuffleboardTab controllerTab = Shuffleboard.getTab("Controllers");
@@ -309,6 +314,7 @@ public class ShuffleboardManager {
         driveHandUnlocked.setBoolean(arm.hasBeenReleased);
         drivePos.setString(drive.getPose().toString());
         driveThrottleDown.setBoolean(Controller1.getThrottle() <= -0.9);
+        driveAngleEncConnected.setBoolean(arm.getAngleEncConnected());
 
         if (ShuffleboardConstants.kFIELD_PLOT) {
             Pose2d robotPose = drive.getPose();

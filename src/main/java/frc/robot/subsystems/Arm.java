@@ -20,6 +20,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
@@ -66,6 +67,7 @@ public class Arm extends SubsystemBase implements Validatable {
 
     // State
     public boolean hasBeenReleased = false;
+    private double overrideHeightLimit = 0.0; // Override at loading station
 
     GenericEntry tempFF = Shuffleboard.getTab("Arm test").add("kFF", -0.009).getEntry();
 
@@ -78,7 +80,7 @@ public class Arm extends SubsystemBase implements Validatable {
 
         angleAbsEncoder.setConversionFactor(360.0);
         angleAbsEncoder.setInverted(false);
-        angleAbsEncoder.setZeroOffset(-73.3);
+        angleAbsEncoder.setZeroOffset(110.7);
         angleAbsEncoder.setRange(Range.FROM_NEGATIVE_180_TO_180);
 
         // Config Winch
@@ -92,6 +94,13 @@ public class Arm extends SubsystemBase implements Validatable {
 
     public void periodic(boolean testing) {
         //anglePID.refresh();
+
+        if (!rawAngleAbsEncoder.isConnected()) {
+            DriverStation.reportError("CRITICAL: ANGLE ENCODER NOT CONNECTED, KILLING ARM CONTROL", false);
+            angleMotor.disable();
+            winchMotor.disable();
+            return;
+        }
 
         if (!DriverStation.isDisabled() && !angleSP.isNaN() && !extSP.isNaN()) {
             // Verify winch motor is safe
@@ -150,6 +159,8 @@ public class Arm extends SubsystemBase implements Validatable {
                         setAngle = kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).getY() <= 60.0;
                     }
 
+                    setAngle = (Math.abs(overrideHeightLimit - Timer.getFPGATimestamp()) <= 3.5) ? true : setAngle;
+
                     // Only set angle if safe
                     if (setAngle) {
                         anglePID.setGoal(angRef);
@@ -182,24 +193,6 @@ public class Arm extends SubsystemBase implements Validatable {
                     // Set angle
                     anglePID.setGoal(angRef);
                 }
-
-                /*if (angleAbsEncoder.getPosition() > 0.0) { // TODO dependent on actual side not SP
-                    // Forwards
-                    DriverStation.reportError(kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).toString(), false);
-                    DriverStation.reportError(angleSP.toString(), false);
-                    if (Math.abs(angleSP) < 0.1 && kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).getY() > 50.0) {
-                        DriverStation.reportWarning("Arm SP above limit, angle not set!", false);
-                    } else {
-                        anglePID.setGoal(angRef);
-                    }
-                } else {
-                    // Backwards
-                    if (Math.abs(angleSP) < 0.1 && kinematics(ArmConstants.winchRotsToTargetExt(winchEnc.getPosition()), angleAbsEncoder.getPosition()).getY() > 60.0) {
-                        DriverStation.reportWarning("Arm SP above limit, angle not set!", false);
-                    } else {
-                        anglePID.setGoal(angRef);
-                    }
-                }*/
             }
 
             // Set angle voltage
@@ -214,6 +207,10 @@ public class Arm extends SubsystemBase implements Validatable {
             }
             angleMotor.setVoltage(currentAngleVolts);
         }
+    }
+
+    public void tempDisableHeightLimit() {
+        overrideHeightLimit = Timer.getFPGATimestamp();
     }
 
     /**
@@ -299,6 +296,7 @@ public class Arm extends SubsystemBase implements Validatable {
     public Translation2d getPose() { return pose; }
     public ArmState getState() { return currentState; }
     public double getAngleDutyCycle() { return angleMotor.getAppliedOutput(); }
+    public boolean getAngleEncConnected() { return rawAngleAbsEncoder.isConnected(); }
 
     public double getAngleTemp() { return MathUtils.celsiusToFahrenheit(angleMotor.getMotorTemperature()); }
     public double getExtTemp() { return MathUtils.celsiusToFahrenheit(winchMotor.getMotorTemperature()); }

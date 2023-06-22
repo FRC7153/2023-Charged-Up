@@ -103,7 +103,7 @@ public class DIO_PWM {
             releaseTime = System.nanoTime() + pulseHighWidth;
 
             if (pulseHighWidth > pulseLowWidth) {
-                // This busy-wait is longer, do work
+                // If this busy-wait is longer, do work here
                 synchronized (this) {
                     pulseHighWidth = targetPW;
                     pulseLowWidth = kPERIOD - targetPW;
@@ -120,7 +120,7 @@ public class DIO_PWM {
             releaseTime = System.nanoTime() + pulseLowWidth;
 
             if (pulseLowWidth >= pulseHighWidth) {
-                // This busy-wait is longer, do work
+                // If this busy-wait is longer, do work here
                 synchronized (this) {
                     pulseHighWidth = targetPW;
                     pulseLowWidth = kPERIOD - targetPW;

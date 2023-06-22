@@ -2,6 +2,9 @@
   "NetworkTables": {
     "transitory": {
       "Shuffleboard": {
+        "Arm": {
+          "open": true
+        },
         "open": true,
         "output": {
           "open": true
@@ -10,10 +13,22 @@
     },
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/Shuffleboard/Controllers/Controllers/XboxController$CalibrateOffsetCommand": "Command"
+      "/Shuffleboard/Controllers/Controllers/Joystick$CalibrateOffsetCommand": "Command",
+      "/Shuffleboard/Controllers/Controllers/XboxController$CalibrateOffsetCommand": "Command",
+      "/Shuffleboard/Drive/Auto": "String Chooser",
+      "/Shuffleboard/Drive/Auto Alliance": "String Chooser",
+      "/Shuffleboard/Drive/Calibrate Gyro": "Command",
+      "/Shuffleboard/Drive/Full Brakes/Disable": "Command",
+      "/Shuffleboard/Drive/Full Brakes/Enable": "Command",
+      "/Shuffleboard/Pi/Camera Server": "Command",
+      "/Shuffleboard/Pi/Pause": "Command",
+      "/Shuffleboard/Pi/Reboot": "Command",
+      "/Shuffleboard/Pi/Resume": "Command",
+      "/Shuffleboard/Pi/Shutdown": "Command"
     }
   },
   "NetworkTables Settings": {
+    "dsClient": false,
     "mode": "Client (NT4)",
     "serverTeam": "10.71.53.2"
   }
