@@ -4,7 +4,7 @@ import com.frc7153.math.PIDConstant;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.Arm.ArmState;;
+import frc.robot.subsystems.Arm.ArmState;
 
 /**
  * Stores constants the robot needs for math. 
@@ -112,7 +112,7 @@ public final class Constants {
         public static final ArmState kFRONT_CUBE_HIGH = ArmState.fromRots(63.42, 160.9);
         public static final ArmState kFRONT_CONE_MID = ArmState.fromRots(60.0, 84.0); // 66, 64
         //public static final ArmState kFRONT_CONE_HIGH = ArmState.fromRots(67.81, 189.8); // wrong
-        public static final ArmState kFRONT_CONE_HIGH = ArmState.fromRots(62.0, 215); // 64, 192
+        public static final ArmState kFRONT_CONE_HIGH = ArmState.fromRots(60.5, 215); // 64, 192
 
         // Rear Placement
         public static final ArmState kREAR_CUBE_MID = ArmState.fromRots(-76.01, 42.9);
@@ -122,7 +122,7 @@ public final class Constants {
         public static final ArmState kREAR_CONE_HIGH = ArmState.fromRots(-62.0, 206.0);
 
         // Loading Station
-        public static final ArmState kFRONT_LOADING_STATION = ArmState.fromRots(53.0, 26.33);
+        public static final ArmState kFRONT_LOADING_STATION = ArmState.fromRots(55.5, 26.33);
         public static final ArmState kREAR_LOADING_STATION = ArmState.fromRots(-57.13, 25.14);
 
         // Loading Station Recovery
@@ -139,7 +139,7 @@ public final class Constants {
         public static final double kL_HAND_OFFSET = 0.9;
         public static final double kR_HAND_OFFSET = 0.2;
 
-        public static final int kCURRENT_LIMIT = 20;
+        public static final int kCURRENT_LIMIT = 50; // 20
     }
 
     /* CLAW GRAB POSITIONS */
@@ -156,7 +156,7 @@ public final class Constants {
 
         // Auto-Specific Presets
         public static final ArmState kREAR_CONE_HIGH = ArmState.fromRots(-63.0, 223); // -65.001, 225
-        public static final Translation2d kFRONT_CUBE_GROUND = new Translation2d(37.98, 3.0);
+        public static final Translation2d kFRONT_CUBE_GROUND = new Translation2d(37.98, 5.0); // 3.0
         public static final Translation2d kFRONT_LOW_CUBE_GROUND = new Translation2d(37.98, 0.9);
 
         // Balance

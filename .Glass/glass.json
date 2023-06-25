@@ -2,9 +2,6 @@
   "NetworkTables": {
     "transitory": {
       "Shuffleboard": {
-        "Arm": {
-          "open": true
-        },
         "open": true,
         "output": {
           "open": true

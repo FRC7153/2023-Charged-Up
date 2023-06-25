@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
 
         // Turn on brakes
         switchMode(true);
+        container.refreshLEDAlliance();
 
         // Get (and run) command
         runningCommand = container.getAutonomousCommand();
@@ -66,6 +67,7 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         // Stop commands
         switchMode(true);
+        container.refreshLEDAlliance();
 
         // Unlock claw, if not already unlocked
         if (container.checkHandsLocked()) {

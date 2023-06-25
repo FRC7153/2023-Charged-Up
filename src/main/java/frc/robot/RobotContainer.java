@@ -127,7 +127,11 @@ public class RobotContainer {
     public void setLimelightLED(boolean state) {
         frontLL.forceLEDMode(state);
         rearLL.forceLEDMode(state);
-    }   
+    }
+
+    public void refreshLEDAlliance() {
+        led.setAllianceColor();
+    }
 
     // Run Shuffleboard (even when disabled)
     public void shuffleboardUpdate() {
